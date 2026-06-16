@@ -1,0 +1,6 @@
+class AddForeignKeysToUserTopics < ActiveRecord::Migration[8.0]
+  def change
+    add_reference :user_topics, :user, null: false, foreign_key: true
+    add_reference :user_topics, :topic, null: false, foreign_key: true
+  end
+end

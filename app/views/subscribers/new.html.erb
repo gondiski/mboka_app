@@ -1,0 +1,36 @@
+<div class="min-h-screen flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
+      <h1 class="text-4xl font-black bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">Mboka</h1>
+      <p class="mt-2 text-sm text-slate-400">Autonomous intelligence gathering mapping structural industry developments</p>
+    </div>
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+      <div class="bg-slate-900 border border-slate-800/80 rounded-2xl py-8 px-6 shadow-2xl sm:px-10">
+        <%= form_with scope: :subscriber, url: subscribers_path, class: "space-y-6" do |f| %>
+          <div>
+            <%= f.label :full_name, "Full Name", class: "block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1" %>
+            <%= f.text_field :full_name, required: true, class: "block w-full rounded-lg bg-slate-950 border-slate-800 text-slate-100 focus:border-emerald-500 focus:ring-emerald-500/20 text-sm" %>
+          </div>
+          <div>
+            <%= f.label :email, "Corporate Domain Email", class: "block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1" %>
+            <%= f.email_field :email, required: true, class: "block w-full rounded-lg bg-slate-950 border-slate-800 text-slate-100 focus:border-emerald-500 focus:ring-emerald-500/20 text-sm" %>
+          </div>
+          <div>
+            <%= f.label :designation, "Current Professional Role", class: "block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1" %>
+            <%= f.text_field :designation, required: true, placeholder: "e.g. Senior Software Engineer", class: "block w-full rounded-lg bg-slate-950 border-slate-800 text-slate-100 focus:border-emerald-500 focus:ring-emerald-500/20 text-sm" %>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Target Insights Fields</label>
+            <div class="grid grid-cols-2 gap-3">
+              <% @topics.each do |topic| %>
+                <label class="flex items-center p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition cursor-pointer select-none">
+                  <%= check_box_tag "subscriber[topic_ids][]", topic.id, false, class: "h-4 w-4 rounded border-slate-800 bg-slate-900 text-emerald-500 focus:ring-0 focus:ring-offset-0" %>
+                  <span class="ml-3 text-sm text-slate-300 font-medium"><%= topic.name %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+          <%= f.submit "Initialize Active Engine", class: "w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 text-sm font-bold rounded-lg hover:opacity-95 transition tracking-wide cursor-pointer shadow-lg" %>
+        <% end %>
+      </div>
+    </div>
+  </div>

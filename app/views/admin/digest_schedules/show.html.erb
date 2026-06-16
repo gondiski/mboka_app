@@ -1,0 +1,87 @@
+<div class="min-h-screen bg-slate-950 text-slate-50 flex">
+  <aside class="w-64 border-r border-slate-900 p-6 flex flex-col gap-6">
+    <div class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Mboka Admin</div>
+    <nav class="flex flex-col gap-1 flex-1">
+      <%= link_to "Performance Panel", admin_dashboard_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-900/50 hover:text-slate-200 transition" %>
+      <%= link_to "Identity Catalogs", admin_users_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-900/50 hover:text-slate-200 transition" %>
+      <%= link_to "Digest Schedule", admin_digest_schedule_path, class: "px-4 py-2.5 rounded-lg bg-slate-900 text-sm font-medium border border-slate-800 text-slate-100" %>
+      <%= link_to "Exit Workspace", profile_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-900/50 hover:text-slate-200 mt-auto transition" %>
+    </nav>
+  </aside>
+
+  <main class="flex-1 p-10 space-y-8">
+    <div class="border-b border-slate-900 pb-6">
+      <h2 class="text-2xl font-bold tracking-tight">Weekly Digest Schedule</h2>
+      <p class="text-slate-400 mt-2 text-sm">Configure when intelligence digests are generated and delivered to subscribers.</p>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-900 rounded-xl p-8 shadow-xl max-w-2xl">
+      <%= form_with model: @schedule, url: admin_digest_schedule_path, method: :patch, class: "space-y-8" do |f| %>
+        <div>
+          <label class="block text-sm font-semibold text-slate-200 mb-4">Delivery Days</label>
+          <div class="grid grid-cols-7 gap-2">
+            <% DigestSchedule::DAYS_OF_WEEK.each do |day_name, day_num| %>
+              <label class="flex flex-col items-center gap-2 cursor-pointer group">
+                <%= f.check_box :days, { multiple: true, checked: @schedule.days&.include?(day_num), class: "sr-peer" }, day_num, nil %>
+                <div class="w-10 h-10 rounded-lg border border-slate-700 flex items-center justify-center text-xs font-medium text-slate-400 peer-checked:border-emerald-500 peer-checked:bg-emerald-500/10 peer-checked:text-emerald-400 transition group-hover:border-slate-500">
+                  <%= day_name[0..2] %>
+                </div>
+              </label>
+            <% end %>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-200 mb-2">Delivery Time</label>
+          <div class="relative">
+            <%= f.time_field :send_time, class: "w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-slate-100 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition" %>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between p-4 bg-slate-800 rounded-lg border border-slate-700">
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Enable Schedule</p>
+            <p class="text-xs text-slate-400 mt-0.5">Toggle to activate or pause digest delivery</p>
+          </div>
+          <label class="relative inline-flex cursor-pointer">
+            <%= f.check_box :active, { class: "sr-peer" }, "true", "false" %>
+            <div class="w-11 h-6 bg-slate-600 rounded-full peer peer-checked:bg-emerald-500 transition after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+          </label>
+        </div>
+
+        <div class="flex items-center gap-4 pt-2">
+          <%= f.submit "Update Schedule", class: "px-6 py-2.5 bg-emerald-500 text-white text-sm font-bold rounded-lg hover:bg-emerald-600 cursor-pointer transition" %>
+          <span class="text-xs text-slate-500">
+            <% if @schedule.cron_expression.present? %>
+              Current schedule: <code class="text-slate-400"><%= @schedule.cron_expression %></code>
+            <% else %>
+              No active schedule configured
+            <% end %>
+          </span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-900 rounded-xl p-6 shadow-xl max-w-2xl">
+      <h3 class="text-sm font-semibold text-slate-200 mb-3">How It Works</h3>
+      <ul class="text-sm text-slate-400 space-y-2">
+        <li class="flex items-start gap-2">
+          <span class="text-emerald-400 mt-0.5">1.</span>
+          <span>Each scheduled run queries the LLM once per unique topic across all subscribers</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-emerald-400 mt-0.5">2.</span>
+          <span>Results are cached per topic for the current week to avoid redundant API calls</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-emerald-400 mt-0.5">3.</span>
+          <span>Each subscriber receives a compiled email combining their chosen topics</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-emerald-400 mt-0.5">4.</span>
+          <span>All link opens and clicks are tracked via Ahoy and visible on the Performance Panel</span>
+        </li>
+      </ul>
+    </div>
+  </main>
+</div>

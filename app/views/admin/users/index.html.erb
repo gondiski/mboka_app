@@ -1,0 +1,55 @@
+<div class="min-h-screen bg-slate-950 text-slate-50 flex">
+    <aside class="w-64 border-r border-slate-900 p-6 flex flex-col gap-6">
+      <div class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Mboka Admin</div>
+      <nav class="flex flex-col gap-1 flex-1">
+        <%= link_to "Performance Panel", admin_dashboard_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-900/50 hover:text-slate-200 transition" %>
+        <%= link_to "Identity Catalogs", admin_users_path, class: "px-4 py-2.5 rounded-lg bg-slate-900 text-sm font-medium border border-slate-800 text-slate-100" %>
+        <%= link_to "Digest Schedule", admin_digest_schedule_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-900/50 hover:text-slate-200 transition" %>
+        <%= link_to "Exit Workspace", profile_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-900/50 hover:text-slate-200 mt-auto transition" %>
+      </nav>
+    </aside>
+  
+    <main class="flex-1 p-10 space-y-8">
+      <div class="flex justify-between items-center border-b border-slate-900 pb-6">
+        <h2 class="text-2xl font-bold tracking-tight">Identity Registry Management</h2>
+        
+        <!-- CSV Intake Trigger Pipeline interface configuration form -->
+        <%= form_with url: import_admin_users_path, method: :post, multipart: true, class: "flex items-center gap-2 bg-slate-900 p-2 rounded-xl border border-slate-800" do |f| %>
+          <%= f.file_field :file, accept: '.csv', required: true, class: "text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 text-slate-500 cursor-pointer" %>
+          <%= f.submit "Bulk Import Profiles", class: "px-3 py-1.5 bg-slate-100 text-slate-950 text-xs font-bold rounded-md hover:bg-slate-200 cursor-pointer transition" %>
+        <% end %>
+      </div>
+  
+      <!-- Live Directory Manifest grid tables data container -->
+      <div class="bg-slate-900 border border-slate-900 rounded-xl overflow-hidden shadow-2xl">
+        <table class="min-w-full divide-y divide-slate-950">
+          <thead class="bg-slate-950">
+            <tr>
+              <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Identity Context</th>
+              <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Designation</th>
+              <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Tracking Capacity</th>
+              <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Operational Integrity</th>
+              <th class="px-6 py-4 class-right text-xs font-bold uppercase tracking-wider text-slate-400">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-950/40 bg-slate-900">
+            <% @users.each do |user| %>
+              <tr class="hover:bg-slate-950/20 transition">
+                <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm font-semibold text-slate-200"><%= user.full_name %></div><div class="text-xs text-slate-500"><%= user.email %></div></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400"><%= user.designation %></td>
+                <td class="px-6 py-4 text-sm text-slate-400"><%= user.topics.map(&:name).join(', ') %></td>
+                <td class="px-6 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full <%= case user.status when 'active' then 'bg-emerald-500/10 text-emerald-400' when 'pending' then 'bg-amber-500/10 text-amber-400' else 'bg-rose-500/10 text-rose-400' end %>"><%= user.status %></span></td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-medium space-x-2">
+                  <% if user != current_user %>
+                    <%= link_to "Activate", update_status_admin_user_path(user, status: 'active'), data: { turbo_method: :patch }, class: "text-emerald-400 hover:underline" %>
+                    <%= link_to "Suspend", update_status_admin_user_path(user, status: 'suspended'), data: { turbo_method: :patch }, class: "text-amber-400 hover:underline" %>
+                    <%= link_to "Block", update_status_admin_user_path(user, status: 'blocked'), data: { turbo_method: :patch }, class: "text-rose-400 hover:underline" %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
