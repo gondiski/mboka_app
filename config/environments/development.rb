@@ -40,6 +40,16 @@ Rails.application.configure do
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
+  # SMTP2GO configuration for development
+  config.action_mailer.smtp_settings = {
+    user_name: ENV.fetch("SMTP2GO_USER_NAME", ""),
+    password: ENV.fetch("SMTP2GO_PASSWORD", ""),
+    address: "mail.smtp2go.com",
+    port: 2525,
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
