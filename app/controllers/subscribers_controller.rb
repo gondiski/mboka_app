@@ -2,11 +2,11 @@
 class SubscribersController < ApplicationController
   def new
     @topics = Topic.all
-    authorize Subscriber
+    authorize :subscriber, :new?
   end
 
   def create
-    authorize Subscriber
+    authorize :subscriber, :create?
     @user = User.find_or_initialize_by(email: subscriber_params[:email].downcase)
 
     if @user.new_record?

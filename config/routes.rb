@@ -22,6 +22,7 @@ Rails.application.routes.draw do
 
   # Subscriber Profiles Panel
   resource :profile, only: [ :show, :update ]
+  post "favorites/toggle/:topic_digest_id", to: "favorites#toggle", as: :toggle_favorite
 
   # Administration Zone Control Arrays
   namespace :admin do
@@ -33,6 +34,7 @@ Rails.application.routes.draw do
       end
       collection do
         post :import
+        post :invite
       end
     end
   end

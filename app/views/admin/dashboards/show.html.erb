@@ -1,0 +1,90 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
+          <span class="text-2xl font-bold text-gray-900">Mboka Admin</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-semibold text-brand-600" %>
+          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-black text-gray-900 mb-8">Performance Dashboard</h1>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <p class="text-sm font-medium text-gray-500 mb-1">Monitored Profiles</p>
+        <p class="text-3xl font-black text-brand-600"><%= @total_users %></p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <p class="text-sm font-medium text-gray-500 mb-1">Dispatched Summaries</p>
+        <p class="text-3xl font-black text-brand-600"><%= @sent_count %></p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <p class="text-sm font-medium text-gray-500 mb-1">Opened Summaries</p>
+        <p class="text-3xl font-black text-brand-600"><%= @opened_count %></p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <p class="text-sm font-medium text-gray-500 mb-1">Total Clicks</p>
+        <p class="text-3xl font-black text-brand-600"><%= @clicked_count %></p>
+      </div>
+    </div>
+
+    <!-- Analytics Grid -->
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- Topic Distribution -->
+      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+        <h3 class="text-lg font-bold text-gray-900 mb-6">Topic Distribution</h3>
+        <div class="space-y-4">
+          <% @common_topics.each do |name, count| %>
+            <div>
+              <div class="flex justify-between text-sm mb-2">
+                <span class="font-medium text-gray-700"><%= name %></span>
+                <span class="text-gray-500"><%= count %> subscribers</span>
+              </div>
+              <div class="w-full bg-gray-100 rounded-full h-2">
+                <div class="bg-brand-500 h-2 rounded-full" style="width: <%= (count.to_f / @total_users * 100).round %>%"></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Weekly Digest Performance -->
+      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-bold text-gray-900">Weekly Digest Performance</h3>
+          <%= link_to "Manage Schedule", admin_digest_schedule_path, class: "text-sm font-semibold text-brand-600 hover:text-brand-700" %>
+        </div>
+        <% if @digest_stats.present? %>
+          <div class="space-y-3">
+            <% @digest_stats.each do |stat| %>
+              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div>
+                  <p class="font-semibold text-gray-900"><%= stat[:topic_name] %></p>
+                  <p class="text-sm text-gray-500"><%= stat[:users_reached] %> users reached</p>
+                </div>
+                <span class="text-sm text-gray-400"><%= stat[:generated_at].strftime("%b %d") %></span>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <p class="text-gray-500">No digests generated this week</p>
+            <p class="text-sm text-gray-400 mt-1">Configure your schedule to start sending digests.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

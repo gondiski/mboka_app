@@ -1,11 +1,18 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
+  include Pagy::Backend
 
   allow_browser versions: :modern
 
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  protected
+
+  def after_sign_out_path_for(resource)
+    root_path
+  end
 
   private
 

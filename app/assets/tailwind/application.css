@@ -1,1 +1,49 @@
 @import "tailwindcss";
+
+@source "../../views";
+
+@theme {
+  --color-brand-50: #f0fdf4;
+  --color-brand-100: #dcfce7;
+  --color-brand-200: #bbf7d0;
+  --color-brand-300: #86efac;
+  --color-brand-400: #4ade80;
+  --color-brand-500: #22c55e;
+  --color-brand-600: #16a34a;
+  --color-brand-700: #15803d;
+  --color-brand-800: #166534;
+  --color-brand-900: #14532d;
+
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+}
+
+/* Pagy Navigation */
+.pagy-nav {
+  @apply flex items-center justify-center gap-2;
+}
+.pagy-nav .page a,
+.pagy-nav .page.active,
+.pagy-nav .page.disabled {
+  @apply px-4 py-2 text-sm font-semibold rounded-xl transition;
+}
+.pagy-nav .page a {
+  @apply bg-white border border-gray-200 text-gray-600 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-700;
+}
+.pagy-nav .page.active {
+  @apply bg-brand-600 text-white border border-brand-600;
+}
+.pagy-nav .page.disabled {
+  @apply bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed;
+}
+.pagy-nav .prev a,
+.pagy-nav .next a {
+  @apply px-4 py-2 text-sm font-semibold rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-700 transition;
+}
+.pagy-nav .prev.disabled a,
+.pagy-nav .next.disabled a {
+  @apply bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed;
+}

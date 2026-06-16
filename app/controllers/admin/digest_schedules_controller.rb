@@ -5,12 +5,12 @@ class Admin::DigestSchedulesController < ApplicationController
 
   def show
     @schedule = DigestSchedule.first_or_initialize
-    authorize @schedule, :show?
+    authorize @schedule, :show?, policy_class: Admin::DigestSchedulePolicy
   end
 
   def update
     @schedule = DigestSchedule.first_or_initialize
-    authorize @schedule, :update?
+    authorize @schedule, :update?, policy_class: Admin::DigestSchedulePolicy
 
     if @schedule.update(schedule_params)
       update_sidekiq_cron(@schedule) if @schedule.active?

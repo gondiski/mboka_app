@@ -1,29 +1,36 @@
-<div class="min-h-screen bg-slate-950 text-slate-50 flex">
-  <aside class="w-64 border-r border-slate-900 p-6 flex flex-col gap-6">
-    <div class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Mboka Admin</div>
-    <nav class="flex flex-col gap-1 flex-1">
-      <%= link_to "Performance Panel", admin_dashboard_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-900/50 hover:text-slate-200 transition" %>
-      <%= link_to "Identity Catalogs", admin_users_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-900/50 hover:text-slate-200 transition" %>
-      <%= link_to "Digest Schedule", admin_digest_schedule_path, class: "px-4 py-2.5 rounded-lg bg-slate-900 text-sm font-medium border border-slate-800 text-slate-100" %>
-      <%= link_to "Exit Workspace", profile_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-900/50 hover:text-slate-200 mt-auto transition" %>
-    </nav>
-  </aside>
-
-  <main class="flex-1 p-10 space-y-8">
-    <div class="border-b border-slate-900 pb-6">
-      <h2 class="text-2xl font-bold tracking-tight">Weekly Digest Schedule</h2>
-      <p class="text-slate-400 mt-2 text-sm">Configure when intelligence digests are generated and delivered to subscribers.</p>
+<div class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
+          <span class="text-2xl font-bold text-gray-900">Mboka Admin</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-semibold text-brand-600" %>
+          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+        </div>
+      </div>
     </div>
+  </nav>
 
-    <div class="bg-slate-900 border border-slate-900 rounded-xl p-8 shadow-xl max-w-2xl">
+  <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-black text-gray-900 mb-2">Digest Schedule</h1>
+    <p class="text-gray-600 mb-8">Configure when intelligence digests are generated and delivered to subscribers.</p>
+
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
       <%= form_with model: @schedule, url: admin_digest_schedule_path, method: :patch, class: "space-y-8" do |f| %>
+        <!-- Delivery Days -->
         <div>
-          <label class="block text-sm font-semibold text-slate-200 mb-4">Delivery Days</label>
-          <div class="grid grid-cols-7 gap-2">
+          <label class="block text-sm font-bold text-gray-900 mb-4">Delivery Days</label>
+          <div class="grid grid-cols-7 gap-3">
             <% DigestSchedule::DAYS_OF_WEEK.each do |day_name, day_num| %>
               <label class="flex flex-col items-center gap-2 cursor-pointer group">
                 <%= f.check_box :days, { multiple: true, checked: @schedule.days&.include?(day_num), class: "sr-peer" }, day_num, nil %>
-                <div class="w-10 h-10 rounded-lg border border-slate-700 flex items-center justify-center text-xs font-medium text-slate-400 peer-checked:border-emerald-500 peer-checked:bg-emerald-500/10 peer-checked:text-emerald-400 transition group-hover:border-slate-500">
+                <div class="w-12 h-12 rounded-xl border-2 border-gray-200 flex items-center justify-center text-sm font-bold text-gray-500 peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 transition group-hover:border-gray-300">
                   <%= day_name[0..2] %>
                 </div>
               </label>
@@ -31,57 +38,67 @@
           </div>
         </div>
 
+        <!-- Delivery Time -->
         <div>
-          <label class="block text-sm font-semibold text-slate-200 mb-2">Delivery Time</label>
-          <div class="relative">
-            <%= f.time_field :send_time, class: "w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-slate-100 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition" %>
-          </div>
+          <label class="block text-sm font-bold text-gray-900 mb-2">Delivery Time</label>
+          <%= f.time_field :send_time, class: "w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm" %>
         </div>
 
-        <div class="flex items-center justify-between p-4 bg-slate-800 rounded-lg border border-slate-700">
+        <!-- Active Toggle -->
+        <div class="flex items-center justify-between p-5 bg-gray-50 rounded-xl border border-gray-200">
           <div>
-            <p class="text-sm font-semibold text-slate-200">Enable Schedule</p>
-            <p class="text-xs text-slate-400 mt-0.5">Toggle to activate or pause digest delivery</p>
+            <p class="font-bold text-gray-900">Enable Schedule</p>
+            <p class="text-sm text-gray-500">Toggle to activate or pause digest delivery</p>
           </div>
           <label class="relative inline-flex cursor-pointer">
             <%= f.check_box :active, { class: "sr-peer" }, "true", "false" %>
-            <div class="w-11 h-6 bg-slate-600 rounded-full peer peer-checked:bg-emerald-500 transition after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+            <div class="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:bg-brand-500 transition after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-6 shadow-inner"></div>
           </label>
         </div>
 
-        <div class="flex items-center gap-4 pt-2">
-          <%= f.submit "Update Schedule", class: "px-6 py-2.5 bg-emerald-500 text-white text-sm font-bold rounded-lg hover:bg-emerald-600 cursor-pointer transition" %>
-          <span class="text-xs text-slate-500">
+        <!-- Submit -->
+        <div class="flex items-center gap-4">
+          <%= f.submit "Update Schedule", class: "px-8 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 cursor-pointer transition shadow-lg transform hover:-translate-y-0.5" %>
+          <span class="text-sm text-gray-500">
             <% if @schedule.cron_expression.present? %>
-              Current schedule: <code class="text-slate-400"><%= @schedule.cron_expression %></code>
+              Cron: <code class="text-gray-700 bg-gray-100 px-2 py-1 rounded"><%= @schedule.cron_expression %></code>
             <% else %>
-              No active schedule configured
+              No active schedule
             <% end %>
           </span>
         </div>
       <% end %>
     </div>
 
-    <div class="bg-slate-900 border border-slate-900 rounded-xl p-6 shadow-xl max-w-2xl">
-      <h3 class="text-sm font-semibold text-slate-200 mb-3">How It Works</h3>
-      <ul class="text-sm text-slate-400 space-y-2">
-        <li class="flex items-start gap-2">
-          <span class="text-emerald-400 mt-0.5">1.</span>
-          <span>Each scheduled run queries the LLM once per unique topic across all subscribers</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="text-emerald-400 mt-0.5">2.</span>
-          <span>Results are cached per topic for the current week to avoid redundant API calls</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="text-emerald-400 mt-0.5">3.</span>
-          <span>Each subscriber receives a compiled email combining their chosen topics</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="text-emerald-400 mt-0.5">4.</span>
-          <span>All link opens and clicks are tracked via Ahoy and visible on the Performance Panel</span>
-        </li>
-      </ul>
+    <!-- How It Works -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+      <h3 class="text-lg font-bold text-gray-900 mb-4">How It Works</h3>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+          <div class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-brand-700 font-bold text-sm">1</span>
+          </div>
+          <p class="text-sm text-gray-600">Each scheduled run queries the LLM once per unique topic across all subscribers.</p>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+          <div class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-brand-700 font-bold text-sm">2</span>
+          </div>
+          <p class="text-sm text-gray-600">Results are cached per topic for the current week to avoid redundant API calls.</p>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+          <div class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-brand-700 font-bold text-sm">3</span>
+          </div>
+          <p class="text-sm text-gray-600">Each subscriber receives a compiled email combining their chosen topics.</p>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+          <div class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-brand-700 font-bold text-sm">4</span>
+          </div>
+          <p class="text-sm text-gray-600">All link opens and clicks are tracked via Ahoy and visible on the Dashboard.</p>
+        </div>
+      </div>
     </div>
-  </main>
+  </div>
 </div>

@@ -1,36 +1,350 @@
-<div class="min-h-screen flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
-      <h1 class="text-4xl font-black bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">Mboka</h1>
-      <p class="mt-2 text-sm text-slate-400">Autonomous intelligence gathering mapping structural industry developments</p>
+<!-- Navigation -->
+<nav class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <div class="flex items-center space-x-2">
+        <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
+        <span class="text-2xl font-bold text-gray-900">Mboka</span>
+      </div>
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#features" class="text-gray-600 hover:text-brand-600 font-medium transition">Features</a>
+        <a href="#testimonials" class="text-gray-600 hover:text-brand-600 font-medium transition">Stories</a>
+        <%= link_to "Sign In", new_user_session_path, class: "text-gray-600 hover:text-brand-600 font-medium transition" %>
+        <button @click="$dispatch('open-subscribe')" class="bg-brand-600 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-brand-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">Subscribe</button>
+      </div>
+      <button @click="$dispatch('open-subscribe')" class="md:hidden bg-brand-600 text-white px-4 py-2 rounded-full text-sm font-semibold">Subscribe</button>
     </div>
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-      <div class="bg-slate-900 border border-slate-800/80 rounded-2xl py-8 px-6 shadow-2xl sm:px-10">
-        <%= form_with scope: :subscriber, url: subscribers_path, class: "space-y-6" do |f| %>
-          <div>
-            <%= f.label :full_name, "Full Name", class: "block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1" %>
-            <%= f.text_field :full_name, required: true, class: "block w-full rounded-lg bg-slate-950 border-slate-800 text-slate-100 focus:border-emerald-500 focus:ring-emerald-500/20 text-sm" %>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center pt-20 overflow-hidden" style="background-image: radial-gradient(circle at 1px 1px, rgba(22, 163, 74, 0.1) 1px, transparent 0); background-size: 40px 40px;">
+  <div class="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-amber-50 opacity-60"></div>
+  <div class="absolute top-32 right-10 w-20 h-20 bg-brand-200 rounded-full blur-3xl opacity-40"></div>
+  <div class="absolute bottom-32 left-10 w-32 h-32 bg-amber-200 rounded-full blur-3xl opacity-40"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8">
+        <div class="inline-flex items-center px-4 py-2 bg-brand-100 text-brand-700 rounded-full text-sm font-semibold">
+          <span class="w-2 h-2 bg-brand-500 rounded-full mr-2 animate-pulse"></span>
+          Trusted by 10,000+ Job Seekers & Entrepreneurs
+        </div>
+        <h1 class="text-5xl lg:text-7xl font-black leading-tight text-gray-900">
+          Discover Your Next <span class="gradient-text">Big Opportunity</span> Weekly
+        </h1>
+        <p class="text-xl text-gray-600 leading-relaxed max-w-lg">
+          Curated job openings, grants, fellowships, and accelerator programs delivered straight to your inbox. Tailored for ambitious professionals and entrepreneurs in Kenya.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button @click="$dispatch('open-subscribe')" class="px-8 py-4 bg-brand-600 text-white rounded-full font-bold text-lg hover:bg-brand-700 transition shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center justify-center gap-2">
+            <span>Subscribe Now</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </button>
+        </div>
+        <div class="flex items-center gap-4 text-sm text-gray-500">
+          <div class="flex -space-x-2">
+            <img src="https://i.pravatar.cc/100?img=1" class="w-8 h-8 rounded-full border-2 border-white" alt="User">
+            <img src="https://i.pravatar.cc/100?img=2" class="w-8 h-8 rounded-full border-2 border-white" alt="User">
+            <img src="https://i.pravatar.cc/100?img=3" class="w-8 h-8 rounded-full border-2 border-white" alt="User">
+            <img src="https://i.pravatar.cc/100?img=4" class="w-8 h-8 rounded-full border-2 border-white" alt="User">
           </div>
-          <div>
-            <%= f.label :email, "Corporate Domain Email", class: "block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1" %>
-            <%= f.email_field :email, required: true, class: "block w-full rounded-lg bg-slate-950 border-slate-800 text-slate-100 focus:border-emerald-500 focus:ring-emerald-500/20 text-sm" %>
-          </div>
-          <div>
-            <%= f.label :designation, "Current Professional Role", class: "block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1" %>
-            <%= f.text_field :designation, required: true, placeholder: "e.g. Senior Software Engineer", class: "block w-full rounded-lg bg-slate-950 border-slate-800 text-slate-100 focus:border-emerald-500 focus:ring-emerald-500/20 text-sm" %>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Target Insights Fields</label>
-            <div class="grid grid-cols-2 gap-3">
-              <% @topics.each do |topic| %>
-                <label class="flex items-center p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition cursor-pointer select-none">
-                  <%= check_box_tag "subscriber[topic_ids][]", topic.id, false, class: "h-4 w-4 rounded border-slate-800 bg-slate-900 text-emerald-500 focus:ring-0 focus:ring-offset-0" %>
-                  <span class="ml-3 text-sm text-slate-300 font-medium"><%= topic.name %></span>
-                </label>
-              <% end %>
+          <p>Join 10,000+ subscribers today</p>
+        </div>
+      </div>
+
+      <div class="relative hidden lg:block">
+        <div class="relative w-full max-w-md mx-auto">
+          <div class="bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition duration-500">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center"><span class="text-brand-600 font-bold">M</span></div>
+                <div><p class="font-semibold text-gray-900">Mboka Weekly</p><p class="text-xs text-gray-500">Monday, 8:00 AM</p></div>
+              </div>
+              <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-bold rounded-full">NEW</span>
+            </div>
+            <h3 class="font-bold text-lg mb-3 text-gray-800">5 Opportunities Matched For You</h3>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="w-2 h-2 bg-brand-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div><p class="font-medium text-sm text-gray-800">Senior Product Designer</p><p class="text-xs text-gray-500">Safaricom - Nairobi - KES 180K</p></div>
+              </div>
+              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="w-2 h-2 bg-amber-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div><p class="font-medium text-sm text-gray-800">Hivos East Africa Grant</p><p class="text-xs text-gray-500">Deadline: Dec 15 - Up to $50K</p></div>
+              </div>
+              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div><p class="font-medium text-sm text-gray-800">Google for Startups</p><p class="text-xs text-gray-500">Accelerator - Applications Open</p></div>
+              </div>
             </div>
           </div>
-          <%= f.submit "Initialize Active Engine", class: "w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 text-sm font-bold rounded-lg hover:opacity-95 transition tracking-wide cursor-pointer shadow-lg" %>
-        <% end %>
+        </div>
       </div>
     </div>
   </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-16 bg-white border-y border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div class="space-y-2"><p class="text-4xl font-black text-brand-600">10K+</p><p class="text-gray-600 font-medium">Active Subscribers</p></div>
+      <div class="space-y-2"><p class="text-4xl font-black text-brand-600">500+</p><p class="text-gray-600 font-medium">Opportunities/Month</p></div>
+      <div class="space-y-2"><p class="text-4xl font-black text-brand-600">85%</p><p class="text-gray-600 font-medium">Success Rate</p></div>
+      <div class="space-y-2"><p class="text-4xl font-black text-brand-600">50+</p><p class="text-gray-600 font-medium">Partner Organizations</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-24 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-4xl font-black text-gray-900 mb-4">Why Choose Mboka?</h2>
+      <p class="text-xl text-gray-600">We do the heavy lifting so you can focus on what matters.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition group">
+        <div class="w-14 h-14 bg-brand-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+          <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Curated Weekly Emails</h3>
+        <p class="text-gray-600 leading-relaxed">Handpicked opportunities delivered every Monday. No spam, no fluff.</p>
+      </div>
+      <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition group">
+        <div class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+          <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Custom Topic Selection</h3>
+        <p class="text-gray-600 leading-relaxed">Choose exactly what you want. Completely free, forever.</p>
+      </div>
+      <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition group">
+        <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+          <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Instant Alerts</h3>
+        <p class="text-gray-600 leading-relaxed">Be the first to apply. Get real-time notifications for high-priority opportunities in your selected topics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-4xl font-black text-gray-900 mb-4">How Mboka Works</h2>
+      <p class="text-xl text-gray-600">From signup to success in three simple steps</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8 relative">
+      <div class="hidden md:block absolute top-1/2 left-1/3 right-1/3 h-0.5 bg-brand-200 -translate-y-1/2"></div>
+      <div class="relative text-center">
+        <div class="w-20 h-20 bg-brand-600 rounded-full flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-xl relative z-10">1</div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Subscribe</h3>
+        <p class="text-gray-600">Sign up for our free weekly digest to get started. No hidden fees, ever.</p>
+      </div>
+      <div class="relative text-center">
+        <div class="w-20 h-20 bg-brand-600 rounded-full flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-xl relative z-10">2</div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Select Your Topics</h3>
+        <p class="text-gray-600">Pick from 20+ categories. Mix and match as you grow, completely free.</p>
+      </div>
+      <div class="relative text-center">
+        <div class="w-20 h-20 bg-brand-600 rounded-full flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-xl relative z-10">3</div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Receive & Apply</h3>
+        <p class="text-gray-600">Get matched opportunities in your inbox. Apply fast and track your success rate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="py-24 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-4xl font-black text-gray-900 mb-4">Free, Forever</h2>
+      <p class="text-xl text-gray-600">All features, completely free. No hidden fees.</p>
+    </div>
+    <div class="max-w-5xl mx-auto">
+      <div class="bg-white rounded-3xl p-12 shadow-2xl border-2 border-brand-100 hover:border-brand-200 transition text-center">
+        <div class="mb-6">
+          <h3 class="text-3xl font-bold text-gray-900 mb-2">Weekly Navigator</h3>
+          <p class="text-gray-600 text-lg">Curated opportunities for your career path</p>
+        </div>
+        <div class="mb-8">
+          <span class="text-7xl font-black text-brand-600">Free</span>
+          <span class="text-gray-500 text-xl">/forever</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8 mb-10 text-left max-w-2xl mx-auto">
+          <ul class="space-y-4">
+            <li class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700 text-lg">Weekly job listings</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700 text-lg">Grant & funding alerts</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700 text-lg">Weekly summary email</span>
+            </li>
+          </ul>
+          <ul class="space-y-4">
+            <li class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700 text-lg">Custom topic selection</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700 text-lg">Application tracking</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700 text-lg">Instant priority alerts</span>
+            </li>
+          </ul>
+        </div>
+        <button @click="$dispatch('open-subscribe')" class="inline-block w-full max-w-md py-5 bg-brand-600 text-white rounded-full font-bold text-xl hover:bg-brand-700 transition shadow-xl transform hover:-translate-y-1 cursor-pointer">Subscribe Now</button>
+      </div>
+    </div>
+    <div class="mt-12 text-center">
+      <p class="text-gray-600 mb-4">Popular topics include:</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Software Engineering</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">NGO Grants</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Data Science</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Fellowships</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Startups</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Remote Jobs</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Accelerator Programs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-24 bg-white overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-4xl font-black text-gray-900 mb-4">Success Stories</h2>
+      <p class="text-xl text-gray-600">Join thousands who have transformed their careers through Mboka</p>
+    </div>
+    <div class="swiper testimonial-swiper pb-12">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <div class="bg-gray-50 rounded-2xl p-8 mx-4">
+            <div class="flex items-center gap-1 mb-4">
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <p class="text-gray-700 text-lg mb-6 leading-relaxed">"Mboka helped me discover the Hivos grant that funded my social enterprise. The custom alerts meant I never missed a deadline."</p>
+            <div class="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?img=5" class="w-12 h-12 rounded-full" alt="Sarah">
+              <div><p class="font-bold text-gray-900">Sarah Ochieng</p><p class="text-sm text-gray-500">Founder, GreenSpace Kenya</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="bg-gray-50 rounded-2xl p-8 mx-4">
+            <div class="flex items-center gap-1 mb-4">
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <p class="text-gray-700 text-lg mb-6 leading-relaxed">"I landed my dream job at a fintech startup through Mboka's Software Engineering alerts. The weekly frequency kept me ahead of other applicants."</p>
+            <div class="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?img=11" class="w-12 h-12 rounded-full" alt="James">
+              <div><p class="font-bold text-gray-900">James Mwangi</p><p class="text-sm text-gray-500">Senior Developer, Twiga Foods</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="bg-gray-50 rounded-2xl p-8 mx-4">
+            <div class="flex items-center gap-1 mb-4">
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <p class="text-gray-700 text-lg mb-6 leading-relaxed">"The accelerator program alerts are gold. Mboka notified me about the Google for Startups program just hours after applications opened. We got in!"</p>
+            <div class="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?img=9" class="w-12 h-12 rounded-full" alt="Amina">
+              <div><p class="font-bold text-gray-900">Amina Hassan</p><p class="text-sm text-gray-500">CEO, TechForGood</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-24 bg-gradient-to-br from-brand-600 to-brand-800 relative overflow-hidden">
+  <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0); background-size: 40px 40px;"></div>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+    <h2 class="text-4xl md:text-5xl font-black text-white mb-6">Ready to Transform Your Career?</h2>
+    <p class="text-xl text-brand-100 mb-10 max-w-2xl mx-auto">Join thousands of professionals and entrepreneurs who never miss an opportunity. Start free today.</p>
+    <button @click="$dispatch('open-subscribe')" class="inline-block px-8 py-4 bg-white text-brand-700 rounded-full font-bold text-lg hover:bg-brand-50 transition shadow-xl cursor-pointer">Subscribe Now</button>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-300 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-4 gap-12 mb-12">
+      <div class="col-span-2">
+        <div class="flex items-center space-x-2 mb-6">
+          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl">M</div>
+          <span class="text-2xl font-bold text-white">Mboka</span>
+        </div>
+        <p class="text-gray-400 leading-relaxed max-w-sm">Empowering Kenyan professionals and entrepreneurs with curated opportunities. Your weekly navigator to success.</p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-4">Quick Links</h4>
+        <ul class="space-y-3">
+          <li><a href="#features" class="hover:text-brand-400 transition">Features</a></li>
+          <li><a href="#pricing" class="hover:text-brand-400 transition">Pricing</a></li>
+          <li><a href="#testimonials" class="hover:text-brand-400 transition">Success Stories</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-4">Connect</h4>
+        <ul class="space-y-3">
+          <li><a href="mailto:hello@mboka.dnrstudios.co.ke" class="hover:text-brand-400 transition">hello@mboka.dnrstudios.co.ke</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-gray-500">&copy; 2026 Mboka. All rights reserved.</p>
+      <div class="flex gap-6 text-sm text-gray-500">
+        <%= link_to "Privacy Policy", privacy_path, class: "hover:text-white transition" %>
+        <%= link_to "Terms of Service", terms_path, class: "hover:text-white transition" %>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Initialize Swiper -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    new Swiper('.testimonial-swiper', {
+      slidesPerView: 1,
+      spaceBetween: 30,
+      loop: true,
+      autoplay: { delay: 5000, disableOnInteraction: false },
+      pagination: { el: '.swiper-pagination', clickable: true },
+      breakpoints: {
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 }
+      }
+    });
+  });
+</script>

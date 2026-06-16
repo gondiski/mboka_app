@@ -3,7 +3,7 @@ class Admin::DashboardsController < ApplicationController
   before_action :authenticate_user!
 
   def show
-    authorize :dashboard, :show?
+    authorize :dashboard, :show?, policy_class: Admin::DashboardPolicy
     @total_users  = User.count
     @total_topics = Topic.count
     @sent_count    = Ahoy::Message.count
