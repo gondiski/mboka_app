@@ -1,7 +1,5 @@
 # app/controllers/magic_links_controller.rb
 class MagicLinksController < ApplicationController
-  skip_before_action :authenticate_user!, only: [ :create, :validate, :new ]
-
   def new
     authorize MagicLink
   end

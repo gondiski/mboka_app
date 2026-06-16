@@ -1,7 +1,5 @@
 # app/controllers/subscribers_controller.rb
 class SubscribersController < ApplicationController
-  skip_before_action :authenticate_user!, only: [ :new, :create ]
-
   def new
     @topics = Topic.all
     authorize Subscriber
