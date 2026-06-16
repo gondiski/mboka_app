@@ -2,8 +2,10 @@
 
 require "sidekiq/cron"
 
-Sidekiq::Cron::Job.create(
-  name: "digest-scheduler",
-  cron: "* * * * *",
-  class: "DigestSchedulerJob"
-)
+if Sidekiq.server?
+  Sidekiq::Cron::Job.create(
+    name: "digest-scheduler",
+    cron: "* * * * *",
+    class: "DigestSchedulerJob"
+  )
+end
