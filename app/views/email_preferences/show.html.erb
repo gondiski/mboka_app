@@ -1,0 +1,112 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
+          <span class="text-2xl font-bold text-gray-900">Mboka</span>
+        </div>
+        <div class="text-sm text-gray-500">
+          Email Preferences
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <div class="w-16 h-16 bg-gradient-to-br from-brand-500 to-brand-700 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg mx-auto mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </div>
+      <h1 class="text-3xl font-black text-gray-900 mb-2">Email Preferences</h1>
+      <p class="text-gray-600">Manage which topics you receive digests for.</p>
+      <p class="text-sm text-gray-400 mt-2">
+        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        <%= @user.email %>
+      </p>
+    </div>
+
+    <!-- Preferences Card -->
+    <div class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+      <%= form_with url: email_preferences_path(token: params[:token]), method: :patch, local: true, data: { turbo: false } do |f| %>
+        <div class="p-8">
+          <!-- Master Toggle -->
+          <div class="flex items-center justify-between p-5 bg-gray-50 rounded-2xl mb-8">
+            <div>
+              <h2 class="text-lg font-bold text-gray-900">Weekly Digest Emails</h2>
+              <p class="text-sm text-gray-500 mt-1">Receive curated intelligence digests every week.</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <%= f.check_box :subscribed, { checked: @user.subscribed?, class: "sr-only peer", data: { controller: "toggle", action: "change->toggle#toggleAll" } }, "true", "false" %>
+              <div class="w-14 h-7 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-brand-600"></div>
+            </label>
+          </div>
+
+          <!-- Topic Subscriptions -->
+          <div id="topic-toggles" class="<%= 'opacity-50 pointer-events-none' unless @user.subscribed? %>">
+            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Your Topics</h3>
+
+            <div class="space-y-3">
+              <% @topics.each do |topic| %>
+                <label class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition cursor-pointer">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brand-100 rounded-xl flex items-center justify-center">
+                      <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                    </div>
+                    <span class="font-semibold text-gray-900"><%= topic.name %></span>
+                  </div>
+                  <div class="relative inline-flex items-center cursor-pointer">
+                    <%= f.check_box "topic_ids[]", {
+                      checked: @subscribed_topic_ids.include?(topic.id),
+                      class: "sr-only peer topic-checkbox",
+                      data: { topic_id: topic.id }
+                    }, topic.id, nil %>
+                    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="px-8 pb-8 flex flex-col sm:flex-row gap-3">
+          <%= f.submit "Save Preferences", class: "flex-1 px-6 py-3.5 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition shadow-lg cursor-pointer transform hover:-translate-y-0.5" %>
+          <%= link_to "Unsubscribe from All", unsubscribe_email_path(token: params[:token]),
+              data: { turbo: false, confirm: "Are you sure you want to unsubscribe from all emails?" },
+              class: "px-6 py-3.5 bg-red-50 text-red-600 font-bold rounded-xl hover:bg-red-100 transition text-center" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-8">
+      <p class="text-sm text-gray-400">
+        You received this link because you're subscribed to digests on Mboka.
+      </p>
+      <a href="<%= root_path %>" class="text-sm text-brand-600 hover:text-brand-700 font-medium mt-2 inline-block">
+        ← Back to Mboka
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const masterToggle = document.querySelector("[name='subscribed']");
+    const topicToggles = document.getElementById("topic-toggles");
+    const topicCheckboxes = document.querySelectorAll(".topic-checkbox");
+
+    if (masterToggle) {
+      masterToggle.addEventListener("change", function() {
+        if (this.checked) {
+          topicToggles.classList.remove("opacity-50", "pointer-events-none");
+        } else {
+          topicToggles.classList.add("opacity-50", "pointer-events-none");
+        }
+      });
+    }
+  });
+</script>

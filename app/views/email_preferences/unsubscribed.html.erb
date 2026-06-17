@@ -1,0 +1,35 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
+          <span class="text-2xl font-bold text-gray-900">Mboka</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-lg mx-auto py-20 px-4 sm:px-6 lg:px-8 text-center">
+    <div class="bg-white rounded-3xl shadow-lg border border-gray-100 p-10">
+      <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </div>
+      <h1 class="text-3xl font-black text-gray-900 mb-3">Unsubscribed</h1>
+      <p class="text-gray-600 mb-8 leading-relaxed">
+        You've been unsubscribed from all weekly digest emails. You won't receive any more digests unless you resubscribe.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <%= form_with url: email_preferences_path(token: @user.unsubscribe_token), method: :patch, local: true, data: { turbo: false } do |f| %>
+          <%= f.hidden_field :subscribed, value: "true" %>
+          <%= f.submit "Resubscribe", class: "px-8 py-3.5 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition shadow-lg cursor-pointer" %>
+        <% end %>
+        <a href="<%= root_path %>" class="px-8 py-3.5 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition">
+          Back to Mboka
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

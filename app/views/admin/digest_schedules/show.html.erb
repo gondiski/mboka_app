@@ -10,6 +10,7 @@
         <div class="flex items-center gap-6">
           <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
           <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Digests", admin_digests_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
           <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-semibold text-brand-600" %>
           <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
         </div>
@@ -21,76 +22,153 @@
     <h1 class="text-3xl font-black text-gray-900 mb-2">Digest Schedule</h1>
     <p class="text-gray-600 mb-8">Configure when intelligence digests are generated and delivered to subscribers.</p>
 
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-      <%= form_with model: @schedule, url: admin_digest_schedule_path, method: :patch, class: "space-y-8" do |f| %>
-        <!-- Delivery Days -->
-        <div>
-          <label class="block text-sm font-bold text-gray-900 mb-4">Delivery Days</label>
-          <div class="grid grid-cols-7 gap-3">
-            <% DigestSchedule::DAYS_OF_WEEK.each do |day_name, day_num| %>
-              <label class="flex flex-col items-center gap-2 cursor-pointer group">
-                <%= f.check_box :days, { multiple: true, checked: @schedule.days&.include?(day_num), class: "sr-peer" }, day_num, nil %>
-                <div class="w-12 h-12 rounded-xl border-2 border-gray-200 flex items-center justify-center text-sm font-bold text-gray-500 peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 transition group-hover:border-gray-300">
-                  <%= day_name[0..2] %>
-                </div>
-              </label>
-            <% end %>
+    <%= form_with model: @schedule, url: admin_digest_schedule_path, method: :patch, id: "schedule-form", class: "space-y-6" do |f| %>
+      <!-- Schedule Card -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <!-- Enable Toggle Header -->
+        <div class="px-8 py-5 border-b border-gray-100 flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center">
+              <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+              <p class="font-bold text-gray-900">Active Schedule</p>
+              <p class="text-sm text-gray-500">Toggle to enable or pause digest delivery</p>
+            </div>
           </div>
-        </div>
-
-        <!-- Delivery Time -->
-        <div>
-          <label class="block text-sm font-bold text-gray-900 mb-2">Delivery Time</label>
-          <%= f.time_field :send_time, class: "w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm" %>
-        </div>
-
-        <!-- Active Toggle -->
-        <div class="flex items-center justify-between p-5 bg-gray-50 rounded-xl border border-gray-200">
-          <div>
-            <p class="font-bold text-gray-900">Enable Schedule</p>
-            <p class="text-sm text-gray-500">Toggle to activate or pause digest delivery</p>
-          </div>
-          <label class="relative inline-flex cursor-pointer">
-            <%= f.check_box :active, { class: "sr-peer" }, "true", "false" %>
-            <div class="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:bg-brand-500 transition after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-6 shadow-inner"></div>
+          <label class="toggle-switch">
+            <%= f.check_box :active, { class: "sr-only toggle-input", data: { controller: "toggle" } }, "true", "false" %>
+            <div class="toggle-track">
+              <div class="toggle-thumb"></div>
+            </div>
           </label>
         </div>
 
-        <!-- Submit -->
-        <div class="flex items-center gap-4">
-          <%= f.submit "Update Schedule", class: "px-8 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 cursor-pointer transition shadow-lg transform hover:-translate-y-0.5" %>
-          <span class="text-sm text-gray-500">
+        <div class="p-8 space-y-8">
+          <!-- Delivery Days -->
+          <div>
+            <label class="block text-sm font-bold text-gray-900 mb-4">Delivery Days</label>
+            <div class="grid grid-cols-7 gap-3">
+              <% DigestSchedule::DAYS_OF_WEEK.each do |day_name, day_num| %>
+                <label class="day-selector cursor-pointer">
+                  <%= f.check_box :days, { multiple: true, checked: @schedule.days&.include?(day_num), class: "sr-only day-input" }, day_num, nil %>
+                  <div class="day-box">
+                    <span class="day-label"><%= day_name[0..2] %></span>
+                    <span class="day-full hidden"><%= day_name %></span>
+                    <svg class="day-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">Select the days you want digests delivered</p>
+          </div>
+
+          <!-- Delivery Time -->
+          <div>
+            <label class="block text-sm font-bold text-gray-900 mb-4">Delivery Time</label>
+            <div class="relative max-w-xs" data-controller="flatpickr">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <%= f.time_field :send_time, {
+                value: @schedule.send_time&.strftime("%H:%M") || "08:00",
+                class: "w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm font-medium text-gray-900",
+                data: {
+                  flatpickr_target: "input",
+                  enable_time: true,
+                  no_24hr: false,
+                  time_24hr: true,
+                  dateFormat: "H:i",
+                  default_hour: 8,
+                  default_minute: 0
+                }
+              } %>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">Time in 24-hour format (EAT)</p>
+          </div>
+
+          <!-- Generation Day -->
+          <div>
+            <label class="block text-sm font-bold text-gray-900 mb-4">Digest Generation</label>
+            <p class="text-sm text-gray-600 mb-4">Choose when digests are generated before delivery. This gives time to review and moderate content.</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <% DigestSchedule::GENERATION_DAY_OPTIONS.each do |label, value| %>
+                <label class="cursor-pointer">
+                  <%= f.radio_button :generation_day, value, { checked: @schedule.generation_day == value, class: "sr-only generation-input" } %>
+                  <div class="generation-box p-4 rounded-xl border-2 border-gray-200 text-center transition-all cursor-pointer hover:border-brand-300">
+                    <span class="text-sm font-semibold text-gray-700"><%= label %></span>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">Digests will be generated on this day and held for moderation before sending.</p>
+          </div>
+
+          <!-- Schedule Summary -->
+          <div class="bg-gray-50 rounded-xl p-5 border border-gray-200">
+            <div class="flex items-center gap-3 mb-3">
+              <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <span class="text-sm font-bold text-gray-900">Schedule Summary</span>
+            </div>
+            <div id="schedule-summary" class="text-sm text-gray-600">
+              <% if @schedule.days.present? && @schedule.send_time.present? %>
+                Delivering on <strong><%= @schedule.days.map { |d| DigestSchedule::DAYS_OF_WEEK.key(d) }.compact.join(", ") %></strong> at <strong><%= @schedule.send_time.strftime("%H:%M") %></strong> EAT
+              <% else %>
+                No schedule configured yet
+              <% end %>
+            </div>
             <% if @schedule.cron_expression.present? %>
-              Cron: <code class="text-gray-700 bg-gray-100 px-2 py-1 rounded"><%= @schedule.cron_expression %></code>
+              <div class="mt-2 text-xs text-gray-400">
+                Cron: <code class="bg-gray-100 px-2 py-0.5 rounded"><%= @schedule.cron_expression %></code>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="px-8 py-5 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+          <button type="button" onclick="document.getElementById('schedule-form').requestSubmit()" class="px-8 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition shadow-lg cursor-pointer transform hover:-translate-y-0.5 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Save Schedule
+          </button>
+          <span class="text-xs text-gray-400">
+            <% if @schedule.active? %>
+              <span class="inline-flex items-center gap-1 text-brand-600 font-semibold">
+                <span class="w-2 h-2 bg-brand-500 rounded-full animate-pulse"></span>
+                Schedule Active
+              </span>
             <% else %>
-              No active schedule
+              <span class="inline-flex items-center gap-1 text-gray-400">
+                <span class="w-2 h-2 bg-gray-300 rounded-full"></span>
+                Schedule Paused
+              </span>
             <% end %>
           </span>
         </div>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
 
     <!-- How It Works -->
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-      <h3 class="text-lg font-bold text-gray-900 mb-4">How It Works</h3>
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mt-8">
+      <h3 class="text-lg font-bold text-gray-900 mb-6">How It Works</h3>
       <div class="grid md:grid-cols-2 gap-4">
         <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
           <div class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
             <span class="text-brand-700 font-bold text-sm">1</span>
           </div>
-          <p class="text-sm text-gray-600">Each scheduled run queries the LLM once per unique topic across all subscribers.</p>
+          <p class="text-sm text-gray-600">Digests are generated on the configured generation day using the LLM.</p>
         </div>
         <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
-          <div class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <span class="text-brand-700 font-bold text-sm">2</span>
+          <div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-amber-700 font-bold text-sm">2</span>
           </div>
-          <p class="text-sm text-gray-600">Results are cached per topic for the current week to avoid redundant API calls.</p>
+          <p class="text-sm text-gray-600"><strong>Moderation:</strong> Admins and moderators review, edit, approve, or reject digests before sending.</p>
         </div>
         <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
-          <div class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <span class="text-brand-700 font-bold text-sm">3</span>
+          <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-green-700 font-bold text-sm">3</span>
           </div>
-          <p class="text-sm text-gray-600">Each subscriber receives a compiled email combining their chosen topics.</p>
+          <p class="text-sm text-gray-600">Only approved digests are sent to subscribers on the scheduled delivery days.</p>
         </div>
         <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
           <div class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -102,3 +180,155 @@
     </div>
   </div>
 </div>
+
+<style>
+  /* Toggle Switch */
+  .toggle-track {
+    width: 52px;
+    height: 28px;
+    background-color: #d1d5db;
+    border-radius: 9999px;
+    position: relative;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .toggle-thumb {
+    width: 22px;
+    height: 22px;
+    background-color: white;
+    border-radius: 9999px;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .toggle-input:checked + .toggle-track {
+    background-color: #16a34a;
+  }
+  .toggle-input:checked + .toggle-track .toggle-thumb {
+    transform: translateX(24px);
+  }
+
+  /* Day Selector */
+  .day-box {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+  }
+  .day-box:hover {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+  }
+  .day-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #6b7280;
+    transition: color 0.2s;
+  }
+  .day-check {
+    width: 16px;
+    height: 16px;
+    color: #16a34a;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+  .day-input:checked + .day-box {
+    border-color: #16a34a;
+    background-color: #f0fdf4;
+  }
+  .day-input:checked + .day-box .day-label {
+    color: #15803d;
+  }
+  .day-input:checked + .day-box .day-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Flatpickr Override */
+  .flatpickr-input {
+    cursor: pointer;
+  }
+
+  /* Generation Day Selector */
+  .generation-box {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .generation-input:checked + .generation-box {
+    border-color: #16a34a;
+    background-color: #f0fdf4;
+  }
+  .generation-input:checked + .generation-box span {
+    color: #15803d;
+  }
+  .generation-box:hover {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+  }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    flatpickr("[data-flatpickr-target='input']", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
+      defaultHour: <%= @schedule.send_time&.hour || 8 %>,
+      defaultMinute: <%= @schedule.send_time&.min || 0 %>,
+      onChange: function(selectedDates, dateStr) {
+        updateSummary();
+      }
+    });
+
+    // Update summary on day toggle
+    document.querySelectorAll('.day-input').forEach(function(input) {
+      input.addEventListener('change', updateSummary);
+    });
+
+    // Update summary on generation day change
+    document.querySelectorAll('.generation-input').forEach(function(input) {
+      input.addEventListener('change', updateSummary);
+    });
+
+    function updateSummary() {
+      var days = [];
+      document.querySelectorAll('.day-input:checked').forEach(function(input) {
+        var label = input.nextElementSibling.querySelector('.day-label');
+        if (label) days.push(label.textContent);
+      });
+      var timeInput = document.querySelector('[data-flatpickr-target="input"]');
+      var time = timeInput ? timeInput.value : '';
+      var genInput = document.querySelector('.generation-input:checked');
+      var genLabel = genInput ? genInput.nextElementSibling.querySelector('span').textContent : '';
+      var summary = document.getElementById('schedule-summary');
+      var html = '';
+      if (days.length > 0 && time) {
+        html = 'Delivering on <strong>' + days.join(', ') + '</strong> at <strong>' + time + '</strong> EAT';
+      } else if (days.length > 0) {
+        html = 'Delivering on <strong>' + days.join(', ') + '</strong> at <strong>08:00</strong> EAT';
+      } else {
+        html = 'No schedule configured yet';
+      }
+      if (genLabel) {
+        html += '<br>Generating digests: <strong>' + genLabel + '</strong>';
+      }
+      summary.innerHTML = html;
+    }
+  });
+</script>

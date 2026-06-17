@@ -10,6 +10,7 @@
         <div class="flex items-center gap-6">
           <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-semibold text-brand-600" %>
           <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Digests", admin_digests_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
           <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
           <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
         </div>
@@ -21,23 +22,54 @@
     <h1 class="text-3xl font-black text-gray-900 mb-8">Performance Dashboard</h1>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-10">
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <p class="text-sm font-medium text-gray-500 mb-1">Monitored Profiles</p>
+        <p class="text-sm font-medium text-gray-500 mb-1">Total Users</p>
         <p class="text-3xl font-black text-brand-600"><%= @total_users %></p>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <p class="text-sm font-medium text-gray-500 mb-1">Dispatched Summaries</p>
+        <p class="text-sm font-medium text-gray-500 mb-1">Emails Sent</p>
         <p class="text-3xl font-black text-brand-600"><%= @sent_count %></p>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <p class="text-sm font-medium text-gray-500 mb-1">Opened Summaries</p>
+        <p class="text-sm font-medium text-gray-500 mb-1">Emails Opened</p>
         <p class="text-3xl font-black text-brand-600"><%= @opened_count %></p>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <p class="text-sm font-medium text-gray-500 mb-1">Total Clicks</p>
         <p class="text-3xl font-black text-brand-600"><%= @clicked_count %></p>
       </div>
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <p class="text-sm font-medium text-gray-500 mb-1">Open Rate</p>
+        <p class="text-3xl font-black text-brand-600"><%= @open_rate %>%</p>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid md:grid-cols-2 gap-8 mb-8">
+      <!-- Weekly Open Rate Chart -->
+      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+        <h3 class="text-lg font-bold text-gray-900 mb-6">Weekly Open Rate</h3>
+        <div id="weeklyChart" class="w-full" style="height: 280px;"></div>
+      </div>
+
+      <!-- Monthly Open Rate Chart -->
+      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+        <h3 class="text-lg font-bold text-gray-900 mb-6">Monthly Open Rate</h3>
+        <div id="monthlyChart" class="w-full" style="height: 280px;"></div>
+      </div>
+    </div>
+
+    <!-- Digest Performance Over Time -->
+    <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 mb-8">
+      <h3 class="text-lg font-bold text-gray-900 mb-6">Digest Performance Over Time</h3>
+      <div id="performanceChart" class="w-full" style="height: 320px;"></div>
+    </div>
+
+    <!-- Topic Open Rate Chart -->
+    <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 mb-8">
+      <h3 class="text-lg font-bold text-gray-900 mb-6">Open Rate by Topic</h3>
+      <div id="topicChart" class="w-full" style="height: 400px;"></div>
     </div>
 
     <!-- Analytics Grid -->
@@ -53,7 +85,7 @@
                 <span class="text-gray-500"><%= count %> subscribers</span>
               </div>
               <div class="w-full bg-gray-100 rounded-full h-2">
-                <div class="bg-brand-500 h-2 rounded-full" style="width: <%= (count.to_f / @total_users * 100).round %>%"></div>
+                <div class="bg-brand-500 h-2 rounded-full" style="width: <%= (count.to_f / [@total_users, 1].max * 100).round %>%"></div>
               </div>
             </div>
           <% end %>
@@ -66,18 +98,27 @@
           <h3 class="text-lg font-bold text-gray-900">Weekly Digest Performance</h3>
           <%= link_to "Manage Schedule", admin_digest_schedule_path, class: "text-sm font-semibold text-brand-600 hover:text-brand-700" %>
         </div>
-        <% if @digest_stats.present? %>
+        <% if @digest_page.present? %>
           <div class="space-y-3">
-            <% @digest_stats.each do |stat| %>
+            <% @digest_page.each do |stat| %>
               <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                 <div>
                   <p class="font-semibold text-gray-900"><%= stat[:topic_name] %></p>
                   <p class="text-sm text-gray-500"><%= stat[:users_reached] %> users reached</p>
                 </div>
-                <span class="text-sm text-gray-400"><%= stat[:generated_at].strftime("%b %d") %></span>
+                <div class="text-right">
+                  <span class="text-sm font-bold text-brand-600"><%= stat[:open_rate] %>%</span>
+                  <p class="text-xs text-gray-400"><%= stat[:generated_at].strftime("%b %d") %></p>
+                </div>
               </div>
             <% end %>
           </div>
+          <!-- Pagination -->
+          <% if @digest_stats.size > 5 %>
+            <div class="mt-6 flex justify-center">
+              <%== pagy_nav(@pagy_digests) %>
+            </div>
+          <% end %>
         <% else %>
           <div class="text-center py-8">
             <p class="text-gray-500">No digests generated this week</p>
@@ -88,3 +129,400 @@
     </div>
   </div>
 </div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+function renderCharts() {
+  if (typeof d3 === 'undefined') { setTimeout(renderCharts, 50); return; }
+  const brandColor = '#16a34a';
+  const brandLight = '#22c55e';
+  const brandDark = '#15803d';
+  const accentColor = '#f59e0b';
+  const gray100 = '#f3f4f6';
+  const gray200 = '#e5e7eb';
+  const gray300 = '#d1d5db';
+  const gray500 = '#6b7280';
+  const gray700 = '#374151';
+  const gray900 = '#111827';
+
+  // ============ WEEKLY LINE CHART ============
+  (function() {
+    const rawData = <%= raw @weekly_open_data.to_json %>;
+    const data = Object.entries(rawData).map(([key, val]) => ({ label: key, ...val }));
+
+    const container = document.getElementById('weeklyChart');
+    const width = container.clientWidth;
+    const height = 280;
+    const margin = { top: 20, right: 20, bottom: 40, left: 50 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+
+    const svg = d3.select('#weeklyChart').append('svg')
+      .attr('width', width).attr('height', height);
+
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scalePoint().domain(data.map(d => d.label)).range([0, innerW]).padding(0.5);
+    const y = d3.scaleLinear().domain([0, 100]).range([innerH, 0]);
+
+    // Grid lines
+    g.selectAll('.grid-line')
+      .data([20, 40, 60, 80, 100])
+      .join('line')
+      .attr('class', 'grid-line')
+      .attr('x1', 0).attr('x2', innerW)
+      .attr('y1', d => y(d)).attr('y2', d => y(d))
+      .attr('stroke', gray200).attr('stroke-dasharray', '3,3');
+
+    // Area
+    const area = d3.area()
+      .x(d => x(d.label))
+      .y0(innerH)
+      .y1(d => y(d.rate))
+      .curve(d3.curveMonotoneX);
+
+    g.append('path')
+      .datum(data)
+      .attr('fill', 'rgba(22,163,74,0.08)')
+      .attr('d', area);
+
+    // Line
+    const line = d3.line()
+      .x(d => x(d.label))
+      .y(d => y(d.rate))
+      .curve(d3.curveMonotoneX);
+
+    g.append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', brandColor)
+      .attr('stroke-width', 3)
+      .attr('stroke-linecap', 'round')
+      .attr('d', line);
+
+    // Dots
+    g.selectAll('.dot')
+      .data(data)
+      .join('circle')
+      .attr('cx', d => x(d.label))
+      .attr('cy', d => y(d.rate))
+      .attr('r', 5)
+      .attr('fill', '#fff')
+      .attr('stroke', brandColor)
+      .attr('stroke-width', 2.5);
+
+    // Tooltip
+    const tooltip = d3.select('#weeklyChart').append('div')
+      .style('position', 'absolute').style('background', gray900).style('color', '#fff')
+      .style('padding', '8px 12px').style('border-radius', '8px').style('font-size', '12px')
+      .style('pointer-events', 'none').style('opacity', 0).style('z-index', 10);
+
+    g.selectAll('.hitarea')
+      .data(data)
+      .join('circle')
+      .attr('cx', d => x(d.label))
+      .attr('cy', d => y(d.rate))
+      .attr('r', 16)
+      .attr('fill', 'transparent')
+      .on('mouseenter', (event, d) => {
+        tooltip.html(`<strong>${d.label}</strong><br>Sent: ${d.sent}<br>Opened: ${d.opened}<br>Rate: ${d.rate}%`)
+          .style('left', (event.offsetX + 12) + 'px')
+          .style('top', (event.offsetY - 10) + 'px')
+          .style('opacity', 1);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    // Axes
+    g.append('g').attr('transform', `translate(0,${innerH})`)
+      .call(d3.axisBottom(x).tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '11px');
+    g.append('g')
+      .call(d3.axisLeft(y).ticks(5).tickFormat(d => d + '%').tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '11px');
+    g.selectAll('.domain').remove();
+  })();
+
+  // ============ MONTHLY BAR CHART ============
+  (function() {
+    const rawData = <%= raw @monthly_open_data.to_json %>;
+    const data = Object.entries(rawData).map(([key, val]) => ({ label: key, ...val }));
+
+    const container = document.getElementById('monthlyChart');
+    const width = container.clientWidth;
+    const height = 280;
+    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+
+    const svg = d3.select('#monthlyChart').append('svg')
+      .attr('width', width).attr('height', height);
+
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand().domain(data.map(d => d.label)).range([0, innerW]).padding(0.3);
+    const y = d3.scaleLinear().domain([0, 100]).range([innerH, 0]);
+
+    // Grid lines
+    g.selectAll('.grid-line')
+      .data([20, 40, 60, 80, 100])
+      .join('line')
+      .attr('x1', 0).attr('x2', innerW)
+      .attr('y1', d => y(d)).attr('y2', d => y(d))
+      .attr('stroke', gray200).attr('stroke-dasharray', '3,3');
+
+    // Bars
+    g.selectAll('.bar')
+      .data(data)
+      .join('rect')
+      .attr('x', d => x(d.label))
+      .attr('y', d => y(d.rate))
+      .attr('width', x.bandwidth())
+      .attr('height', d => innerH - y(d.rate))
+      .attr('fill', brandColor)
+      .attr('rx', 4)
+      .attr('ry', 4);
+
+    // Tooltip
+    const tooltip = d3.select('#monthlyChart').append('div')
+      .style('position', 'absolute').style('background', gray900).style('color', '#fff')
+      .style('padding', '8px 12px').style('border-radius', '8px').style('font-size', '12px')
+      .style('pointer-events', 'none').style('opacity', 0).style('z-index', 10);
+
+    g.selectAll('.bar-hitarea')
+      .data(data)
+      .join('rect')
+      .attr('x', d => x(d.label))
+      .attr('y', 0)
+      .attr('width', x.bandwidth())
+      .attr('height', innerH)
+      .attr('fill', 'transparent')
+      .on('mouseenter', (event, d) => {
+        tooltip.html(`<strong>${d.label}</strong><br>Sent: ${d.sent}<br>Opened: ${d.opened}<br>Rate: ${d.rate}%`)
+          .style('left', (event.offsetX + 12) + 'px')
+          .style('top', (event.offsetY - 10) + 'px')
+          .style('opacity', 1);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    // Axes
+    g.append('g').attr('transform', `translate(0,${innerH})`)
+      .call(d3.axisBottom(x).tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '10px')
+      .attr('transform', 'rotate(-35)').attr('text-anchor', 'end');
+    g.append('g')
+      .call(d3.axisLeft(y).ticks(5).tickFormat(d => d + '%').tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '11px');
+    g.selectAll('.domain').remove();
+  })();
+
+  // ============ PERFORMANCE OVER TIME ============
+  (function() {
+    const data = <%= raw @digest_performance_data.to_json %>;
+
+    const container = document.getElementById('performanceChart');
+    const width = container.clientWidth;
+    const height = 320;
+    const margin = { top: 20, right: 60, bottom: 40, left: 50 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+
+    const svg = d3.select('#performanceChart').append('svg')
+      .attr('width', width).attr('height', height);
+
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scalePoint().domain(data.map(d => d.week)).range([0, innerW]).padding(0.5);
+    const y = d3.scaleLinear().domain([0, 100]).range([innerH, 0]);
+
+    // Grid
+    g.selectAll('.grid-line')
+      .data([20, 40, 60, 80, 100])
+      .join('line')
+      .attr('x1', 0).attr('x2', innerW)
+      .attr('y1', d => y(d)).attr('y2', d => y(d))
+      .attr('stroke', gray200).attr('stroke-dasharray', '3,3');
+
+    // Area under open rate
+    const area = d3.area()
+      .x(d => x(d.week))
+      .y0(innerH)
+      .y1(d => y(d.rate))
+      .curve(d3.curveMonotoneX);
+
+    g.append('path')
+      .datum(data)
+      .attr('fill', 'rgba(22,163,74,0.06)')
+      .attr('d', area);
+
+    // Open rate line
+    const line = d3.line()
+      .x(d => x(d.week))
+      .y(d => y(d.rate))
+      .curve(d3.curveMonotoneX);
+
+    g.append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', brandColor)
+      .attr('stroke-width', 3)
+      .attr('stroke-linecap', 'round')
+      .attr('d', line);
+
+    // Sent bars (thin, subtle)
+    const barWidth = Math.max(12, innerW / data.length * 0.3);
+    g.selectAll('.sent-bar')
+      .data(data)
+      .join('rect')
+      .attr('x', d => x(d.week) - barWidth / 2)
+      .attr('y', d => y(Math.min(d.sent / (d3.max(data, dd => dd.sent) || 1) * 100, 100)))
+      .attr('width', barWidth)
+      .attr('height', d => innerH - y(Math.min(d.sent / (d3.max(data, dd => dd.sent) || 1) * 100, 100)))
+      .attr('fill', 'rgba(245,158,11,0.25)')
+      .attr('rx', 3);
+
+    // Dots on rate line
+    g.selectAll('.dot')
+      .data(data)
+      .join('circle')
+      .attr('cx', d => x(d.week))
+      .attr('cy', d => y(d.rate))
+      .attr('r', 5)
+      .attr('fill', '#fff')
+      .attr('stroke', brandColor)
+      .attr('stroke-width', 2.5);
+
+    // Tooltip
+    const tooltip = d3.select('#performanceChart').append('div')
+      .style('position', 'absolute').style('background', gray900).style('color', '#fff')
+      .style('padding', '8px 12px').style('border-radius', '8px').style('font-size', '12px')
+      .style('pointer-events', 'none').style('opacity', 0).style('z-index', 10);
+
+    g.selectAll('.hitarea')
+      .data(data)
+      .join('circle')
+      .attr('cx', d => x(d.week))
+      .attr('cy', d => y(d.rate))
+      .attr('r', 16)
+      .attr('fill', 'transparent')
+      .on('mouseenter', (event, d) => {
+        tooltip.html(`<strong>Week of ${d.week}</strong><br>Digests: ${d.digests_count}<br>Sent: ${d.sent}<br>Opened: ${d.opened}<br>Rate: ${d.rate}%`)
+          .style('left', (event.offsetX + 12) + 'px')
+          .style('top', (event.offsetY - 10) + 'px')
+          .style('opacity', 1);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    // Legend
+    const legend = g.append('g').attr('transform', `translate(${innerW - 140}, 0)`);
+    legend.append('line').attr('x1', 0).attr('x2', 20).attr('y1', 0).attr('y2', 0).attr('stroke', brandColor).attr('stroke-width', 3);
+    legend.append('text').attr('x', 26).attr('y', 4).text('Open Rate').attr('fill', gray500).attr('font-size', '11px');
+    legend.append('rect').attr('x', 0).attr('y', 14).attr('width', 20).attr('height', 8).attr('fill', 'rgba(245,158,11,0.25)').attr('rx', 2);
+    legend.append('text').attr('x', 26).attr('y', 22).text('Sent Volume').attr('fill', gray500).attr('font-size', '11px');
+
+    // Axes
+    g.append('g').attr('transform', `translate(0,${innerH})`)
+      .call(d3.axisBottom(x).tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '11px');
+    g.append('g')
+      .call(d3.axisLeft(y).ticks(5).tickFormat(d => d + '%').tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '11px');
+    g.selectAll('.domain').remove();
+  })();
+
+  // ============ TOPIC HORIZONTAL BAR CHART ============
+  (function() {
+    const rawData = <%= raw @topic_open_data.to_json %>;
+    const entries = Object.entries(rawData).slice(0, 15);
+    const data = entries.map(([name, val]) => ({ name, ...val }));
+
+    const container = document.getElementById('topicChart');
+    const width = container.clientWidth;
+    const barHeight = 32;
+    const gap = 8;
+    const height = Math.max(300, data.length * (barHeight + gap) + 40);
+    const margin = { top: 10, right: 80, bottom: 20, left: 200 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+
+    container.style.height = height + 'px';
+
+    const svg = d3.select('#topicChart').append('svg')
+      .attr('width', width).attr('height', height);
+
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleLinear().domain([0, 100]).range([0, innerW]);
+    const y = d3.scaleBand().domain(data.map(d => d.name)).range([0, innerH]).padding(0.25);
+
+    // Grid
+    g.selectAll('.grid-line')
+      .data([20, 40, 60, 80, 100])
+      .join('line')
+      .attr('x1', d => x(d)).attr('x2', d => x(d))
+      .attr('y1', 0).attr('y2', innerH)
+      .attr('stroke', gray200).attr('stroke-dasharray', '3,3');
+
+    // Bars
+    g.selectAll('.bar')
+      .data(data)
+      .join('rect')
+      .attr('x', 0)
+      .attr('y', d => y(d.name))
+      .attr('width', d => x(d.rate))
+      .attr('height', y.bandwidth())
+      .attr('fill', brandColor)
+      .attr('rx', 4)
+      .attr('ry', 4);
+
+    // Labels (right of bar)
+    g.selectAll('.label')
+      .data(data)
+      .join('text')
+      .attr('x', d => x(d.rate) + 8)
+      .attr('y', d => y(d.name) + y.bandwidth() / 2)
+      .attr('dy', '0.35em')
+      .attr('fill', gray700)
+      .attr('font-size', '12px')
+      .attr('font-weight', '600')
+      .text(d => d.rate + '%');
+
+    // Y axis labels
+    g.selectAll('.y-label')
+      .data(data)
+      .join('text')
+      .attr('x', -10)
+      .attr('y', d => y(d.name) + y.bandwidth() / 2)
+      .attr('dy', '0.35em')
+      .attr('text-anchor', 'end')
+      .attr('fill', gray700)
+      .attr('font-size', '12px')
+      .text(d => d.name.length > 24 ? d.name.slice(0, 22) + '…' : d.name);
+
+    // Tooltip
+    const tooltip = d3.select('#topicChart').append('div')
+      .style('position', 'absolute').style('background', gray900).style('color', '#fff')
+      .style('padding', '8px 12px').style('border-radius', '8px').style('font-size', '12px')
+      .style('pointer-events', 'none').style('opacity', 0).style('z-index', 10);
+
+    g.selectAll('.bar-hitarea')
+      .data(data)
+      .join('rect')
+      .attr('x', 0)
+      .attr('y', d => y(d.name))
+      .attr('width', innerW)
+      .attr('height', y.bandwidth())
+      .attr('fill', 'transparent')
+      .on('mouseenter', (event, d) => {
+        tooltip.html(`<strong>${d.name}</strong><br>Sent: ${d.sent}<br>Opened: ${d.opened}<br>Rate: ${d.rate}%`)
+          .style('left', (event.offsetX + 12) + 'px')
+          .style('top', (event.offsetY - 10) + 'px')
+          .style('opacity', 1);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    g.selectAll('.domain').remove();
+    g.selectAll('.tick line').remove();
+  })();
+}
+document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', renderCharts) : renderCharts();
+</script>

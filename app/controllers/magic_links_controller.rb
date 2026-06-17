@@ -1,18 +1,25 @@
-# app/controllers/magic_links_controller.rb
+# frozen_string_literal: true
+
 class MagicLinksController < ApplicationController
+  skip_before_action :authenticate_user!, raise: false
+
   def new
     authorize :magic_link, :new?
   end
 
   def create
     authorize :magic_link, :create?
-    user = User.find_by(email: params[:email].strip.downcase)
-    if user && %w[active pending].include?(user.status)
+    user = User.find_by(email: params[:email]&.strip&.downcase)
+
+    if user.nil?
+      redirect_to new_user_session_path, alert: "No account found with that email. Please sign up first."
+    elsif user.status == "active" || user.status == "pending"
       token = user.generate_magic_link!
       UserMailer.magic_link(user, token).deliver_later
-      redirect_to root_path, notice: "Authentication link dispatched to your inbox."
+      Rails.logger.info "Magic link sent to #{user.email}"
+      redirect_to check_email_path, notice: "Authentication link dispatched to your inbox."
     else
-      redirect_to new_user_session_path, alert: "Account unavailable or disabled."
+      redirect_to new_user_session_path, alert: "Account is #{user.status}. Contact support."
     end
   end
 
@@ -26,7 +33,7 @@ class MagicLinksController < ApplicationController
       sign_in(user)
       redirect_to profile_path, notice: "Session established successfully."
     else
-      redirect_to new_user_session_path, alert: "Authentication token expired or corrupt."
+      redirect_to new_user_session_path, alert: "Authentication token expired or invalid."
     end
   end
 

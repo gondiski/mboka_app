@@ -21,10 +21,9 @@ class IntelligenceGatheringJob
       TopicDigest.create!(
         topic: topic,
         content: digest_content,
-        week_of: week_date
+        week_of: week_date,
+        status: :draft
       )
     end
-
-    DigestDeliveryJob.perform_async(week_of)
   end
 end

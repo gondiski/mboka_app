@@ -23,7 +23,9 @@ class Admin::DigestSchedulesController < ApplicationController
   private
 
   def schedule_params
-    params.require(:digest_schedule).permit(:send_time, :active, days: [])
+    params.require(:digest_schedule).permit(:send_time, :active, :generation_day, days: []).tap do |p|
+      p[:active] = ActiveModel::Type::Boolean.new.cast(p[:active]) if p.key?(:active)
+    end
   end
 
   def update_sidekiq_cron(schedule)

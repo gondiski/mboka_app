@@ -1,13 +1,20 @@
-Mboka Intelligence Digest
-Your personalized weekly insights for <%= Date.current.strftime('%B %d, %Y') %>
+Hi <%= @greeting %>,
+
+Your Weekly Intelligence Digest for <%= Date.current.strftime('%B %d, %Y') %>
 ================================================================
 
 <% @topic_digests.each do |digest| %>
 <%= digest.topic.name %>
 ----------------------------------------------------------------
+
 <%= strip_tags(digest.content) %>
+
+Read full digest: <%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>
 
 <% end %>
 
 ---
+Manage your preferences: <%= @preferences_url %>
+Unsubscribe: <%= @unsubscribe_url %>
+
 You received this digest because you're subscribed to these topics on Mboka.

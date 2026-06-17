@@ -158,6 +158,7 @@ GEM
       activesupport (>= 6.1)
     groupdate (6.7.0)
       activesupport (>= 7.1)
+    hashids (1.0.6)
     htmlentities (4.4.2)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
@@ -456,6 +457,7 @@ DEPENDENCIES
   dotenv-rails (~> 3.1)
   foreman (~> 0.90.0)
   groupdate (~> 6.4)
+  hashids (~> 1.0)
   importmap-rails
   jbuilder
   kamal

@@ -8,14 +8,17 @@ class DigestSchedulerJob
   def perform
     schedule = DigestSchedule.active_schedule
     return unless schedule
-    return unless schedule.should_send_today?(Date.current)
 
-    now = Time.current
-    send_time = schedule.send_time
+    today = Date.current
 
-    return unless now.hour == send_time.hour && now.min == send_time.min
+    if schedule.should_generate_today?(today)
+      week_of = today.beginning_of_week.to_s
+      IntelligenceGatheringJob.perform_async(week_of)
+    end
 
-    week_of = Date.current.beginning_of_week.to_s
-    IntelligenceGatheringJob.perform_async(week_of)
+    if schedule.should_send_today?(today)
+      week_of = today.beginning_of_week.to_s
+      DigestDeliveryJob.perform_async(week_of)
+    end
   end
 end

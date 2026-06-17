@@ -17,8 +17,50 @@ class DigestSchedule < ApplicationRecord
     "Saturday" => 6
   }.freeze
 
+  DAY_NAMES = {
+    0 => "SUN",
+    1 => "MON",
+    2 => "TUE",
+    3 => "WED",
+    4 => "THU",
+    5 => "FRI",
+    6 => "SAT"
+  }.freeze
+
+  GENERATION_DAY_OPTIONS = {
+    "Same day as delivery" => -1,
+    "1 day before" => 1,
+    "2 days before" => 2,
+    "3 days before" => 3,
+    "Sunday" => 0,
+    "Monday" => 1,
+    "Tuesday" => 2,
+    "Wednesday" => 3,
+    "Thursday" => 4,
+    "Friday" => 5,
+    "Saturday" => 6
+  }.freeze
+
   def should_send_today?(date = Date.current)
     days.include?(date.wday)
+  end
+
+  def should_generate_today?(date = Date.current)
+    return false unless active?
+
+    if generation_day == -1
+      should_send_today?(date)
+    else
+      days.any? do |send_day|
+        generate_day = (send_day - generation_day.abs) % 7
+        date.wday == generate_day
+      end
+    end
+  end
+
+  def generation_day_name
+    return "Same day as delivery" if generation_day == -1
+    DAYS_OF_WEEK.key(generation_day)
   end
 
   def cron_expression
@@ -29,6 +71,16 @@ class DigestSchedule < ApplicationRecord
     day_names = days.map { |d| DAY_NAMES[d] }.compact.join(",")
 
     "#{minute} #{hour} * * #{day_names}"
+  end
+
+  def generation_cron_expression
+    return nil if send_time.blank? || generation_day == -1
+
+    minute = send_time.min
+    hour = [send_time.hour - 2, 0].max
+    day_name = DAY_NAMES[generation_day]
+
+    "#{minute} #{hour} * * #{day_name}"
   end
 
   def days=(value)
@@ -43,14 +95,4 @@ class DigestSchedule < ApplicationRecord
       errors.add(:base, "Only one digest schedule is allowed")
     end
   end
-
-  DAY_NAMES = {
-    0 => "SUN",
-    1 => "MON",
-    2 => "TUE",
-    3 => "WED",
-    4 => "THU",
-    5 => "FRI",
-    6 => "SAT"
-  }.freeze
 end

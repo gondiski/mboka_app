@@ -47,3 +47,50 @@
 .pagy-nav .next.disabled a {
   @apply bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed;
 }
+
+/* Page Number Digit Animation */
+.digit-animate {
+  animation: digitFlip 0.3s ease-out;
+}
+
+@keyframes digitFlip {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  40% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Smooth page indicator transitions */
+[data-page-num] {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-page-num]:hover {
+  transform: scale(1.15);
+}
+
+[data-page-num]:active {
+  transform: scale(0.95);
+}
+
+/* Loading spinner pulse */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 1.5s ease-in-out infinite;
+}

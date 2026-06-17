@@ -5,7 +5,8 @@ class FavoritesController < ApplicationController
   skip_after_action :verify_authorized
 
   def toggle
-    digest = TopicDigest.find(params[:topic_digest_id])
+    digest_id = TopicDigest.decode_hashid(params[:topic_digest_id])
+    digest = TopicDigest.find(digest_id)
     favorite = current_user.favorites.find_by(topic_digest: digest)
 
     if favorite
@@ -19,7 +20,7 @@ class FavoritesController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
-          "favorite_#{digest.id}",
+          "favorite_#{digest.to_param}",
           partial: "favorites/star",
           locals: { digest: digest, favorited: favorited }
         )

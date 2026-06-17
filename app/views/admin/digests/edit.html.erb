@@ -1,0 +1,223 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
+          <span class="text-2xl font-bold text-gray-900">Mboka Admin</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Digests", admin_digests_path, class: "text-sm font-semibold text-brand-600" %>
+          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    <!-- Back Link -->
+    <div class="mb-6">
+      <%= link_to admin_digest_path(@topic_digest), class: "inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Digest
+      <% end %>
+    </div>
+
+    <h1 class="text-3xl font-black text-gray-900 mb-2">Edit Digest Content</h1>
+    <p class="text-gray-600 mb-8">Modify the content for <strong><%= @topic_digest.topic.name %></strong> — Week of <%= @topic_digest.week_of.strftime("%B %d, %Y") %></p>
+
+    <%= form_with model: @topic_digest, url: admin_digest_path(@topic_digest), method: :patch, data: { turbo: false }, class: "space-y-6" do |f| %>
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="px-8 py-5 border-b border-gray-100">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center">
+                <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              </div>
+              <div>
+                <p class="font-bold text-gray-900">Digest Content</p>
+                <p class="text-sm text-gray-500">Edit visually or switch to HTML source</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 bg-gray-100 rounded-xl p-1">
+              <button type="button" id="btn-visual" onclick="showEditor('visual')" class="px-4 py-2 text-sm font-semibold rounded-lg transition bg-white text-brand-600 shadow-sm">
+                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Visual
+              </button>
+              <button type="button" id="btn-source" onclick="showEditor('source')" class="px-4 py-2 text-sm font-semibold rounded-lg transition text-gray-500 hover:text-gray-700">
+                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                HTML Source
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-8">
+          <!-- Visual Editor (Quill) -->
+          <div id="editor-visual">
+            <div id="quill-editor" style="min-height: 350px;"></div>
+          </div>
+
+          <!-- Source Editor (textarea) -->
+          <div id="editor-source" style="display: none;">
+            <textarea id="html-source" name="topic_digest[content]" rows="20" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm font-mono" style="min-height: 350px;"><%= @topic_digest.content %></textarea>
+          </div>
+
+          <p class="text-xs text-gray-400 mt-4" id="editor-hint">Format text with the toolbar above. Switch to HTML Source for raw editing.</p>
+        </div>
+
+        <div class="px-8 py-5 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+          <%= link_to "Cancel", admin_digest_path(@topic_digest), class: "px-6 py-3 text-gray-600 font-semibold hover:text-gray-900 transition text-sm" %>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="previewDigest()" class="px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition text-sm cursor-pointer">
+              <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              Preview
+            </button>
+            <%= f.submit "Save Changes", class: "px-6 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition shadow-lg cursor-pointer transform hover:-translate-y-0.5" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closePreview()"></div>
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl relative z-10 overflow-hidden max-h-[85vh] flex flex-col">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h3 class="text-lg font-bold text-gray-900">Digest Preview</h3>
+          <button onclick="closePreview()" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div id="preview-content" class="p-8 overflow-y-auto prose prose-gray max-w-none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quill Editor CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+<style>
+  .ql-toolbar.ql-snow {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px 12px 0 0 !important;
+    background: #f9fafb;
+  }
+  .ql-container.ql-snow {
+    border: 2px solid #e5e7eb !important;
+    border-top: none !important;
+    border-radius: 0 0 12px 12px !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    color: #374151;
+  }
+  .ql-editor {
+    min-height: 350px;
+    line-height: 1.7;
+    padding: 20px 24px;
+  }
+  .ql-editor h3 { font-size: 18px; font-weight: 700; color: #111827; margin: 16px 0 8px; }
+  .ql-editor ul { list-style-type: disc; padding-left: 20px; margin: 8px 0; }
+  .ql-editor li { margin-bottom: 6px; }
+  .ql-editor p { margin-bottom: 12px; }
+  .ql-editor strong { font-weight: 700; color: #111827; }
+  .ql-snow .ql-stroke { stroke: #6b7280; }
+  .ql-snow .ql-fill { fill: #6b7280; }
+  .ql-snow .ql-picker { color: #6b7280; }
+  .ql-snow button:hover .ql-stroke { stroke: #16a34a; }
+  .ql-snow button:hover .ql-fill { fill: #16a34a; }
+  .ql-snow button.ql-active .ql-stroke { stroke: #16a34a; }
+  .ql-snow button.ql-active .ql-fill { fill: #16a34a; }
+</style>
+
+<script>
+  const initialContent = <%= raw @topic_digest.content.to_json %>;
+  let currentMode = 'visual';
+  let quill;
+
+  function initQuill() {
+    if (typeof Quill === 'undefined') {
+      setTimeout(initQuill, 50);
+      return;
+    }
+
+    quill = new Quill('#quill-editor', {
+      theme: 'snow',
+      placeholder: 'Start writing your digest content...',
+      modules: {
+        toolbar: [
+          [{ 'header': [3, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          ['link'],
+          ['clean']
+        ]
+      }
+    });
+
+    if (initialContent && initialContent.trim() !== '') {
+      quill.clipboard.dangerouslyPasteHTML(initialContent);
+    }
+
+    quill.on('text-change', function() {
+      if (currentMode === 'visual') {
+        document.getElementById('html-source').value = quill.root.innerHTML;
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initQuill);
+  } else {
+    initQuill();
+  }
+
+  function showEditor(mode) {
+    currentMode = mode;
+    const visualBtn = document.getElementById('btn-visual');
+    const sourceBtn = document.getElementById('btn-source');
+    const visualEditor = document.getElementById('editor-visual');
+    const sourceEditor = document.getElementById('editor-source');
+    const hint = document.getElementById('editor-hint');
+
+    if (mode === 'visual') {
+      const html = document.getElementById('html-source').value;
+      if (quill) {
+        quill.setText('');
+        if (html && html.trim() !== '') {
+          quill.clipboard.dangerouslyPasteHTML(html);
+        }
+      }
+      visualBtn.className = 'px-4 py-2 text-sm font-semibold rounded-lg transition bg-white text-brand-600 shadow-sm';
+      sourceBtn.className = 'px-4 py-2 text-sm font-semibold rounded-lg transition text-gray-500 hover:text-gray-700';
+      visualEditor.style.display = 'block';
+      sourceEditor.style.display = 'none';
+      hint.textContent = 'Format text with the toolbar above. Switch to HTML Source for raw editing.';
+    } else {
+      if (quill) {
+        document.getElementById('html-source').value = quill.root.innerHTML;
+      }
+      sourceBtn.className = 'px-4 py-2 text-sm font-semibold rounded-lg transition bg-white text-brand-600 shadow-sm';
+      visualBtn.className = 'px-4 py-2 text-sm font-semibold rounded-lg transition text-gray-500 hover:text-gray-700';
+      sourceEditor.style.display = 'block';
+      visualEditor.style.display = 'none';
+      hint.textContent = 'Edit raw HTML directly. Switch back to Visual for WYSIWYG editing.';
+    }
+  }
+
+  function previewDigest() {
+    const content = document.getElementById('html-source').value;
+    document.getElementById('preview-content').innerHTML = content;
+    document.getElementById('preview-modal').classList.remove('hidden');
+  }
+
+  function closePreview() {
+    document.getElementById('preview-modal').classList.add('hidden');
+  }
+</script>

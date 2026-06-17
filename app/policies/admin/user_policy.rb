@@ -5,6 +5,10 @@ class Admin::UserPolicy < ApplicationPolicy
     admin? || moderator?
   end
 
+  def show?
+    admin? || moderator?
+  end
+
   def update_status?
     admin?
   end

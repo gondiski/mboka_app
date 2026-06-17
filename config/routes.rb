@@ -15,6 +15,11 @@ Rails.application.routes.draw do
   resources :subscribers, only: [ :create ]
   get "check_email", to: "magic_links#check_email", as: :check_email
 
+  # Email Preferences (token-based, unauthenticated)
+  get "email_preferences/:token", to: "email_preferences#show", as: :email_preferences
+  patch "email_preferences/:token", to: "email_preferences#update"
+  get "unsubscribe/:token", to: "email_preferences#unsubscribe", as: :unsubscribe_email
+
   # Structural Core Views
   get "about",   to: "pages#about",   as: :about
   get "privacy", to: "pages#privacy", as: :privacy
@@ -22,20 +27,34 @@ Rails.application.routes.draw do
 
   # Subscriber Profiles Panel
   resource :profile, only: [ :show, :update ]
+  resources :topic_digests, only: [ :show ], path: "digests"
   post "favorites/toggle/:topic_digest_id", to: "favorites#toggle", as: :toggle_favorite
 
   # Administration Zone Control Arrays
   namespace :admin do
     resource :dashboard, only: [ :show ]
     resource :digest_schedule, only: [ :show, :update ]
-    resources :users, only: [ :index ] do
+    resources :digests, only: [ :index, :show, :edit, :update ] do
+      member do
+        patch :approve
+        patch :reject
+        patch :reset_to_draft
+      end
+      collection do
+        patch :bulk_approve
+      end
+    end
+    resources :users, only: [ :index, :show ] do
       member do
         patch :update_status
+        patch :update_role
       end
       collection do
         post :import
         post :invite
+        get :download_template
       end
     end
+    resources :invitations, only: [ :create ]
   end
 end

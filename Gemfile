@@ -86,3 +86,5 @@ gem "pagy", "~> 9.0"
 # Date grouping for queries
 gem "groupdate", "~> 6.4"
 gem "ahoy_email", "~> 2.0"
+
+gem "hashids", "~> 1.0"

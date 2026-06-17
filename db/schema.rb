@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_16_120721) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_17_120002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -41,6 +41,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_16_120721) do
     t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "generation_day", default: 0, null: false
   end
 
   create_table "favorites", force: :cascade do |t|
@@ -70,6 +71,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_16_120721) do
     t.date "week_of", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "moderated_at"
+    t.bigint "moderated_by"
+    t.text "rejection_reason"
+    t.index ["status"], name: "index_topic_digests_on_status"
     t.index ["topic_id", "week_of"], name: "index_topic_digests_on_topic_id_and_week_of", unique: true
     t.index ["topic_id"], name: "index_topic_digests_on_topic_id"
   end
@@ -102,8 +108,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_16_120721) do
     t.string "status"
     t.string "magic_link_token"
     t.datetime "magic_link_expires_at"
+    t.string "unsubscribe_token"
+    t.boolean "subscribed", default: true, null: false
+    t.datetime "unsubscribed_at"
+    t.string "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer "invitation_accepted_count", default: 0
+    t.integer "invited_by_id"
+    t.string "invited_by_type"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
+    t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["unsubscribe_token"], name: "index_users_on_unsubscribe_token", unique: true
   end
 
   create_table "users_roles", id: false, force: :cascade do |t|
@@ -117,6 +137,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_16_120721) do
   add_foreign_key "favorites", "topic_digests"
   add_foreign_key "favorites", "users"
   add_foreign_key "topic_digests", "topics"
+  add_foreign_key "topic_digests", "users", column: "moderated_by"
   add_foreign_key "user_topics", "topics"
   add_foreign_key "user_topics", "users"
 end

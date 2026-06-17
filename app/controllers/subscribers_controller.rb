@@ -16,7 +16,11 @@ class SubscribersController < ApplicationController
     end
 
     if @user.save
-      @user.topic_ids = subscriber_params[:topic_ids] || []
+      if subscriber_params[:topic_ids].present?
+        @user.topic_ids = subscriber_params[:topic_ids]
+      else
+        DesignationTopicMatcher.assign_to_user(@user)
+      end
       @user.add_role(:subscriber) if @user.roles.blank?
 
       token = @user.generate_magic_link!
