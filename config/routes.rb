@@ -1,5 +1,18 @@
 # config/routes.rb
+require "sidekiq/web"
+
+class AdminConstraint
+  def matches?(request)
+    warden = request.env["warden"]
+    return false unless warden&.user
+    warden.user.has_role?(:admin)
+  end
+end
+
 Rails.application.routes.draw do
+  # Sidekiq Web UI - admin only
+  mount Sidekiq::Web => "/admin/sidekiq", constraints: AdminConstraint.new
+
   devise_for :users, skip: [ :sessions, :registrations ]
 
   # Passwordless Authentication Interface

@@ -25,20 +25,27 @@ topics.each { |name| Topic.find_or_create_by!(name: name) }
 puts "Created #{Topic.count} topics."
 
 # Admin
-admin = User.find_or_create_by!(email: "admin@thoth.africa") do |u|
-  u.full_name = "Admin"
-  u.designation = "Platform Admin"
-  u.status = "active"
-  u.password = "password123"
-  u.password_confirmation = "password123"
+admins_data = [
+  { full_name: "Eugene", email: "eugene@dnrstudios.co.ke", designation: "Platform Admin" },
+  { full_name: "Enoch", email: "enoch@thoth.africa", designation: "Platform Admin" },
+  { full_name: "Digital", email: "digital@dnrstudios.co.ke", designation: "Platform Admin" }
+]
+
+admins_data.each do |attrs|
+  user = User.find_or_create_by!(email: attrs[:email]) do |u|
+    u.full_name = attrs[:full_name]
+    u.designation = attrs[:designation]
+    u.status = "active"
+    u.password = "password123"
+    u.password_confirmation = "password123"
+  end
+  user.add_role(:admin) unless user.has_role?(:admin)
+  puts "Admin: #{user.email}"
 end
-admin.add_role(:admin) unless admin.has_role?(:admin)
-puts "Admin: #{admin.email}"
 
 # Moderators
 moderators_data = [
-  { full_name: "Faith Wanjiku", email: "faith@mboka.dnrstudios.co.ke", designation: "Community Manager" },
-  { full_name: "Brian Ochieng", email: "brian@mboka.dnrstudios.co.ke", designation: "Program Coordinator" }
+  { full_name: "David Kiirya", email: "david.kiirya@dnrstudios.co.ke", designation: "Community Manager" }
 ]
 
 moderators_data.each do |attrs|
@@ -288,8 +295,9 @@ puts "Digests: #{TopicDigest.count}"
 puts "Favorites: #{Favorite.count}"
 puts ""
 puts "=== Login Credentials ==="
-puts "Admin:     admin@thoth.africa / password123"
-puts "Moderator: faith@mboka.dnrstudios.co.ke / password123"
-puts "Moderator: brian@mboka.dnrstudios.co.ke / password123"
+puts "Admin:     eugene@dnrstudios.co.ke / password123"
+puts "Admin:     enoch@thoth.africa / password123"
+puts "Admin:     digital@dnrstudios.co.ke / password123"
+puts "Moderator: david.kiirya@dnrstudios.co.ke / password123"
 puts "Subscriber: wanjiru@example.com / password123"
 puts "========================="
