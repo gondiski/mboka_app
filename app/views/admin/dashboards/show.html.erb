@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-50">
   <!-- Navigation -->
-  <nav class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <div class="flex items-center space-x-2">
@@ -8,11 +8,12 @@
           <span class="text-2xl font-bold text-gray-900">Mboka Admin</span>
         </div>
         <div class="flex items-center gap-6">
-          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-semibold text-brand-600" %>
-          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
-          <%= link_to "Digests", admin_digests_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
-          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
-          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-semibold text-brand-600 nav-link" %>
+          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Digests", admin_digests_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Reports", admin_reports_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
         </div>
       </div>
     </div>
@@ -49,62 +50,61 @@
     <div class="grid md:grid-cols-2 gap-8 mb-8">
       <!-- Weekly Open Rate Chart -->
       <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-        <h3 class="text-lg font-bold text-gray-900 mb-6">Weekly Open Rate</h3>
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-bold text-gray-900">Weekly Open Rate</h3>
+          <%= link_to "Full Reports", admin_reports_path, class: "text-sm font-semibold text-brand-600 hover:text-brand-700 transition" %>
+        </div>
         <div id="weeklyChart" class="w-full" style="height: 280px;"></div>
       </div>
 
       <!-- Monthly Open Rate Chart -->
       <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-        <h3 class="text-lg font-bold text-gray-900 mb-6">Monthly Open Rate</h3>
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-bold text-gray-900">Monthly Open Rate</h3>
+        </div>
         <div id="monthlyChart" class="w-full" style="height: 280px;"></div>
       </div>
     </div>
 
     <!-- Digest Performance Over Time -->
     <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 mb-8">
-      <h3 class="text-lg font-bold text-gray-900 mb-6">Digest Performance Over Time</h3>
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-bold text-gray-900">Digest Performance Over Time</h3>
+        <%= link_to "Full Reports", admin_reports_path, class: "text-sm font-semibold text-brand-600 hover:text-brand-700 transition" %>
+      </div>
       <div id="performanceChart" class="w-full" style="height: 320px;"></div>
-    </div>
-
-    <!-- Topic Open Rate Chart -->
-    <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 mb-8">
-      <h3 class="text-lg font-bold text-gray-900 mb-6">Open Rate by Topic</h3>
-      <div id="topicChart" class="w-full" style="height: 400px;"></div>
     </div>
 
     <!-- Analytics Grid -->
     <div class="grid md:grid-cols-2 gap-8">
-      <!-- Topic Distribution -->
-      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-        <h3 class="text-lg font-bold text-gray-900 mb-6">Topic Distribution</h3>
-        <div class="space-y-4">
-          <% @common_topics.each do |name, count| %>
-            <div>
-              <div class="flex justify-between text-sm mb-2">
-                <span class="font-medium text-gray-700"><%= name %></span>
-                <span class="text-gray-500"><%= count %> subscribers</span>
-              </div>
-              <div class="w-full bg-gray-100 rounded-full h-2">
-                <div class="bg-brand-500 h-2 rounded-full" style="width: <%= (count.to_f / [@total_users, 1].max * 100).round %>%"></div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      </div>
-
-      <!-- Weekly Digest Performance -->
+      <!-- Top 10 Topics by Open Rate -->
       <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
         <div class="flex justify-between items-center mb-6">
-          <h3 class="text-lg font-bold text-gray-900">Weekly Digest Performance</h3>
-          <%= link_to "Manage Schedule", admin_digest_schedule_path, class: "text-sm font-semibold text-brand-600 hover:text-brand-700" %>
+          <h3 class="text-lg font-bold text-gray-900">Top 10 Topics by Open Rate</h3>
+          <%= link_to "Full Reports", admin_reports_path, class: "text-sm font-semibold text-brand-600 hover:text-brand-700 transition" %>
+        </div>
+        <div id="topicChart" class="w-full" style="height: 400px;"></div>
+      </div>
+
+      <!-- Top 5 Weekly Digest Performance -->
+      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-bold text-gray-900">Top 5 Weekly Digests</h3>
+          <%= link_to "Manage Schedule", admin_digest_schedule_path, class: "text-sm font-semibold text-brand-600 hover:text-brand-700 transition" %>
         </div>
         <% if @digest_page.present? %>
           <div class="space-y-3">
-            <% @digest_page.each do |stat| %>
+            <% @digest_page.each_with_index do |stat, idx| %>
               <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                <div>
-                  <p class="font-semibold text-gray-900"><%= stat[:topic_name] %></p>
-                  <p class="text-sm text-gray-500"><%= stat[:users_reached] %> users reached</p>
+                <div class="flex items-center gap-3">
+                  <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                    <%= idx == 0 ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-gray-500' %>">
+                    <%= idx + 1 %>
+                  </span>
+                  <div>
+                    <p class="font-semibold text-gray-900"><%= stat[:topic_name] %></p>
+                    <p class="text-sm text-gray-500"><%= stat[:users_reached] %> users reached</p>
+                  </div>
                 </div>
                 <div class="text-right">
                   <span class="text-sm font-bold text-brand-600"><%= stat[:open_rate] %>%</span>
@@ -113,12 +113,6 @@
               </div>
             <% end %>
           </div>
-          <!-- Pagination -->
-          <% if @digest_stats.size > 5 %>
-            <div class="mt-6 flex justify-center">
-              <%== pagy_nav(@pagy_digests) %>
-            </div>
-          <% end %>
         <% else %>
           <div class="text-center py-8">
             <p class="text-gray-500">No digests generated this week</p>
@@ -432,7 +426,7 @@ function renderCharts() {
   // ============ TOPIC HORIZONTAL BAR CHART ============
   (function() {
     const rawData = <%= raw @topic_open_data.to_json %>;
-    const entries = Object.entries(rawData).slice(0, 15);
+    const entries = Object.entries(rawData).slice(0, 10);
     const data = entries.map(([name, val]) => ({ name, ...val }));
 
     const container = document.getElementById('topicChart');

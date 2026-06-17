@@ -9,19 +9,13 @@ class Admin::DashboardsController < ApplicationController
     @total_topics = Topic.count
     @sent_count    = Ahoy::Message.count
     @opened_count  = Ahoy::Message.where.not(opened_at: nil).count
-    @clicked_count = Ahoy::Click.count
+    @clicked_count = Ahoy::Message.where.not(clicked_at: nil).count
     @open_rate = @sent_count > 0 ? (@opened_count.to_f / @sent_count * 100).round(1) : 0
-
-    @common_topics = Topic.joins(:user_topics)
-                          .group("topics.name")
-                          .order("count(user_topics.id) DESC")
-                          .limit(5)
-                          .count
 
     # Paginated digest stats
     @current_week_digests = TopicDigest.current_week.includes(:topic)
     @digest_stats = build_digest_stats
-    @pagy_digests, @digest_page = pagy_array(@digest_stats, items: 5)
+    @digest_page = @digest_stats.first(5)
 
     # Chart data
     @weekly_open_data = weekly_open_rates
@@ -41,7 +35,7 @@ class Admin::DashboardsController < ApplicationController
                                        .pluck(:user_id)
                                        .uniq
 
-    @current_week_digests.map do |digest|
+    stats = @current_week_digests.map do |digest|
       users_with_topic = digest.topic.users.where(id: messages_by_topic).count
       sent = Ahoy::Message.where(mailer: "UserMailer#topic_digest", sent_at: 1.week.ago..).count
       opened = Ahoy::Message.where(mailer: "UserMailer#topic_digest", sent_at: 1.week.ago..).where.not(opened_at: nil).count
@@ -53,6 +47,8 @@ class Admin::DashboardsController < ApplicationController
         open_rate: sent > 0 ? (opened.to_f / sent * 100).round(1) : 0
       }
     end
+
+    stats.sort_by { |s| -s[:open_rate] }
   end
 
   def weekly_open_rates

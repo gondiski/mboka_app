@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-50">
   <!-- Navigation -->
-  <nav class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <div class="flex items-center space-x-2">
@@ -8,11 +8,12 @@
           <span class="text-2xl font-bold text-gray-900">Mboka Admin</span>
         </div>
         <div class="flex items-center gap-6">
-          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
-          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
-          <%= link_to "Digests", admin_digests_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
-          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-semibold text-brand-600" %>
-          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Digests", admin_digests_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-semibold text-brand-600 nav-link" %>
+          <%= link_to "Reports", admin_reports_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
         </div>
       </div>
     </div>
@@ -66,7 +67,7 @@
           <!-- Delivery Time -->
           <div>
             <label class="block text-sm font-bold text-gray-900 mb-4">Delivery Time</label>
-            <div class="relative max-w-xs" data-controller="flatpickr">
+            <div class="relative max-w-xs">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
@@ -74,13 +75,7 @@
                 value: @schedule.send_time&.strftime("%H:%M") || "08:00",
                 class: "w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm font-medium text-gray-900",
                 data: {
-                  flatpickr_target: "input",
-                  enable_time: true,
-                  no_24hr: false,
-                  time_24hr: true,
-                  dateFormat: "H:i",
-                  default_hour: 8,
-                  default_minute: 0
+                  schedule_time_target: "input"
                 }
               } %>
             </div>
@@ -258,11 +253,6 @@
     transform: scale(1);
   }
 
-  /* Flatpickr Override */
-  .flatpickr-input {
-    cursor: pointer;
-  }
-
   /* Generation Day Selector */
   .generation-box {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -280,11 +270,9 @@
   }
 </style>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    flatpickr("[data-flatpickr-target='input']", {
+    flatpickr("[data-schedule-time-target='input']", {
       enableTime: true,
       noCalendar: true,
       dateFormat: "H:i",
@@ -312,7 +300,7 @@
         var label = input.nextElementSibling.querySelector('.day-label');
         if (label) days.push(label.textContent);
       });
-      var timeInput = document.querySelector('[data-flatpickr-target="input"]');
+      var timeInput = document.querySelector('[data-schedule-time-target="input"]');
       var time = timeInput ? timeInput.value : '';
       var genInput = document.querySelector('.generation-input:checked');
       var genLabel = genInput ? genInput.nextElementSibling.querySelector('span').textContent : '';

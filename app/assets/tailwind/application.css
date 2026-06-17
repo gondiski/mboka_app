@@ -94,3 +94,374 @@
 .animate-pulse-subtle {
   animation: pulse-subtle 1.5s ease-in-out infinite;
 }
+
+/* Favorite star pop */
+@keyframes starPop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.35); }
+  50% { transform: scale(0.9); }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.star-pop {
+  animation: starPop 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* Button press effect */
+.btn-press {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-press:active {
+  transform: scale(0.96);
+}
+
+/* Table row hover lift */
+.table-row-hover {
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.table-row-hover:hover {
+  background-color: rgba(249, 250, 251, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Stats card hover */
+.stat-card {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.08);
+}
+
+/* Status badge pulse on hover */
+.badge-pulse {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.badge-pulse:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Nav link underline animation */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Modal entrance animation */
+@keyframes modalEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-enter {
+  animation: modalEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Backdrop fade */
+@keyframes backdropFade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.backdrop-fade {
+  animation: backdropFade 0.2s ease-out;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ripple effect on click */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, currentColor 10%, transparent 10%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.4s, opacity 0.4s;
+}
+
+.ripple:active::after {
+  transform: scale(4);
+  opacity: 0.1;
+  transition: 0s;
+}
+
+/* Tooltip fade */
+.tooltip-fade {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Smooth border glow */
+.glow-green {
+  transition: box-shadow 0.3s ease;
+}
+
+.glow-green:hover {
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+.glow-red {
+  transition: box-shadow 0.3s ease;
+}
+
+.glow-red:hover {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+/* Input focus ring animation */
+@keyframes focusRing {
+  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.3); }
+  100% { box-shadow: 0 0 0 4px rgba(22, 163, 74, 0); }
+}
+
+.focus-ring-animate:focus {
+  animation: focusRing 0.3s ease-out;
+}
+
+/* Skeleton loading shimmer */
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 8px, transparent 0);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ==================== FLATPICKR MBOKA THEME ==================== */
+.flatpickr-input {
+  cursor: pointer;
+  @apply w-full px-3 py-2 rounded-xl border border-gray-300 bg-white text-sm text-gray-900 transition;
+}
+
+.flatpickr-input:focus {
+  @apply border-brand-500 ring-2 ring-brand-200 outline-none;
+}
+
+/* Calendar container */
+.flatpickr-calendar {
+  @apply rounded-2xl shadow-2xl border border-gray-100 overflow-hidden;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Month/Year header */
+.flatpickr-months {
+  @apply bg-brand-600 text-white;
+}
+
+.flatpickr-months .flatpickr-month {
+  @apply bg-transparent text-white h-12;
+}
+
+.flatpickr-current-month {
+  @apply text-white font-bold text-sm;
+}
+
+.flatpickr-current-month input.cur-year {
+  @apply text-white font-bold;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  @apply bg-transparent text-white font-semibold;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months option {
+  @apply bg-white text-gray-900;
+}
+
+/* Navigation arrows */
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+  @apply fill-white hover:bg-white/20 rounded-lg transition;
+  padding: 8px !important;
+}
+
+.flatpickr-months .flatpickr-prev-month:hover,
+.flatpickr-months .flatpickr-next-month:hover {
+  @apply bg-white/20;
+}
+
+/* Weekday headers */
+.flatpickr-weekdays {
+  @apply bg-gray-50;
+}
+
+span.flatpickr-weekday {
+  @apply text-gray-500 font-semibold text-xs uppercase tracking-wider;
+}
+
+/* Day container */
+.flatpickr-day {
+  @apply rounded-lg text-sm font-medium transition-all duration-150;
+  border-radius: 0.5rem !important;
+  line-height: 2.25rem !important;
+  height: 2.25rem !important;
+}
+
+.flatpickr-day:hover {
+  @apply bg-brand-50 text-brand-700;
+}
+
+/* Today */
+.flatpickr-day.today {
+  @apply bg-brand-100 text-brand-700 border-brand-200 font-bold;
+}
+
+.flatpickr-day.today:hover {
+  @apply bg-brand-200;
+}
+
+/* Selected */
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+  @apply bg-brand-600 text-white border-brand-600 font-bold shadow-md;
+}
+
+/* Range */
+.flatpickr-day.selected.startRange,
+.flatpickr-day.selected.endRange {
+  @apply bg-brand-600 text-white border-brand-600;
+}
+
+.flatpickr-day.inRange {
+  @apply bg-brand-50 text-brand-700 shadow-none border-brand-100;
+}
+
+.flatpickr-day.inRange:hover {
+  @apply bg-brand-100;
+}
+
+/* Previous/next month days */
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  @apply text-gray-300;
+}
+
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover {
+  @apply text-gray-400 bg-gray-50;
+}
+
+/* Disabled */
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+  @apply text-gray-300 bg-gray-50 cursor-not-allowed;
+}
+
+/* Time picker */
+.flatpickr-time {
+  @apply border-t border-gray-100;
+}
+
+.flatpickr-time input {
+  @apply text-sm font-medium text-gray-900;
+}
+
+.flatpickr-time .flatpickr-am-pm {
+  @apply text-sm font-medium;
+}
+
+.flatpickr-time .numInputWrapper:hover {
+  @apply bg-brand-50;
+}
+
+.flatpickr-time .numInputWrapper span.arrowUp,
+.flatpickr-time .numInputWrapper span.arrowDown {
+  @apply fill-brand-600;
+}
+
+.flatpickr-time .numInputWrapper span.arrowUp:hover,
+.flatpickr-time .numInputWrapper span.arrowDown:hover {
+  @apply bg-brand-100;
+}
+
+/* Clear button */
+.flatpickr-clear {
+  @apply text-brand-600 hover:text-brand-700 font-semibold;
+}
+
+/* Days container */
+.flatpickr-innerContainer {
+  @apply bg-white;
+}
+
+/* Week numbers */
+.flatpickr-weekNumber {
+  @apply text-gray-400 font-medium;
+}
+
+/* Input group styling */
+.flatpickr-wrapper {
+  @apply w-full;
+}
+
+/* Datepicker icon override */
+.has-datepicker {
+  @apply pl-10;
+}

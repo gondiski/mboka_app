@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-50">
   <!-- Navigation -->
-  <nav class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <div class="flex items-center space-x-2">
@@ -8,11 +8,12 @@
           <span class="text-2xl font-bold text-gray-900">Mboka Admin</span>
         </div>
         <div class="flex items-center gap-6">
-          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
-          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
-          <%= link_to "Digests", admin_digests_path, class: "text-sm font-semibold text-brand-600" %>
-          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
-          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %>
+          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Digests", admin_digests_path, class: "text-sm font-semibold text-brand-600 nav-link" %>
+          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Reports", admin_reports_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
         </div>
       </div>
     </div>
@@ -75,16 +76,16 @@
         <div class="px-8 py-5 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <% if @topic_digest.draft? || @topic_digest.rejected? %>
-              <%= link_to "Edit Content", edit_admin_digest_path(@topic_digest), class: "px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition text-sm" %>
-              <%= button_to "Reset to Draft", reset_to_draft_admin_digest_path(@topic_digest), method: :patch, class: "px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition text-sm cursor-pointer" if @topic_digest.rejected? %>
+              <%= link_to "Edit Content", edit_admin_digest_path(@topic_digest), class: "px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 text-sm btn-press" %>
+              <%= button_to "Reset to Draft", reset_to_draft_admin_digest_path(@topic_digest), method: :patch, class: "px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 text-sm cursor-pointer btn-press" if @topic_digest.rejected? %>
             <% end %>
           </div>
           <div class="flex items-center gap-3">
             <% if @topic_digest.draft? || @topic_digest.rejected? %>
-              <button type="button" onclick="document.getElementById('reject-modal').classList.remove('hidden')" class="px-5 py-2.5 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition text-sm cursor-pointer">
+              <button type="button" onclick="document.getElementById('reject-modal').classList.remove('hidden')" class="px-5 py-2.5 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-all duration-200 text-sm cursor-pointer btn-press glow-red">
                 Reject
               </button>
-              <%= button_to "Approve", approve_admin_digest_path(@topic_digest), method: :patch, class: "px-5 py-2.5 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition text-sm cursor-pointer" %>
+              <%= button_to "Approve", approve_admin_digest_path(@topic_digest), method: :patch, class: "px-5 py-2.5 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-all duration-200 text-sm cursor-pointer btn-press glow-green" %>
             <% end %>
           </div>
         </div>
@@ -113,8 +114,8 @@
 
 <!-- Reject Modal -->
 <div id="reject-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('reject-modal').classList.add('hidden')"></div>
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 p-8">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm backdrop-fade" onclick="document.getElementById('reject-modal').classList.add('hidden')"></div>
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 p-8 modal-enter">
     <h3 class="text-xl font-bold text-gray-900 mb-4">Reject Digest</h3>
     <%= form_with url: reject_admin_digest_path(@topic_digest), method: :patch, local: true do |f| %>
       <div class="mb-6">
@@ -122,10 +123,10 @@
         <%= f.text_area :rejection_reason, rows: 3, placeholder: "Explain why this digest is being rejected...", class: "w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm" %>
       </div>
       <div class="flex justify-end gap-3">
-        <button type="button" onclick="document.getElementById('reject-modal').classList.add('hidden')" class="px-5 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition text-sm">
+        <button type="button" onclick="document.getElementById('reject-modal').classList.add('hidden')" class="px-5 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition text-sm btn-press">
           Cancel
         </button>
-        <%= f.submit "Reject Digest", class: "px-5 py-2.5 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition text-sm cursor-pointer" %>
+        <%= f.submit "Reject Digest", class: "px-5 py-2.5 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition text-sm cursor-pointer btn-press" %>
       </div>
     <% end %>
   </div>

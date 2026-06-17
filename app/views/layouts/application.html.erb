@@ -14,6 +14,7 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
@@ -21,6 +22,20 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-flatpickr-target="input"]').forEach(function(el) {
+          if (el._flatpickr) return;
+          flatpickr(el, {
+            monthSelectorType: "dropdown",
+            theme: "mboka",
+            altInput: true,
+            altFormat: "F j, Y"
+          });
+        });
+      });
+    </script>
 
     <style>
       [x-cloak] { display: none !important; }

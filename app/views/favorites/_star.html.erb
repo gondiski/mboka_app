@@ -5,11 +5,11 @@
       data: { turbo_stream: true, action: "click->favorite#toggle" },
       form: { data: { turbo_stream: true } } do %>
     <% if favorited %>
-      <svg class="w-6 h-6 text-brand-500 drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24">
+      <svg data-star-icon class="w-6 h-6 text-brand-500 drop-shadow-sm star-pop" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
       </svg>
     <% else %>
-      <svg class="w-6 h-6 text-gray-300 hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg data-star-icon class="w-6 h-6 text-gray-300 hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
       </svg>
     <% end %>

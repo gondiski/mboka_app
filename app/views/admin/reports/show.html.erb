@@ -1,0 +1,429 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
+          <span class="text-2xl font-bold text-gray-900">Mboka Admin</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Digests", admin_digests_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Reports", admin_reports_path, class: "text-sm font-semibold text-brand-600 nav-link" %>
+          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-3xl font-black text-gray-900">Advanced Reports</h1>
+        <p class="text-gray-600 mt-1">Detailed analytics with date range and topic filters.</p>
+      </div>
+      <%= link_to "Back to Dashboard", admin_dashboard_path, class: "text-sm font-semibold text-brand-600 hover:text-brand-700 transition" %>
+    </div>
+
+    <!-- Filters -->
+    <div x-data="{ scrolled: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 120 })" class="sticky top-20 z-40 bg-white rounded-2xl shadow-lg border border-gray-100 mb-8 transition-all duration-500 ease-in-out" :class="scrolled ? 'p-3 ml-16' : 'p-6'">
+      <%= form_with url: admin_reports_path, method: :get, class: "flex flex-wrap gap-3 items-end" do |f| %>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1 transition-all duration-500 ease-in-out" :class="scrolled ? 'h-0 overflow-hidden opacity-0 mb-0' : 'opacity-100 mb-1'">Topic</label>
+          <%= f.collection_select :topic_id, @topics, :id, :name, { include_blank: "All Topics", selected: @selected_topic&.id }, class: "px-3 py-2 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm" %>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1 transition-all duration-500 ease-in-out" :class="scrolled ? 'h-0 overflow-hidden opacity-0 mb-0' : 'opacity-100 mb-1'">From</label>
+          <div class="relative" data-controller="flatpickr" data-flatpickr-date-format-value="Y-m-d" data-flatpickr-alt-input-value="true" data-flatpickr-alt-format-value="F j, Y">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <%= f.text_field :from, value: @date_from, data: { flatpickr_target: "input" }, class: "pl-10 px-3 py-2 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm" %>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1 transition-all duration-500 ease-in-out" :class="scrolled ? 'h-0 overflow-hidden opacity-0 mb-0' : 'opacity-100 mb-1'">To</label>
+          <div class="relative" data-controller="flatpickr" data-flatpickr-date-format-value="Y-m-d" data-flatpickr-alt-input-value="true" data-flatpickr-alt-format-value="F j, Y">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <%= f.text_field :to, value: @date_to, data: { flatpickr_target: "input" }, class: "pl-10 px-3 py-2 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm" %>
+          </div>
+        </div>
+        <div class="flex gap-2 transition-all duration-500 ease-in-out overflow-hidden" :class="scrolled ? 'h-0 opacity-0' : 'opacity-100'">
+          <%= f.submit "Apply Filters", class: "px-5 py-2 bg-brand-600 text-white font-semibold rounded-xl hover:bg-brand-700 transition-all duration-200 cursor-pointer text-sm btn-press" %>
+          <%= link_to "Clear", admin_reports_path, class: "px-5 py-2 bg-gray-100 text-gray-600 font-semibold rounded-xl hover:bg-gray-200 transition text-sm btn-press" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-2xl p-5 shadow-lg border border-gray-100 stat-card">
+        <p class="text-sm font-medium text-gray-500 mb-1">Total Sent</p>
+        <p class="text-2xl font-black text-brand-600"><%= @topic_open_data.values.sum { |v| v[:sent] } %></p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-lg border border-gray-100 stat-card">
+        <p class="text-sm font-medium text-gray-500 mb-1">Total Opened</p>
+        <p class="text-2xl font-black text-brand-600"><%= @topic_open_data.values.sum { |v| v[:opened] } %></p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-lg border border-gray-100 stat-card">
+        <p class="text-sm font-medium text-gray-500 mb-1">Total Clicks</p>
+        <p class="text-2xl font-black text-brand-600"><%= @topic_open_data.values.sum { |v| v[:clicked] } %></p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-lg border border-gray-100 stat-card">
+        <p class="text-sm font-medium text-gray-500 mb-1">Avg Open Rate</p>
+        <% total_sent = @topic_open_data.values.sum { |v| v[:sent] } %>
+        <% total_opened = @topic_open_data.values.sum { |v| v[:opened] } %>
+        <p class="text-2xl font-black text-brand-600"><%= total_sent > 0 ? (total_opened.to_f / total_sent * 100).round(1) : 0 %>%</p>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid md:grid-cols-2 gap-8 mb-8">
+      <!-- Weekly Trend -->
+      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+        <h3 class="text-lg font-bold text-gray-900 mb-6">Weekly Send & Open Trend</h3>
+        <div id="weeklyTrendChart" class="w-full" style="height: 320px;"></div>
+      </div>
+
+      <!-- User Growth -->
+      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+        <h3 class="text-lg font-bold text-gray-900 mb-6">User Growth</h3>
+        <div id="userGrowthChart" class="w-full" style="height: 320px;"></div>
+      </div>
+    </div>
+
+    <!-- Full Width Charts -->
+    <div class="grid md:grid-cols-2 gap-8 mb-8">
+      <!-- Topic Open Rates -->
+      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+        <h3 class="text-lg font-bold text-gray-900 mb-6">Open Rate by Topic</h3>
+        <div id="topicRateChart" class="w-full" style="height: 500px;"></div>
+      </div>
+
+      <!-- Topic Send Volume -->
+      <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+        <h3 class="text-lg font-bold text-gray-900 mb-6">Send Volume by Topic</h3>
+        <div id="topicVolumeChart" class="w-full" style="height: 500px;"></div>
+      </div>
+    </div>
+
+    <!-- Top Topics by Subscribers -->
+    <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 mb-8">
+      <h3 class="text-lg font-bold text-gray-900 mb-6">Top Topics by Subscriber Count</h3>
+      <div id="subscriberChart" class="w-full" style="height: 400px;"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+function renderReportCharts() {
+  if (typeof d3 === 'undefined') { setTimeout(renderReportCharts, 50); return; }
+
+  const brandColor = '#16a34a';
+  const brandLight = '#22c55e';
+  const accentColor = '#f59e0b';
+  const gray100 = '#f3f4f6';
+  const gray200 = '#e5e7eb';
+  const gray300 = '#d1d5db';
+  const gray500 = '#6b7280';
+  const gray700 = '#374151';
+  const gray900 = '#111827';
+
+  function makeTooltip(container) {
+    return d3.select(container).append('div')
+      .style('position', 'absolute').style('background', gray900).style('color', '#fff')
+      .style('padding', '8px 12px').style('border-radius', '8px').style('font-size', '12px')
+      .style('pointer-events', 'none').style('opacity', 0).style('z-index', 10);
+  }
+
+  // ============ WEEKLY TREND ============
+  (function() {
+    const data = <%= raw @weekly_trend_data.to_json %>;
+    const container = document.getElementById('weeklyTrendChart');
+    const width = container.clientWidth;
+    const height = 320;
+    const margin = { top: 20, right: 20, bottom: 40, left: 50 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+
+    const svg = d3.select('#weeklyTrendChart').append('svg').attr('width', width).attr('height', height);
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scalePoint().domain(data.map(d => d.week)).range([0, innerW]).padding(0.5);
+    const y = d3.scaleLinear().domain([0, d3.max(data, d => Math.max(d.sent, d.opened)) * 1.1 || 100]).range([innerH, 0]);
+
+    // Grid
+    g.selectAll('.grid-line').data(y.ticks(5)).join('line')
+      .attr('x1', 0).attr('x2', innerW).attr('y1', d => y(d)).attr('y2', d => y(d))
+      .attr('stroke', gray200).attr('stroke-dasharray', '3,3');
+
+    // Sent area
+    const sentArea = d3.area().x(d => x(d.week)).y0(innerH).y1(d => y(d.sent)).curve(d3.curveMonotoneX);
+    g.append('path').datum(data).attr('fill', 'rgba(245,158,11,0.1)').attr('d', sentArea);
+
+    // Sent line
+    const sentLine = d3.line().x(d => x(d.week)).y(d => y(d.sent)).curve(d3.curveMonotoneX);
+    g.append('path').datum(data).attr('fill', 'none').attr('stroke', accentColor).attr('stroke-width', 2).attr('stroke-dasharray', '6,4').attr('d', sentLine);
+
+    // Opened area
+    const openArea = d3.area().x(d => x(d.week)).y0(innerH).y1(d => y(d.opened)).curve(d3.curveMonotoneX);
+    g.append('path').datum(data).attr('fill', 'rgba(22,163,74,0.08)').attr('d', openArea);
+
+    // Opened line
+    const openLine = d3.line().x(d => x(d.week)).y(d => y(d.opened)).curve(d3.curveMonotoneX);
+    g.append('path').datum(data).attr('fill', 'none').attr('stroke', brandColor).attr('stroke-width', 3).attr('stroke-linecap', 'round').attr('d', openLine);
+
+    // Dots
+    g.selectAll('.dot-open').data(data).join('circle')
+      .attr('cx', d => x(d.week)).attr('cy', d => y(d.opened)).attr('r', 4)
+      .attr('fill', '#fff').attr('stroke', brandColor).attr('stroke-width', 2);
+
+    g.selectAll('.dot-sent').data(data).join('circle')
+      .attr('cx', d => x(d.week)).attr('cy', d => y(d.sent)).attr('r', 3)
+      .attr('fill', '#fff').attr('stroke', accentColor).attr('stroke-width', 2);
+
+    // Tooltip
+    const tooltip = makeTooltip('#weeklyTrendChart');
+    g.selectAll('.hitarea').data(data).join('circle')
+      .attr('cx', d => x(d.week)).attr('cy', d => y(d.opened)).attr('r', 16).attr('fill', 'transparent')
+      .on('mouseenter', (event, d) => {
+        tooltip.html(`<strong>Week of ${d.week}</strong><br>Sent: ${d.sent}<br>Opened: ${d.opened}<br>Clicked: ${d.clicked}<br>Rate: ${d.rate}%`)
+          .style('left', (event.offsetX + 12) + 'px').style('top', (event.offsetY - 10) + 'px').style('opacity', 1);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    // Legend
+    const legend = g.append('g').attr('transform', `translate(${innerW - 160}, 0)`);
+    legend.append('line').attr('x1', 0).attr('x2', 20).attr('y1', 0).attr('y2', 0).attr('stroke', brandColor).attr('stroke-width', 3);
+    legend.append('text').attr('x', 26).attr('y', 4).text('Opened').attr('fill', gray500).attr('font-size', '11px');
+    legend.append('line').attr('x1', 0).attr('x2', 20).attr('y1', 16).attr('y2', 16).attr('stroke', accentColor).attr('stroke-width', 2).attr('stroke-dasharray', '6,4');
+    legend.append('text').attr('x', 26).attr('y', 20).text('Sent').attr('fill', gray500).attr('font-size', '11px');
+
+    // Axes
+    g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '10px');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '11px');
+    g.selectAll('.domain').remove();
+  })();
+
+  // ============ USER GROWTH ============
+  (function() {
+    const data = <%= raw @user_growth_data.to_json %>;
+    const container = document.getElementById('userGrowthChart');
+    const width = container.clientWidth;
+    const height = 320;
+    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+
+    const svg = d3.select('#userGrowthChart').append('svg').attr('width', width).attr('height', height);
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand().domain(data.map(d => d.month)).range([0, innerW]).padding(0.35);
+    const y = d3.scaleLinear().domain([0, d3.max(data, d => d.total) * 1.1 || 10]).range([innerH, 0]);
+
+    // Grid
+    g.selectAll('.grid-line').data(y.ticks(5)).join('line')
+      .attr('x1', 0).attr('x2', innerW).attr('y1', d => y(d)).attr('y2', d => y(d))
+      .attr('stroke', gray200).attr('stroke-dasharray', '3,3');
+
+    // Total bars
+    g.selectAll('.bar-total').data(data).join('rect')
+      .attr('x', d => x(d.month)).attr('y', d => y(d.total))
+      .attr('width', x.bandwidth()).attr('height', d => innerH - y(d.total))
+      .attr('fill', 'rgba(22,163,74,0.2)').attr('rx', 4);
+
+    // Active bars
+    g.selectAll('.bar-active').data(data).join('rect')
+      .attr('x', d => x(d.month)).attr('y', d => y(d.active))
+      .attr('width', x.bandwidth()).attr('height', d => innerH - y(d.active))
+      .attr('fill', brandColor).attr('rx', 4);
+
+    // Tooltip
+    const tooltip = makeTooltip('#userGrowthChart');
+    g.selectAll('.hitarea').data(data).join('rect')
+      .attr('x', d => x(d.month)).attr('y', 0).attr('width', x.bandwidth()).attr('height', innerH).attr('fill', 'transparent')
+      .on('mouseenter', (event, d) => {
+        tooltip.html(`<strong>${d.month}</strong><br>Total: ${d.total}<br>Active: ${d.active}`)
+          .style('left', (event.offsetX + 12) + 'px').style('top', (event.offsetY - 10) + 'px').style('opacity', 1);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    // Legend
+    const legend = g.append('g').attr('transform', `translate(${innerW - 120}, 0)`);
+    legend.append('rect').attr('width', 14).attr('height', 10).attr('fill', brandColor).attr('rx', 2);
+    legend.append('text').attr('x', 20).attr('y', 9).text('Active').attr('fill', gray500).attr('font-size', '11px');
+    legend.append('rect').attr('y', 16).attr('width', 14).attr('height', 10).attr('fill', 'rgba(22,163,74,0.2)').attr('rx', 2);
+    legend.append('text').attr('x', 20).attr('y', 25).text('Total').attr('fill', gray500).attr('font-size', '11px');
+
+    // Axes
+    g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '10px').attr('transform', 'rotate(-35)').attr('text-anchor', 'end');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '11px');
+    g.selectAll('.domain').remove();
+  })();
+
+  // ============ TOPIC OPEN RATE HORIZONTAL BAR ============
+  (function() {
+    const rawData = <%= raw @topic_open_data.to_json %>;
+    const entries = Object.entries(rawData);
+    const data = entries.map(([name, val]) => ({ name, ...val }));
+
+    const container = document.getElementById('topicRateChart');
+    const width = container.clientWidth;
+    const barHeight = 30;
+    const gap = 8;
+    const height = Math.max(300, data.length * (barHeight + gap) + 40);
+    const margin = { top: 10, right: 80, bottom: 20, left: 200 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+
+    container.style.height = height + 'px';
+
+    const svg = d3.select('#topicRateChart').append('svg').attr('width', width).attr('height', height);
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleLinear().domain([0, 100]).range([0, innerW]);
+    const y = d3.scaleBand().domain(data.map(d => d.name)).range([0, innerH]).padding(0.25);
+
+    g.selectAll('.grid-line').data([20, 40, 60, 80, 100]).join('line')
+      .attr('x1', d => x(d)).attr('x2', d => x(d)).attr('y1', 0).attr('y2', innerH)
+      .attr('stroke', gray200).attr('stroke-dasharray', '3,3');
+
+    g.selectAll('.bar').data(data).join('rect')
+      .attr('x', 0).attr('y', d => y(d.name)).attr('width', d => x(d.rate)).attr('height', y.bandwidth())
+      .attr('fill', brandColor).attr('rx', 4);
+
+    g.selectAll('.label').data(data).join('text')
+      .attr('x', d => x(d.rate) + 8).attr('y', d => y(d.name) + y.bandwidth() / 2).attr('dy', '0.35em')
+      .attr('fill', gray700).attr('font-size', '12px').attr('font-weight', '600').text(d => d.rate + '%');
+
+    g.selectAll('.y-label').data(data).join('text')
+      .attr('x', -10).attr('y', d => y(d.name) + y.bandwidth() / 2).attr('dy', '0.35em').attr('text-anchor', 'end')
+      .attr('fill', gray700).attr('font-size', '12px').text(d => d.name.length > 24 ? d.name.slice(0, 22) + '…' : d.name);
+
+    const tooltip = makeTooltip('#topicRateChart');
+    g.selectAll('.bar-hitarea').data(data).join('rect')
+      .attr('x', 0).attr('y', d => y(d.name)).attr('width', innerW).attr('height', y.bandwidth()).attr('fill', 'transparent')
+      .on('mouseenter', (event, d) => {
+        tooltip.html(`<strong>${d.name}</strong><br>Sent: ${d.sent}<br>Opened: ${d.opened}<br>Clicked: ${d.clicked}<br>Rate: ${d.rate}%`)
+          .style('left', (event.offsetX + 12) + 'px').style('top', (event.offsetY - 10) + 'px').style('opacity', 1);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    g.selectAll('.domain').remove();
+    g.selectAll('.tick line').remove();
+  })();
+
+  // ============ TOPIC SEND VOLUME HORIZONTAL BAR ============
+  (function() {
+    const rawData = <%= raw @digest_send_stats.to_json %>;
+    const entries = Object.entries(rawData).slice(0, 15);
+    const data = entries.map(([name, val]) => ({ name, ...val }));
+
+    const container = document.getElementById('topicVolumeChart');
+    const width = container.clientWidth;
+    const barHeight = 30;
+    const gap = 8;
+    const height = Math.max(300, data.length * (barHeight + gap) + 40);
+    const margin = { top: 10, right: 80, bottom: 20, left: 200 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+
+    container.style.height = height + 'px';
+
+    const svg = d3.select('#topicVolumeChart').append('svg').attr('width', width).attr('height', height);
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const maxSent = d3.max(data, d => d.sent) || 1;
+    const x = d3.scaleLinear().domain([0, maxSent * 1.1]).range([0, innerW]);
+    const y = d3.scaleBand().domain(data.map(d => d.name)).range([0, innerH]).padding(0.25);
+
+    g.selectAll('.grid-line').data(x.ticks(5)).join('line')
+      .attr('x1', d => x(d)).attr('x2', d => x(d)).attr('y1', 0).attr('y2', innerH)
+      .attr('stroke', gray200).attr('stroke-dasharray', '3,3');
+
+    g.selectAll('.bar').data(data).join('rect')
+      .attr('x', 0).attr('y', d => y(d.name)).attr('width', d => x(d.sent)).attr('height', y.bandwidth())
+      .attr('fill', accentColor).attr('rx', 4);
+
+    g.selectAll('.label').data(data).join('text')
+      .attr('x', d => x(d.sent) + 8).attr('y', d => y(d.name) + y.bandwidth() / 2).attr('dy', '0.35em')
+      .attr('fill', gray700).attr('font-size', '12px').attr('font-weight', '600').text(d => d.sent);
+
+    g.selectAll('.y-label').data(data).join('text')
+      .attr('x', -10).attr('y', d => y(d.name) + y.bandwidth() / 2).attr('dy', '0.35em').attr('text-anchor', 'end')
+      .attr('fill', gray700).attr('font-size', '12px').text(d => d.name.length > 24 ? d.name.slice(0, 22) + '…' : d.name);
+
+    const tooltip = makeTooltip('#topicVolumeChart');
+    g.selectAll('.bar-hitarea').data(data).join('rect')
+      .attr('x', 0).attr('y', d => y(d.name)).attr('width', innerW).attr('height', y.bandwidth()).attr('fill', 'transparent')
+      .on('mouseenter', (event, d) => {
+        tooltip.html(`<strong>${d.name}</strong><br>Sent: ${d.sent}<br>Opened: ${d.opened}<br>Rate: ${d.rate}%`)
+          .style('left', (event.offsetX + 12) + 'px').style('top', (event.offsetY - 10) + 'px').style('opacity', 1);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    g.selectAll('.domain').remove();
+    g.selectAll('.tick line').remove();
+  })();
+
+  // ============ SUBSCRIBER COUNT BAR CHART ============
+  (function() {
+    const rawData = <%= raw @top_topics_by_subscribers.to_json %>;
+    const entries = Object.entries(rawData).slice(0, 15);
+    const data = entries.map(([name, count]) => ({ name, count }));
+
+    const container = document.getElementById('subscriberChart');
+    const width = container.clientWidth;
+    const height = 400;
+    const margin = { top: 20, right: 20, bottom: 60, left: 50 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+
+    const svg = d3.select('#subscriberChart').append('svg').attr('width', width).attr('height', height);
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand().domain(data.map(d => d.name)).range([0, innerW]).padding(0.3);
+    const y = d3.scaleLinear().domain([0, d3.max(data, d => d.count) * 1.1 || 10]).range([innerH, 0]);
+
+    g.selectAll('.grid-line').data(y.ticks(5)).join('line')
+      .attr('x1', 0).attr('x2', innerW).attr('y1', d => y(d)).attr('y2', d => y(d))
+      .attr('stroke', gray200).attr('stroke-dasharray', '3,3');
+
+    g.selectAll('.bar').data(data).join('rect')
+      .attr('x', d => x(d.name)).attr('y', d => y(d.count))
+      .attr('width', x.bandwidth()).attr('height', d => innerH - y(d.count))
+      .attr('fill', brandColor).attr('rx', 4);
+
+    g.selectAll('.label').data(data).join('text')
+      .attr('x', d => x(d.name) + x.bandwidth() / 2).attr('y', d => y(d.count) - 6)
+      .attr('text-anchor', 'middle').attr('fill', gray700).attr('font-size', '11px').attr('font-weight', '600')
+      .text(d => d.count);
+
+    const tooltip = makeTooltip('#subscriberChart');
+    g.selectAll('.hitarea').data(data).join('rect')
+      .attr('x', d => x(d.name)).attr('y', 0).attr('width', x.bandwidth()).attr('height', innerH).attr('fill', 'transparent')
+      .on('mouseenter', (event, d) => {
+        tooltip.html(`<strong>${d.name}</strong><br>Subscribers: ${d.count}`)
+          .style('left', (event.offsetX + 12) + 'px').style('top', (event.offsetY - 10) + 'px').style('opacity', 1);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '10px').attr('transform', 'rotate(-40)').attr('text-anchor', 'end');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(0).tickPadding(10))
+      .selectAll('text').attr('fill', gray500).attr('font-size', '11px');
+    g.selectAll('.domain').remove();
+  })();
+}
+document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', renderReportCharts) : renderReportCharts();
+</script>

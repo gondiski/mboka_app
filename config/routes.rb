@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   # Administration Zone Control Arrays
   namespace :admin do
     resource :dashboard, only: [ :show ]
+    resource :reports, only: [ :show ]
     resource :digest_schedule, only: [ :show, :update ]
     resources :digests, only: [ :index, :show, :edit, :update ] do
       member do
