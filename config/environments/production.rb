@@ -66,7 +66,7 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     user_name: ENV.fetch("SMTP2GO_USER_NAME", nil),
     password: ENV.fetch("SMTP2GO_PASSWORD", nil),
-    address: "mail.smtp2go.com",
+    address: "mail-eu.smtp2go.com",
     port: 2525,
     authentication: :plain,
     enable_starttls_auto: true
