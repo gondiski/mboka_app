@@ -61,7 +61,7 @@ class Admin::UsersController < ApplicationController
     role = params[:role].presence_in(%w[admin moderator subscriber]) || "subscriber"
     user.add_role(role) unless user.has_role?(role.to_sym)
     token = user.generate_magic_link!
-    UserMailer.magic_link(user, token).deliver_later
+    UserMailer.magic_link(user, token).deliver_now
     redirect_to admin_users_path, notice: "Invitation sent to #{user.email} with role: #{role}."
   end
 

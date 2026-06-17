@@ -24,7 +24,7 @@ class SubscribersController < ApplicationController
       @user.add_role(:subscriber) if @user.roles.blank?
 
       token = @user.generate_magic_link!
-      UserMailer.magic_link(@user, token).deliver_later
+      UserMailer.magic_link(@user, token).deliver_now
 
       redirect_to check_email_path, notice: "Account pre-registered. Check your email to verify!"
     else

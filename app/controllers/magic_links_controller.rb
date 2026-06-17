@@ -15,7 +15,7 @@ class MagicLinksController < ApplicationController
       redirect_to new_user_session_path, alert: "No account found with that email. Please sign up first."
     elsif user.status == "active" || user.status == "pending"
       token = user.generate_magic_link!
-      UserMailer.magic_link(user, token).deliver_later
+      UserMailer.magic_link(user, token).deliver_now
       Rails.logger.info "Magic link sent to #{user.email}"
       redirect_to check_email_path, notice: "Authentication link dispatched to your inbox."
     else
