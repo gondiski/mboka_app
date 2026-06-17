@@ -11,4 +11,9 @@ if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
 fi
 
+# If running foreman (starts web + worker), also run db:prepare
+if [ "${@: -1:1}" == "start" ]; then
+  ./bin/rails db:prepare
+fi
+
 exec "${@}"
