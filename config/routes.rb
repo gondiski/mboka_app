@@ -49,6 +49,7 @@ Rails.application.routes.draw do
     resource :reports, only: [ :show ]
     resource :settings, only: [ :show, :update ]
     resource :digest_schedule, only: [ :show, :update ]
+    get "docs", to: "docs#show", as: :docs
 
     # Payments
     resource :payments, only: [ :show ] do
