@@ -21,13 +21,15 @@ module PaymentAccessControl
     settings = AdminSetting.first
     return true if settings.nil?
 
-    # Always check fresh - no cache for access control
+    # Check directly - no caching
     settings.app_accessible?
   end
 
   def accessible_without_payment?
+    # Always allow these paths regardless of payment status
     allowed_paths = %w[
       pages
+      subscribers
       magic_links
       email_preferences
       devise/sessions
