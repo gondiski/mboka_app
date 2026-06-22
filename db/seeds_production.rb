@@ -16,8 +16,13 @@ topics = [
   "Digital Marketing", "Blockchain & Web3", "Embedded Systems & IoT",
   "Business & Entrepreneurship"
 ]
-topics.each { |name| Topic.find_or_create_by!(name: name) }
-puts "Ensured #{Topic.count} topics exist."
+
+topics.each do |name|
+  Topic.find_or_create_by!(name: name)
+rescue ActiveRecord::RecordInvalid => e
+  puts "  Topic '#{name}' error: #{e.message}"
+end
+puts "Topics: #{Topic.count}"
 
 # Admin users
 admins_data = [
@@ -39,7 +44,9 @@ admins_data.each do |attrs|
   end
   user.save!
   user.add_role(:admin) unless user.has_role?(:admin)
-  puts "Admin: #{user.email} (#{user.status})"
+  puts "  Admin: #{user.email} (#{user.status})"
+rescue ActiveRecord::RecordInvalid => e
+  puts "  Admin '#{attrs[:email]}' error: #{e.message}"
 end
 
 # Moderator users
@@ -61,7 +68,9 @@ moderators_data.each do |attrs|
   user.save!
   user.add_role(:moderator) unless user.has_role?(:moderator)
   DesignationTopicMatcher.assign_to_user(user)
-  puts "Moderator: #{user.email} (#{user.status})"
+  puts "  Moderator: #{user.email} (#{user.status})"
+rescue ActiveRecord::RecordInvalid => e
+  puts "  Moderator '#{attrs[:email]}' error: #{e.message}"
 end
 
 puts ""

@@ -9,11 +9,13 @@ fi
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
+  ./bin/rails db:seed
 fi
 
-# If running foreman (starts web + worker), also run db:prepare
+# If running foreman (starts web + worker), also run db:prepare and seed
 if [ "${@: -1:1}" == "start" ]; then
   ./bin/rails db:prepare
+  ./bin/rails db:seed
 fi
 
 exec "${@}"
