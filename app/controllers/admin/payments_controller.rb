@@ -17,7 +17,7 @@ class Admin::PaymentsController < ApplicationController
     authorize @settings, :checkout?, policy_class: Admin::PaymentsPolicy
 
     unless @settings.paystack_configured?
-      redirect_to admin_payments_path, alert: "Paystack is not configured. Please add your Paystack API keys in Settings."
+      redirect_to admin_payments_path, alert: "Paystack is not configured. Please add PAYSTACK_SECRET_KEY to your .env file."
       return
     end
 
@@ -30,28 +30,41 @@ class Admin::PaymentsController < ApplicationController
     reference = "mboka-#{installment_num}-#{SecureRandom.hex(8)}"
     amount_cents = @settings.installment_amount_cents
 
-    result = PaystackService.initialize_transaction(
-      email: current_user.email,
-      amount_cents: amount_cents,
-      reference: reference,
-      metadata: {
-        installment_number: installment_num,
-        admin_setting_id: @settings.id,
-        callback_url: verify_admin_payments_url(reference: reference)
-      }
-    )
+    Rails.logger.info("[Paystack] Initializing payment: reference=#{reference}, amount=#{amount_cents}, email=#{current_user.email}")
 
-    if result[:status] == true && result.dig(:data, :authorization_url)
-      @payment = @settings.payments.create!(
+    begin
+      result = PaystackService.initialize_transaction(
+        email: current_user.email,
         amount_cents: amount_cents,
-        installment_number: installment_num,
-        status: :pending,
-        paystack_reference: reference
+        reference: reference,
+        metadata: {
+          installment_number: installment_num,
+          admin_setting_id: @settings.id,
+          callback_url: verify_admin_payments_url(reference: reference)
+        }
       )
 
-      redirect_to result.dig(:data, :authorization_url), allow_other_host: true, status: :see_other
-    else
-      redirect_to admin_payments_path, alert: "Could not initialize payment. Please try again."
+      Rails.logger.info("[Paystack] Response: #{result.inspect}")
+
+      if result[:status] == true && result.dig(:data, :authorization_url).present?
+        @payment = @settings.payments.create!(
+          amount_cents: amount_cents,
+          installment_number: installment_num,
+          status: :pending,
+          paystack_reference: reference
+        )
+
+        auth_url = result.dig(:data, :authorization_url)
+        Rails.logger.info("[Paystack] Redirecting to: #{auth_url}")
+        redirect_to auth_url, allow_other_host: true, status: :see_other
+      else
+        error_msg = result.dig(:message) || "Unknown error"
+        Rails.logger.error("[Paystack] Failed: #{error_msg}")
+        redirect_to admin_payments_path, alert: "Payment initialization failed: #{error_msg}"
+      end
+    rescue StandardError => e
+      Rails.logger.error("[Paystack] Exception: #{e.message}\n#{e.backtrace.first(5).join("\n")}")
+      redirect_to admin_payments_path, alert: "Payment error: #{e.message}"
     end
   end
 
@@ -67,14 +80,19 @@ class Admin::PaymentsController < ApplicationController
       return
     end
 
-    result = PaystackService.verify_transaction(reference)
+    begin
+      result = PaystackService.verify_transaction(reference)
 
-    if result[:status] == true && result.dig(:data, :status) == "success"
-      payment.mark_success!(reference: reference)
-      redirect_to admin_payments_path, notice: "Payment of $#{payment.amount_dollars} successful! App access extended for 30 days."
-    else
-      payment.mark_failed!(reference: reference)
-      redirect_to admin_payments_path, alert: "Payment verification failed. Please contact support."
+      if result[:status] == true && result.dig(:data, :status) == "success"
+        payment.mark_success!(reference: reference)
+        redirect_to admin_payments_path, notice: "Payment of $#{payment.amount_dollars} successful! App access extended for 30 days."
+      else
+        payment.mark_failed!(reference: reference)
+        redirect_to admin_payments_path, alert: "Payment verification failed. Please contact support."
+      end
+    rescue StandardError => e
+      Rails.logger.error("[Paystack] Verify error: #{e.message}")
+      redirect_to admin_payments_path, alert: "Verification error: #{e.message}"
     end
   end
 

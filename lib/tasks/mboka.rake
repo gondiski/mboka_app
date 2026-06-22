@@ -70,4 +70,13 @@ namespace :mboka do
     puts "Admins: #{User.joins(:roles).where(roles: { name: 'admin' }).count}"
     puts "Moderators: #{User.joins(:roles).where(roles: { name: 'moderator' }).count}"
   end
+
+  desc "Set trial start date to July 1, 2026"
+  task set_trial: :environment do
+    settings = AdminSetting.instance
+    settings.update!(trial_start_at: Date.new(2026, 7, 1).beginning_of_day)
+    puts "Trial start date set to: #{settings.trial_start_at}"
+    puts "Trial active: #{settings.trial_active?}"
+    puts "Trial expires: July 31, 2026"
+  end
 end

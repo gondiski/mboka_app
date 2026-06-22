@@ -10,6 +10,8 @@ class AdminSetting < ApplicationRecord
 
   FIXED_PRICE_CENTS = 200_000
   TRIAL_DURATION = 30.days
+  TRIAL_START_DATE = Date.new(2026, 7, 1)
+  TRIAL_END_DATE = Date.new(2026, 7, 31)
 
   def self.instance
     first_or_create!
@@ -26,8 +28,12 @@ class AdminSetting < ApplicationRecord
   end
 
   def paystack_configured?
-    ENV.fetch("PAYSTACK_SECRET_KEY", nil).present? && ENV.fetch("PAYSTACK_PUBLIC_KEY", nil).present? ||
-      paystack_secret_key.present? && paystack_public_key.present?
+    key = ENV.fetch("PAYSTACK_SECRET_KEY", nil).presence || paystack_secret_key
+    key.present? && key.start_with?("sk_") && !key.include?("your_")
+  end
+
+  def paystack_public_key_value
+    ENV.fetch("PAYSTACK_PUBLIC_KEY", nil).presence || paystack_public_key
   end
 
   # --- Payment / Access Logic ---
@@ -45,17 +51,17 @@ class AdminSetting < ApplicationRecord
   end
 
   def start_trial!
-    update!(trial_start_at: Time.current) if trial_start_at.blank?
+    update!(trial_start_at: TRIAL_START_DATE.beginning_of_day) if trial_start_at.blank?
   end
 
   def trial_active?
     return false if trial_start_at.blank?
-    trial_start_at + TRIAL_DURATION > Time.current
+    Date.current <= TRIAL_END_DATE
   end
 
   def trial_expired?
     return false if trial_start_at.blank?
-    !trial_active?
+    Date.current > TRIAL_END_DATE
   end
 
   def current_payment
