@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   get "about",   to: "pages#about",   as: :about
   get "privacy", to: "pages#privacy", as: :privacy
   get "terms",   to: "pages#terms",   as: :terms
+  get "health",  to: "pages#health",  as: :health
 
   # Subscriber Profiles Panel
   resource :profile, only: [ :show, :update ]

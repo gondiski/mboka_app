@@ -36,6 +36,18 @@
             <%= link_to "Admin Login", new_user_session_path, class: "text-brand-600 font-semibold hover:text-brand-700 transition" %>
           </div>
         <% end %>
+
+        <!-- Debug info (remove in production) -->
+        <% if Rails.env.development? %>
+          <div class="mt-6 p-4 bg-gray-100 rounded-xl text-xs text-gray-500">
+            <p><strong>Debug Info:</strong></p>
+            <% settings = AdminSetting.first %>
+            <p>Trial start: <%= settings&.trial_start_at&.strftime('%Y-%m-%d') || 'Not set' %></p>
+            <p>Trial active: <%= settings&.trial_active? %></p>
+            <p>App accessible: <%= settings&.app_accessible? %></p>
+            <p>Date: <%= Date.current %></p>
+          </div>
+        <% end %>
       </div>
     </div>
 

@@ -12,7 +12,12 @@ module PaymentAccessControl
   def check_app_access
     return if app_access_allowed?
 
-    redirect_to locked_path
+    # Add cache-busting headers to prevent Turbo from caching the redirect
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+
+    redirect_to locked_path, status: :see_other
   end
 
   def app_access_allowed?
@@ -21,20 +26,17 @@ module PaymentAccessControl
     settings = AdminSetting.first
     return true if settings.nil?
 
-    # Check directly - no caching
     settings.app_accessible?
   end
 
   def accessible_without_payment?
-    # Always allow these paths regardless of payment status
     allowed_paths = %w[
       pages
       subscribers
       magic_links
       email_preferences
-      devise/sessions
-      devise/registrations
-      webhooks/paystack
+      devise
+      webhooks
     ]
 
     return true if allowed_paths.any? { |path| controller_path.start_with?(path) }
