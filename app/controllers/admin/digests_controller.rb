@@ -43,6 +43,7 @@ class Admin::DigestsController < ApplicationController
     authorize @topic_digest, :approve?, policy_class: Admin::DigestPolicy
 
     @topic_digest.approve!(current_user)
+    clear_analytics_cache
     redirect_to admin_digests_path, notice: "Digest approved for sending."
   end
 
@@ -50,6 +51,7 @@ class Admin::DigestsController < ApplicationController
     authorize @topic_digest, :reject?, policy_class: Admin::DigestPolicy
 
     @topic_digest.reject!(current_user, reason: params[:rejection_reason])
+    clear_analytics_cache
     redirect_to admin_digests_path, alert: "Digest rejected."
   end
 
@@ -107,5 +109,10 @@ class Admin::DigestsController < ApplicationController
       search = "%#{params[:search]}%"
       @topic_digests = @topic_digests.joins(:topic).where("topics.name ILIKE :search OR topic_digests.content ILIKE :search", search: search)
     end
+  end
+
+  def clear_analytics_cache
+    Rails.cache.delete("dashboard_stats")
+    Rails.cache.delete_matched("reports/*")
   end
 end

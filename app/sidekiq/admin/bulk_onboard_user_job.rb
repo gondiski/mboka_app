@@ -15,7 +15,7 @@ class Admin::BulkOnboardUserJob
     user.assign_attributes(
       full_name: full_name.presence || "New Colleague",
       designation: designation.presence || "Professional Ecosystem Partner",
-      status: "pending",
+      status: "active",
       password: SecureRandom.hex(16)
     )
 

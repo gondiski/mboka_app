@@ -36,5 +36,20 @@ class DigestDeliveryJob
       random_digest = all_ready_digests.sample
       UserMailer.topic_digest(user, [random_digest]).deliver_later
     end
+
+    clear_analytics_cache
+  end
+
+  private
+
+  def clear_analytics_cache
+    Rails.cache.delete("dashboard_stats")
+    Rails.cache.delete_matched("reports/*")
+    Rails.cache.delete_matched("weekly_open_rates")
+    Rails.cache.delete_matched("monthly_open_rates")
+    Rails.cache.delete_matched("topic_open_rates")
+    Rails.cache.delete_matched("digest_performance")
+  rescue StandardError => e
+    Rails.logger.warn("Failed to clear analytics cache: #{e.message}")
   end
 end

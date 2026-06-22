@@ -1,0 +1,46 @@
+<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+  <div class="max-w-lg w-full">
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-br from-red-500 to-red-700 p-8 text-white text-center">
+        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h1 class="text-2xl font-bold mb-2">App Access Locked</h1>
+        <p class="text-red-100">Your Mboka subscription has expired.</p>
+      </div>
+
+      <!-- Content -->
+      <div class="p-8">
+        <div class="text-center mb-6">
+          <p class="text-gray-600 mb-4">
+            To continue using Mboka and receiving intelligence digests, the administrator needs to complete the payment for the next installment.
+          </p>
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <p class="text-sm text-amber-800">
+              <strong>Next step:</strong> The admin should log in and make a payment from the Payments page to restore access.
+            </p>
+          </div>
+        </div>
+
+        <% if defined?(current_user) && current_user&.has_role?(:admin) %>
+          <div class="mt-6">
+            <%= link_to admin_payments_path, class: "w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition shadow-lg" do %>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+              Go to Payments
+            <% end %>
+          </div>
+        <% else %>
+          <div class="mt-6 text-center">
+            <p class="text-sm text-gray-500 mb-3">Are you the administrator?</p>
+            <%= link_to "Admin Login", new_user_session_path, class: "text-brand-600 font-semibold hover:text-brand-700 transition" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-gray-400 mt-6">
+      Mboka &mdash; East Africa Intelligence Digest
+    </p>
+  </div>
+</div>

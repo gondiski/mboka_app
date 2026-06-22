@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_17_120002) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_19_162506) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "admin_settings", force: :cascade do |t|
+    t.text "serpapi_key"
+    t.text "anthropic_api_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "paystack_secret_key"
+    t.text "paystack_public_key"
+    t.integer "total_price_cents", default: 200000
+    t.integer "installment_count", default: 4
+    t.datetime "trial_start_at"
+  end
 
   create_table "ahoy_clicks", force: :cascade do |t|
     t.string "campaign"
@@ -52,6 +64,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_17_120002) do
     t.index ["topic_digest_id"], name: "index_favorites_on_topic_digest_id"
     t.index ["user_id", "topic_digest_id"], name: "index_favorites_on_user_id_and_topic_digest_id", unique: true
     t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.bigint "admin_setting_id", null: false
+    t.integer "amount_cents", null: false
+    t.integer "installment_number", null: false
+    t.integer "status", default: 0, null: false
+    t.string "paystack_reference"
+    t.datetime "paid_at"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_setting_id", "installment_number"], name: "index_payments_on_admin_setting_id_and_installment_number", unique: true
+    t.index ["admin_setting_id"], name: "index_payments_on_admin_setting_id"
+    t.index ["paystack_reference"], name: "index_payments_on_paystack_reference", unique: true
+    t.index ["status"], name: "index_payments_on_status"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -118,12 +146,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_17_120002) do
     t.integer "invitation_accepted_count", default: 0
     t.integer "invited_by_id"
     t.string "invited_by_type"
+    t.string "username"
+    t.datetime "username_changed_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unsubscribe_token"], name: "index_users_on_unsubscribe_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   create_table "users_roles", id: false, force: :cascade do |t|
@@ -136,6 +167,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_17_120002) do
 
   add_foreign_key "favorites", "topic_digests"
   add_foreign_key "favorites", "users"
+  add_foreign_key "payments", "admin_settings"
   add_foreign_key "topic_digests", "topics"
   add_foreign_key "topic_digests", "users", column: "moderated_by"
   add_foreign_key "user_topics", "topics"

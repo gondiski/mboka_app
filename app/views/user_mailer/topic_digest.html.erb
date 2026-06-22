@@ -19,9 +19,9 @@
       .content { padding: 8px 40px 40px; }
       .greeting { font-size: 22px; font-weight: 700; color: #0f172a; margin: 0 0 6px; letter-spacing: -0.01em; }
       .subtitle { font-size: 15px; color: #64748b; margin: 0 0 32px; }
-      .topic-card { background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #16a34a; border-radius: 12px; padding: 28px; margin-bottom: 20px; transition: box-shadow 0.2s; }
-      .topic-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-      .topic-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+      .topic-section { padding: 24px 0; }
+      .topic-section:first-child { padding-top: 0; }
+      .topic-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
       .topic-name { font-size: 17px; font-weight: 700; color: #16a34a; margin: 0; letter-spacing: -0.01em; }
       .topic-badge { font-size: 11px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); color: #15803d; padding: 4px 12px; border-radius: 20px; font-weight: 600; border: 1px solid #bbf7d0; letter-spacing: 0.02em; }
       .topic-content { font-size: 15px; color: #475569; line-height: 1.75; }
@@ -30,9 +30,9 @@
       .topic-content li { margin-bottom: 8px; color: #475569; }
       .topic-content a { color: #16a34a; text-decoration: none; font-weight: 600; }
       .topic-content a:hover { text-decoration: underline; }
-      .view-more-btn { display: inline-block; margin-top: 20px; padding: 10px 24px; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 10px; transition: all 0.2s; }
-      .view-more-btn:hover { background: linear-gradient(135deg, #15803d 0%, #166534 100%); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(22,163,74,0.3); }
-      .divider { height: 1px; background: linear-gradient(to right, transparent, #e2e8f0, transparent); margin: 28px 0; }
+      .view-more-link { display: inline-block; margin-top: 16px; font-size: 14px; color: #16a34a; font-weight: 600; text-decoration: none; }
+      .view-more-link:hover { text-decoration: underline; }
+      .topic-divider { height: 1px; background: #e5e7eb; margin: 0; }
       .footer { padding: 28px 40px; background: #f8fafc; border-top: 1px solid #f1f5f9; text-align: center; border-radius: 0 0 20px 20px; }
       .footer-brand { font-size: 16px; font-weight: 800; color: #16a34a; margin-bottom: 12px; letter-spacing: -0.02em; }
       .footer-links { margin-bottom: 16px; }
@@ -44,7 +44,7 @@
         .header { padding: 36px 24px 32px; }
         .content { padding: 8px 24px 32px; }
         .footer { padding: 24px; }
-        .topic-card { padding: 20px; }
+        .topic-section { padding: 20px 0; }
       }
     </style>
   </head>
@@ -64,7 +64,7 @@
             <p class="subtitle">Here's what happened across your topics this week.</p>
 
             <% @topic_digests.each_with_index do |digest, index| %>
-              <div class="topic-card">
+              <div class="topic-section">
                 <div class="topic-header">
                   <h3 class="topic-name"><%= digest.topic.name %></h3>
                   <span class="topic-badge">Week of <%= digest.week_of.strftime("%b %d") %></span>
@@ -72,12 +72,12 @@
                 <div class="topic-content">
                   <%= raw inject_utm_links(digest.content, source: "digest_email", medium: "email", campaign: digest.topic.name.parameterize, content: digest.id) %>
                 </div>
-                <a href="<%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>" class="view-more-btn">
+                <a href="<%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>" class="view-more-link">
                   Read Full Digest →
                 </a>
               </div>
               <% if index < @topic_digests.length - 1 %>
-                <div class="divider"></div>
+                <div class="topic-divider"></div>
               <% end %>
             <% end %>
 

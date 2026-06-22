@@ -47,7 +47,18 @@ Rails.application.routes.draw do
   namespace :admin do
     resource :dashboard, only: [ :show ]
     resource :reports, only: [ :show ]
+    resource :settings, only: [ :show, :update ]
     resource :digest_schedule, only: [ :show, :update ]
+
+    # Payments
+    resource :payments, only: [ :show ] do
+      post :checkout
+      collection do
+        get :verify
+        get :history
+      end
+    end
+
     resources :digests, only: [ :index, :show, :edit, :update ] do
       member do
         patch :approve
@@ -71,4 +82,10 @@ Rails.application.routes.draw do
     end
     resources :invitations, only: [ :create ]
   end
+
+  # Paystack Webhook
+  post "webhooks/paystack", to: "webhooks/paystack#receive"
+
+  # Locked Page (app expired)
+  get "locked", to: "pages#locked", as: :locked
 end

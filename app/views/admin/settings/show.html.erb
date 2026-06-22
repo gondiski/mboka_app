@@ -1,0 +1,223 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
+          <span class="text-2xl font-bold text-gray-900">Mboka Admin</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Users", admin_users_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Digests", admin_digests_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Schedule", admin_digest_schedule_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Settings", admin_settings_path, class: "text-sm font-semibold text-brand-600 nav-link" %>
+          <%= link_to "Payments", admin_payments_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Reports", admin_reports_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Sidekiq", "/admin/sidekiq", target: "_blank", class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+          <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700 transition nav-link" %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-black text-gray-900 mb-2">Settings</h1>
+    <p class="text-gray-600 mb-8">Configure API keys and payment settings for your Mboka instance.</p>
+
+    <%= form_with model: @settings, url: admin_settings_path, method: :patch, id: "settings-form", class: "space-y-6" do |f| %>
+      <!-- SerpAPI Key Card -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="px-8 py-5 border-b border-gray-100 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">SerpAPI Key</p>
+            <p class="text-sm text-gray-500">Google Jobs API for East Africa job listings</p>
+          </div>
+        </div>
+
+        <div class="p-8 space-y-4">
+          <div>
+            <label class="block text-sm font-bold text-gray-900 mb-2">API Key</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+              </div>
+              <%= f.text_field :serpapi_key, {
+                value: @settings.serpapi_key,
+                placeholder: "Enter your SerpAPI key",
+                class: "w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm font-mono text-gray-900"
+              } %>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">
+              Used to fetch recent job listings in East Africa via Google Jobs. Get your key at
+              <a href="https://serpapi.com" target="_blank" class="text-brand-600 underline">serpapi.com</a>
+            </p>
+          </div>
+
+          <% if @settings.serpapi_key.present? %>
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>Current key: <code class="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono"><%= @settings.serpapi_key_masked %></code></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Anthropic API Key Card -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="px-8 py-5 border-b border-gray-100 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">Anthropic Claude API Key</p>
+            <p class="text-sm text-gray-500">AI scraping for VC, accelerators, grants &amp; funding</p>
+          </div>
+        </div>
+
+        <div class="p-8 space-y-4">
+          <div>
+            <label class="block text-sm font-bold text-gray-900 mb-2">API Key</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+              </div>
+              <%= f.text_field :anthropic_api_key, {
+                value: @settings.anthropic_api_key,
+                placeholder: "Enter your Anthropic API key",
+                class: "w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm font-mono text-gray-900"
+              } %>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">
+              Used by Claude to scrape and analyze VC programs, angel networks, accelerator programs, grants, and funding opportunities.
+              Get your key at
+              <a href="https://console.anthropic.com" target="_blank" class="text-brand-600 underline">console.anthropic.com</a>
+            </p>
+          </div>
+
+          <% if @settings.anthropic_api_key.present? %>
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>Current key: <code class="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono"><%= @settings.anthropic_api_key_masked %></code></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Paystack Configuration Card -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="px-8 py-5 border-b border-gray-100 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">Paystack Installment Plan</p>
+            <p class="text-sm text-gray-500">Configure your Mboka license payment schedule</p>
+          </div>
+        </div>
+
+        <div class="p-8 space-y-6">
+          <div class="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+            <% if @settings.paystack_configured? %>
+              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span class="text-sm text-green-700 font-medium">Paystack is configured and ready to accept payments.</span>
+            <% else %>
+              <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+              <span class="text-sm text-amber-700 font-medium">Paystack keys not found. Add them to Rails credentials or the database.</span>
+            <% end %>
+          </div>
+
+          <div class="border-t border-gray-100 pt-6">
+            <p class="text-sm font-bold text-gray-900 mb-4">Installment Plan</p>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Total Price (cents)</label>
+                <%= f.number_field :total_price_cents, {
+                  value: @settings.total_price_cents || 200_000,
+                  class: "w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm font-medium text-gray-900"
+                } %>
+                <p class="text-xs text-gray-400 mt-1">In cents. 200000 = $2,000</p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Installments</label>
+                <%= f.select :installment_count, options_for_select([3, 4], @settings.installment_count || 4), {}, {
+                  class: "w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition text-sm font-medium text-gray-900"
+                } %>
+                <p class="text-xs text-gray-400 mt-1">Each installment unlocks 30 days of access</p>
+              </div>
+            </div>
+
+            <div class="mt-4 bg-gray-50 rounded-xl p-4">
+              <p class="text-sm text-gray-600">
+                <strong>Plan summary:</strong>
+                $<%= number_with_precision((@settings.total_price_cents || 200_000) / 100.0, precision: 0) %> total &divide;
+                <%= @settings.installment_count || 4 %> installments =
+                <strong>$<%= number_with_precision(((@settings.total_price_cents || 200_000) / 100.0) / (@settings.installment_count || 4), precision: 0) %></strong> per installment
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What These Keys Do -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+        <h3 class="text-lg font-bold text-gray-900 mb-6">How These Settings Are Used</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="flex items-start gap-3 p-4 bg-blue-50 rounded-xl">
+            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-blue-700 font-bold text-sm">1</span>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">SerpAPI</p>
+              <p class="text-sm text-gray-600 mt-1">Fetches recent East Africa job listings from Google Jobs for each digest topic.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-purple-50 rounded-xl">
+            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-purple-700 font-bold text-sm">2</span>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">Claude AI</p>
+              <p class="text-sm text-gray-600 mt-1">Scrapes VC, accelerators, grants, and funding opportunities for digest content.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-amber-50 rounded-xl">
+            <div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-amber-700 font-bold text-sm">3</span>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">Paystack</p>
+              <p class="text-sm text-gray-600 mt-1">Processes installment payments for your Mboka license. Each payment unlocks 30 days.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 px-8 py-5 flex items-center justify-between">
+        <button type="button" onclick="document.getElementById('settings-form').requestSubmit()" class="px-8 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition shadow-lg cursor-pointer transform hover:-translate-y-0.5 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Save Settings
+        </button>
+        <span class="text-xs text-gray-400">
+          <% if @settings.serpapi_key.present? && @settings.anthropic_api_key.present? && @settings.paystack_configured? %>
+            <span class="inline-flex items-center gap-1 text-green-600 font-semibold">
+              <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+              All settings configured
+            </span>
+          <% else %>
+            <span class="inline-flex items-center gap-1 text-amber-500 font-semibold">
+              <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+              Some settings missing
+            </span>
+          <% end %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+</div>

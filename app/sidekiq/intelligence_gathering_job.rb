@@ -18,9 +18,14 @@ class IntelligenceGatheringJob
         designation: "general"
       )
 
+      jobs = JobSearchService.call(topic_name: topic.name, schedule_date: week_date)
+      job_html = JobDigestFormatter.format(jobs)
+
+      full_content = job_html.present? ? "#{digest_content}\n#{job_html}" : digest_content
+
       TopicDigest.create!(
         topic: topic,
-        content: digest_content,
+        content: full_content,
         week_of: week_date,
         status: :draft
       )

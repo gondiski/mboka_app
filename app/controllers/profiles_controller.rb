@@ -16,8 +16,18 @@ class ProfilesController < ApplicationController
   def update
     @user = current_user
     authorize @user, policy_class: ProfilePolicy
-    if @user.update(profile_params)
-      redirect_to profile_path, notice: "Tracking targets updated successfully."
+
+    if username_changing?
+      unless @user.can_change_username?
+        @topics = Topic.all
+        flash.now[:alert] = "Username can only be changed once every 48 hours. You can change it again in #{@user.username_cooldown_display}."
+        render :show, status: :unprocessable_entity
+        return
+      end
+    end
+
+    if @user.update(profile_params.merge(username_change_timestamp))
+      redirect_to profile_path, notice: "Profile updated successfully."
     else
       @topics = Topic.all
       render :show, status: :unprocessable_entity
@@ -27,7 +37,15 @@ class ProfilesController < ApplicationController
   private
 
   def profile_params
-    params.require(:user).permit(:full_name, :designation, topic_ids: [])
+    params.require(:user).permit(:full_name, :username, :designation, topic_ids: [])
+  end
+
+  def username_changing?
+    params.dig(:user, :username).present? && params.dig(:user, :username).strip != @user.username
+  end
+
+  def username_change_timestamp
+    username_changing? ? { username_changed_at: Time.current } : {}
   end
 
   def load_digest_data

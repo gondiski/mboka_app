@@ -17,10 +17,13 @@ class AiAgentService
 
   private
 
+  def anthropic_api_key
+    ApiKeyCache.read("anthropic_api_key") ||
+      Rails.application.credentials.dig(:anthropic, :api_key)
+  end
+
   def scrape_web_for_topics
-    client = Anthropic::Client.new(
-      api_key: Rails.application.credentials.dig(:anthropic, :api_key)
-    )
+    client = Anthropic::Client.new(api_key: anthropic_api_key)
 
     response = client.messages(
       model: "claude-sonnet-4-20250514",
@@ -40,9 +43,7 @@ class AiAgentService
   end
 
   def analyze_and_summarize(raw_data)
-    client = Anthropic::Client.new(
-      api_key: Rails.application.credentials.dig(:anthropic, :api_key)
-    )
+    client = Anthropic::Client.new(api_key: anthropic_api_key)
 
     prompt = <<~TEXT
       You are an expert research agent. Analyze the following raw data for a professional working as a #{@designation}.
