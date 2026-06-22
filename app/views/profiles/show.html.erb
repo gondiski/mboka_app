@@ -183,12 +183,13 @@
         <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
           <div class="flex justify-between items-center mb-6">
             <h3 class="text-xl font-bold text-gray-900">Your Topics</h3>
-            <span class="text-sm font-bold text-brand-600"><%= @user.topics.count %> selected</span>
+            <span class="text-sm font-bold text-brand-600"><span id="topic-count"><%= @user.topics.count %></span> selected</span>
           </div>
+          <input type="hidden" name="user[topic_ids][]" value="">
           <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
             <% @topics.each do |topic| %>
               <label class="cursor-pointer relative">
-                <input type="checkbox" name="user[topic_ids][]" value="<%= topic.id %>" <%= 'checked' if @user.topic_ids.include?(topic.id) %> class="sr-only topic-checkbox">
+                <input type="checkbox" name="user[topic_ids][]" value="<%= topic.id %>" <%= 'checked' if @user.topic_ids.include?(topic.id) %> class="sr-only topic-checkbox" onchange="updateTopicCount()">
                 <div class="p-3 rounded-xl border-2 border-gray-200 hover:border-brand-300 transition flex items-center justify-between group">
                   <span class="text-sm font-medium text-gray-700"><%= topic.name %></span>
                   <svg class="w-5 h-5 text-brand-600 opacity-0 transform scale-50 transition-all duration-200 check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>

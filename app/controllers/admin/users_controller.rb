@@ -42,9 +42,15 @@ class Admin::UsersController < ApplicationController
     authorize User, :import?, policy_class: Admin::UserPolicy
     if params[:file].present?
       result = Admin::CsvImportService.call(params[:file])
-      redirect_to admin_users_path, notice: "#{result[:processed]} users queued for onboarding."
+      respond_to do |format|
+        format.json { render json: { processed: result[:processed], skipped: result[:skipped] } }
+        format.html { redirect_to admin_users_path, notice: "#{result[:processed]} users queued for onboarding." }
+      end
     else
-      redirect_to admin_users_path, alert: "No file selected."
+      respond_to do |format|
+        format.json { render json: { processed: 0, skipped: 0, error: "No file selected" }, status: :unprocessable_entity }
+        format.html { redirect_to admin_users_path, alert: "No file selected." }
+      end
     end
   end
 
