@@ -12,27 +12,28 @@ module PaymentAccessControl
   def check_app_access
     return if app_access_allowed?
 
-    # Add cache-busting headers to prevent Turbo from caching the redirect
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
-
     redirect_to locked_path, status: :see_other
   end
 
   def app_access_allowed?
-    return true if accessible_without_payment?
-
     settings = AdminSetting.first
-    return true if settings.nil?
 
-    settings.app_accessible?
+    # No settings or no trial started yet - allow everything
+    return true if settings.nil?
+    return true if settings.trial_start_at.blank?
+
+    # Trial active or all payments complete - allow everything
+    return true if settings.app_accessible?
+
+    # Trial expired and no payment - only allow locked page and payment flows
+    accessible_without_payment?
   end
 
   def accessible_without_payment?
     allowed_paths = %w[
       pages
       subscribers
+      profiles
       magic_links
       email_preferences
       devise
