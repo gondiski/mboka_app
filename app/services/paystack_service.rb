@@ -41,8 +41,8 @@ class PaystackService
   private
 
   def paystack_secret_key
-    AdminSetting.first&.paystack_secret_key.presence ||
-      Rails.application.credentials.dig(:paystack, :secret_key)
+    ENV.fetch("PAYSTACK_SECRET_KEY", nil).presence ||
+      AdminSetting.first&.paystack_secret_key.presence
   end
 
   def post(uri, body, secret_key)

@@ -25,7 +25,6 @@ class Admin::SettingsController < ApplicationController
     params.require(:admin_setting).permit(
       :serpapi_key,
       :anthropic_api_key,
-      :total_price_cents,
       :installment_count
     )
   end

@@ -26,8 +26,8 @@ class Webhooks::PaystackController < ApplicationController
   private
 
   def valid_signature?(payload, signature)
-    secret = AdminSetting.first&.paystack_secret_key.presence ||
-             Rails.application.credentials.dig(:paystack, :secret_key)
+    secret = ENV.fetch("PAYSTACK_SECRET_KEY", nil).presence ||
+             AdminSetting.first&.paystack_secret_key.presence
     return false if secret.blank?
 
     computed = OpenSSL::HMAC.hexdigest("SHA512", secret, payload)

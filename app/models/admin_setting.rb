@@ -4,9 +4,11 @@ class AdminSetting < ApplicationRecord
   has_many :payments, dependent: :destroy
 
   validate :singleton_record, on: :create
+  before_validation :enforce_fixed_price
 
   after_save :invalidate_api_key_cache
 
+  FIXED_PRICE_CENTS = 200_000
   TRIAL_DURATION = 30.days
 
   def self.instance
@@ -24,9 +26,8 @@ class AdminSetting < ApplicationRecord
   end
 
   def paystack_configured?
-    paystack_secret_key.present? && paystack_public_key.present? ||
-      Rails.application.credentials.dig(:paystack, :secret_key).present? &&
-      Rails.application.credentials.dig(:paystack, :public_key).present?
+    ENV.fetch("PAYSTACK_SECRET_KEY", nil).present? && ENV.fetch("PAYSTACK_PUBLIC_KEY", nil).present? ||
+      paystack_secret_key.present? && paystack_public_key.present?
   end
 
   # --- Payment / Access Logic ---
@@ -100,6 +101,10 @@ class AdminSetting < ApplicationRecord
     if AdminSetting.exists?
       errors.add(:base, "Only one admin settings record is allowed")
     end
+  end
+
+  def enforce_fixed_price
+    self.total_price_cents = FIXED_PRICE_CENTS
   end
 
   def invalidate_api_key_cache
