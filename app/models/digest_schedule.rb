@@ -29,9 +29,9 @@ class DigestSchedule < ApplicationRecord
 
   GENERATION_DAY_OPTIONS = {
     "Same day as delivery" => -1,
-    "1 day before" => 1,
-    "2 days before" => 2,
-    "3 days before" => 3,
+    "1 day before" => -2,
+    "2 days before" => -3,
+    "3 days before" => -4,
     "Sunday" => 0,
     "Monday" => 1,
     "Tuesday" => 2,
@@ -47,22 +47,31 @@ class DigestSchedule < ApplicationRecord
 
   def should_generate_today?(date = Date.current)
     return false unless active?
+    return false if days.blank?
 
     if generation_day == -1
+      # Same day as delivery
       should_send_today?(date)
-    else
+    elsif generation_day_negative?
+      # Relative days before delivery (e.g., -2 = 2 days before)
+      offset = generation_day.abs - 1
       days.any? do |send_day|
-        generate_day = (send_day - generation_day.abs) % 7
+        generate_day = (send_day - offset) % 7
         date.wday == generate_day
       end
+    else
+      # Specific day of week (0-6)
+      date.wday == generation_day
     end
   end
 
   def generation_day_name
     return "Same day as delivery" if generation_day == -1
-    DAYS_OF_WEEK.key(generation_day)
+    return "#{generation_day.abs - 1} day(s) before delivery" if generation_day_negative?
+    DAYS_OF_WEEK.key(generation_day) || "Unknown"
   end
 
+  # Cron expression for the delivery days
   def cron_expression
     return nil if send_time.blank? || days.blank?
 
@@ -73,14 +82,29 @@ class DigestSchedule < ApplicationRecord
     "#{minute} #{hour} * * #{day_names}"
   end
 
+  # Cron expression for the generation day
   def generation_cron_expression
-    return nil if send_time.blank? || generation_day == -1
+    return nil if send_time.blank?
+    return nil unless active?
 
     minute = send_time.min
+    # Generate 2 hours before delivery time
     hour = [send_time.hour - 2, 0].max
-    day_name = DAY_NAMES[generation_day]
 
-    "#{minute} #{hour} * * #{day_name}"
+    if generation_day == -1
+      # Same day as delivery - use same cron as delivery
+      return cron_expression
+    elsif generation_day_negative?
+      # Relative days before delivery
+      offset = generation_day.abs - 1
+      gen_days = days.map { |d| (d - offset) % 7 }
+      day_names = gen_days.map { |d| DAY_NAMES[d] }.compact.join(",")
+      return "#{minute} #{hour} * * #{day_names}"
+    else
+      # Specific day of week
+      day_name = DAY_NAMES[generation_day]
+      return "#{minute} #{hour} * * #{day_name}"
+    end
   end
 
   def days=(value)
@@ -89,6 +113,10 @@ class DigestSchedule < ApplicationRecord
   end
 
   private
+
+  def generation_day_negative?
+    generation_day.present? && generation_day < -1
+  end
 
   def singleton_record
     if DigestSchedule.exists?

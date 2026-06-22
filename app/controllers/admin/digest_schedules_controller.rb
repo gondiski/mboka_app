@@ -13,7 +13,7 @@ class Admin::DigestSchedulesController < ApplicationController
     authorize @schedule, :update?, policy_class: Admin::DigestSchedulePolicy
 
     if @schedule.update(schedule_params)
-      update_sidekiq_cron(@schedule) if @schedule.active?
+      update_sidekiq_crons(@schedule)
       redirect_to admin_digest_schedule_path, notice: "Digest schedule updated successfully."
     else
       render :show, status: :unprocessable_entity
@@ -28,18 +28,37 @@ class Admin::DigestSchedulesController < ApplicationController
     end
   end
 
-  def update_sidekiq_cron(schedule)
-    job_name = "digest-scheduler"
-
-    existing = Sidekiq::Cron::Job.find(job_name)
-    existing&.destroy
+  def update_sidekiq_crons(schedule)
+    destroy_cron_job("digest-delivery")
+    destroy_cron_job("digest-generation")
 
     return unless schedule.active?
 
-    Sidekiq::Cron::Job.create(
-      name: job_name,
-      cron: schedule.cron_expression,
-      class: "DigestSchedulerJob"
-    )
+    # Create delivery cron job
+    if schedule.cron_expression.present?
+      Sidekiq::Cron::Job.create(
+        name: "digest-delivery",
+        cron: schedule.cron_expression,
+        class: "DigestDeliveryJob",
+        args: [Date.current.beginning_of_week.to_s]
+      )
+    end
+
+    # Create generation cron job
+    if schedule.generation_cron_expression.present?
+      Sidekiq::Cron::Job.create(
+        name: "digest-generation",
+        cron: schedule.generation_cron_expression,
+        class: "IntelligenceGatheringJob",
+        args: [Date.current.beginning_of_week.to_s]
+      )
+    end
+  end
+
+  def destroy_cron_job(name)
+    existing = Sidekiq::Cron::Job.find(name)
+    existing&.destroy
+  rescue StandardError => e
+    Rails.logger.warn("Failed to destroy cron job '#{name}': #{e.message}")
   end
 end

@@ -67,6 +67,7 @@ class AdminSetting < ApplicationRecord
   end
 
   def app_accessible?
+    return true if all_payments_complete?
     trial_active? || payment_active?
   end
 

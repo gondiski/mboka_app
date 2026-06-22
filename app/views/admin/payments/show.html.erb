@@ -26,36 +26,55 @@
     <p class="text-gray-600 mb-8">Manage your Mboka license installments.</p>
 
     <!-- Status Banner -->
-    <% if @settings.app_accessible? %>
+    <% if @settings.all_payments_complete? %>
+      <!-- All payments done - permanent access -->
       <div class="bg-green-50 border border-green-200 rounded-2xl p-6 mb-8 flex items-center gap-4">
         <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
           <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <div>
-          <p class="font-bold text-green-900">
-            <% if @settings.trial_active? %>
-              Free Trial Active
-            <% else %>
-              App Access Active
-            <% end %>
+          <p class="font-bold text-green-900">License Fully Paid</p>
+          <p class="text-sm text-green-700">Your Mboka license is complete. You have permanent access to the application.</p>
+        </div>
+      </div>
+    <% elsif @settings.trial_active? %>
+      <!-- Trial active -->
+      <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-8 flex items-center gap-4">
+        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <p class="font-bold text-blue-900">Free Trial Active</p>
+          <p class="text-sm text-blue-700">
+            Your trial expires in <%= time_ago_in_words(@settings.trial_start_at + 30.days) %>
+            (<%= (@settings.trial_start_at + 30.days).strftime("%B %d, %Y") %>).
+            Make your first payment before then to avoid interruption.
           </p>
+        </div>
+      </div>
+    <% elsif @settings.payment_active? %>
+      <!-- Payment active -->
+      <div class="bg-green-50 border border-green-200 rounded-2xl p-6 mb-8 flex items-center gap-4">
+        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <p class="font-bold text-green-900">Access Active</p>
           <p class="text-sm text-green-700">
-            <% if @settings.trial_active? %>
-              Trial expires <%= time_ago_in_words(@settings.trial_start_at + 30.days) %> from now.
-            <% elsif @settings.current_payment %>
-              Access expires on <%= @settings.current_payment.expires_at.strftime("%B %d, %Y") %>.
-            <% end %>
+            Current installment access expires on <%= @settings.current_payment.expires_at.strftime("%B %d, %Y") %>.
+            Pay the next installment before then to maintain access.
           </p>
         </div>
       </div>
     <% else %>
-      <div class="bg-red-50 border border-red-200 rounded-2xl p-6 mb-8 flex items-center gap-4">
-        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      <!-- Trial expired, no payment - need to pay -->
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-8 flex items-center gap-4">
+        <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
         </div>
         <div>
-          <p class="font-bold text-red-900">Access Expired</p>
-          <p class="text-sm text-red-700">Make a payment to restore app access.</p>
+          <p class="font-bold text-amber-900">Free Trial Expired</p>
+          <p class="text-sm text-amber-700">Your 30-day free trial has ended. Make your first payment to restore access to Mboka.</p>
         </div>
       </div>
     <% end %>
@@ -103,8 +122,14 @@
       </div>
     </div>
 
-    <!-- Pay Button -->
-    <% if @next_installment %>
+    <!-- Pay Button or Completion -->
+    <% if @settings.all_payments_complete? %>
+      <div class="bg-green-50 border border-green-200 rounded-2xl p-6 mb-8 text-center">
+        <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        <p class="font-bold text-green-900 text-xl mb-2">License Fully Paid</p>
+        <p class="text-green-700">All <%= @summary[:total_installments] %> installments have been paid. You have permanent access to Mboka.</p>
+      </div>
+    <% elsif @next_installment %>
       <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
         <div class="flex items-center justify-between">
           <div>
@@ -122,12 +147,6 @@
             <%= link_to "Configure Paystack First", admin_settings_path, class: "px-6 py-3 bg-gray-100 text-gray-500 font-semibold rounded-xl hover:bg-gray-200 transition" %>
           <% end %>
         </div>
-      </div>
-    <% elsif @settings.all_payments_complete? %>
-      <div class="bg-green-50 border border-green-200 rounded-2xl p-6 mb-8 text-center">
-        <svg class="w-12 h-12 text-green-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <p class="font-bold text-green-900 text-lg">All Installments Paid!</p>
-        <p class="text-sm text-green-700 mt-1">Your Mboka license is fully paid.</p>
       </div>
     <% end %>
 
@@ -180,7 +199,7 @@
         <div class="px-6 py-12 text-center text-gray-500">
           <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
           <p class="font-medium">No payments yet</p>
-          <p class="text-sm mt-1">Payments will appear here after your first transaction.</p>
+          <p class="text-sm mt-1">Your first payment will be recorded here after your trial ends.</p>
         </div>
       <% end %>
     </div>

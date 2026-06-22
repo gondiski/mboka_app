@@ -2,10 +2,8 @@
 
 require "sidekiq/cron"
 
-if Sidekiq.server?
-  Sidekiq::Cron::Job.create(
-    name: "digest-scheduler",
-    cron: "* * * * *",
-    class: "DigestSchedulerJob"
-  )
-end
+# Cron jobs are now managed dynamically by Admin::DigestSchedulesController
+# They are created/updated when the admin changes the schedule settings.
+#
+# delivery job: "digest-delivery" - runs on configured delivery days
+# generation job: "digest-generation" - runs on configured generation days

@@ -20,9 +20,10 @@ module PaymentAccessControl
 
     settings = cached_admin_settings
     return true if settings.nil?
+    return true if settings[:all_payments_complete]
     return true if settings[:app_accessible]
 
-    !(settings[:trial_expired] && !settings[:payment_active])
+    false
   end
 
   def cached_admin_settings
@@ -31,7 +32,7 @@ module PaymentAccessControl
       return nil if settings.nil?
 
       {
-        trial_start_at: settings.trial_start_at,
+        all_payments_complete: settings.all_payments_complete?,
         app_accessible: settings.app_accessible?,
         trial_expired: settings.trial_expired?,
         payment_active: settings.payment_active?
