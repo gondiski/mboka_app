@@ -18,26 +18,11 @@ module PaymentAccessControl
   def app_access_allowed?
     return true if accessible_without_payment?
 
-    settings = cached_admin_settings
+    settings = AdminSetting.first
     return true if settings.nil?
-    return true if settings[:all_payments_complete]
-    return true if settings[:app_accessible]
 
-    false
-  end
-
-  def cached_admin_settings
-    Rails.cache.fetch("admin_settings_access_check", expires_in: 2.minutes) do
-      settings = AdminSetting.first
-      return nil if settings.nil?
-
-      {
-        all_payments_complete: settings.all_payments_complete?,
-        app_accessible: settings.app_accessible?,
-        trial_expired: settings.trial_expired?,
-        payment_active: settings.payment_active?
-      }
-    end
+    # Always check fresh - no cache for access control
+    settings.app_accessible?
   end
 
   def accessible_without_payment?
@@ -53,7 +38,7 @@ module PaymentAccessControl
     return true if allowed_paths.any? { |path| controller_path.start_with?(path) }
     return true if controller_path.start_with?("admin/payments")
     return true if controller_path.start_with?("admin/settings")
-    return true if controller_name == "locked" && action_name == "locked"
+    return true if controller_name == "locked"
 
     false
   end
