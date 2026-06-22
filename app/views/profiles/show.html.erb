@@ -252,7 +252,22 @@
       customClass: { popup: 'swal2-border-radius' }
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = '<%= destroy_user_session_path %>';
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '<%= destroy_user_session_path %>';
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'delete';
+        form.appendChild(methodInput);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'authenticity_token';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+        document.body.appendChild(form);
+        form.submit();
       }
     });
   }
