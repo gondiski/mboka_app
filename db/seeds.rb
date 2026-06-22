@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+if Rails.env.production?
+  load Rails.root.join("db", "seeds_production.rb")
+  exit
+end
+
 puts "Clearing existing data..."
 Favorite.destroy_all
 TopicDigest.destroy_all
@@ -32,13 +37,17 @@ admins_data = [
 ]
 
 admins_data.each do |attrs|
-  user = User.find_or_create_by!(email: attrs[:email]) do |u|
-    u.full_name = attrs[:full_name]
-    u.designation = attrs[:designation]
-    u.status = "active"
-    u.password = "password123"
-    u.password_confirmation = "password123"
+  user = User.find_or_initialize_by(email: attrs[:email])
+  user.assign_attributes(
+    full_name: attrs[:full_name],
+    designation: attrs[:designation],
+    status: "active"
+  )
+  if user.new_record?
+    user.password = "password123"
+    user.password_confirmation = "password123"
   end
+  user.save!
   user.add_role(:admin) unless user.has_role?(:admin)
   puts "Admin: #{user.email}"
 end
@@ -49,13 +58,17 @@ moderators_data = [
 ]
 
 moderators_data.each do |attrs|
-  user = User.find_or_create_by!(email: attrs[:email]) do |u|
-    u.full_name = attrs[:full_name]
-    u.designation = attrs[:designation]
-    u.status = "active"
-    u.password = "password123"
-    u.password_confirmation = "password123"
+  user = User.find_or_initialize_by(email: attrs[:email])
+  user.assign_attributes(
+    full_name: attrs[:full_name],
+    designation: attrs[:designation],
+    status: "active"
+  )
+  if user.new_record?
+    user.password = "password123"
+    user.password_confirmation = "password123"
   end
+  user.save!
   user.add_role(:moderator) unless user.has_role?(:moderator)
   DesignationTopicMatcher.assign_to_user(user)
   puts "Moderator: #{user.email}"
@@ -109,13 +122,17 @@ end
 all_subscribers = named_subscribers + generated_users
 
 all_subscribers.each do |attrs|
-  user = User.find_or_create_by!(email: attrs[:email]) do |u|
-    u.full_name = attrs[:full_name]
-    u.designation = attrs[:designation]
-    u.status = "active"
-    u.password = "password123"
-    u.password_confirmation = "password123"
+  user = User.find_or_initialize_by(email: attrs[:email])
+  user.assign_attributes(
+    full_name: attrs[:full_name],
+    designation: attrs[:designation],
+    status: "active"
+  )
+  if user.new_record?
+    user.password = "password123"
+    user.password_confirmation = "password123"
   end
+  user.save!
   user.add_role(:subscriber) unless user.has_role?(:subscriber)
   DesignationTopicMatcher.assign_to_user(user)
 end
