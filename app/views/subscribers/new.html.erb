@@ -1,79 +1,85 @@
 <!-- Navigation -->
-<nav class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm">
+<nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-white/90 backdrop-blur-md shadow-sm">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-20">
-      <div class="flex items-center space-x-2">
-        <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
+      <div class="flex items-center space-x-2 group">
+        <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:shadow-brand-500/30 transition-all duration-300 group-hover:scale-110">M</div>
         <span class="text-2xl font-bold text-gray-900">Mboka</span>
       </div>
       <div class="hidden md:flex items-center space-x-8">
-        <a href="#features" class="text-gray-600 hover:text-brand-600 font-medium transition">Features</a>
-        <a href="#testimonials" class="text-gray-600 hover:text-brand-600 font-medium transition">Stories</a>
-        <%= link_to "Sign In", new_user_session_path, class: "text-gray-600 hover:text-brand-600 font-medium transition" %>
-        <button @click="$dispatch('open-subscribe')" class="bg-brand-600 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-brand-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">Subscribe</button>
+        <a href="#features" class="text-gray-600 hover:text-brand-600 font-medium transition-all duration-300 hover:-translate-y-0.5">Features</a>
+        <a href="#testimonials" class="text-gray-600 hover:text-brand-600 font-medium transition-all duration-300 hover:-translate-y-0.5">Stories</a>
+        <%= link_to "Sign In", new_user_session_path, class: "text-gray-600 hover:text-brand-600 font-medium transition-all duration-300 hover:-translate-y-0.5" %>
+        <button @click="$dispatch('open-subscribe')" class="bg-brand-600 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-brand-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-brand-500/25 transform hover:-translate-y-0.5 active:scale-95">Subscribe</button>
       </div>
-      <button @click="$dispatch('open-subscribe')" class="md:hidden bg-brand-600 text-white px-4 py-2 rounded-full text-sm font-semibold">Subscribe</button>
+      <button @click="$dispatch('open-subscribe')" class="md:hidden bg-brand-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-brand-700 transition-all duration-300 active:scale-95">Subscribe</button>
     </div>
   </div>
 </nav>
 
 <!-- Hero Section -->
-<section class="relative min-h-screen flex items-center pt-20 overflow-hidden" style="background-image: radial-gradient(circle at 1px 1px, rgba(22, 163, 74, 0.1) 1px, transparent 0); background-size: 40px 40px;">
-  <div class="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-amber-50 opacity-60"></div>
-  <div class="absolute top-32 right-10 w-20 h-20 bg-brand-200 rounded-full blur-3xl opacity-40"></div>
-  <div class="absolute bottom-32 left-10 w-32 h-32 bg-amber-200 rounded-full blur-3xl opacity-40"></div>
+<section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+  <!-- Animated background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-amber-50"></div>
+  <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(22, 163, 74, 0.08) 1px, transparent 0); background-size: 40px 40px;"></div>
+
+  <!-- Floating orbs with animation -->
+  <div class="absolute top-32 right-10 w-20 h-20 bg-brand-300 rounded-full blur-3xl opacity-30 animate-float"></div>
+  <div class="absolute bottom-32 left-10 w-32 h-32 bg-amber-300 rounded-full blur-3xl opacity-30 animate-float-delayed"></div>
+  <div class="absolute top-1/2 left-1/3 w-16 h-16 bg-blue-200 rounded-full blur-2xl opacity-20 animate-float-slow"></div>
 
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <div class="space-y-8">
-        <div class="inline-flex items-center px-4 py-2 bg-brand-100 text-brand-700 rounded-full text-sm font-semibold">
+        <div class="inline-flex items-center px-4 py-2 bg-brand-100 text-brand-700 rounded-full text-sm font-semibold animate-fade-in-down">
           <span class="w-2 h-2 bg-brand-500 rounded-full mr-2 animate-pulse"></span>
           Trusted by 10,000+ Job Seekers & Entrepreneurs
         </div>
-        <h1 class="text-5xl lg:text-7xl font-black leading-tight text-gray-900">
-          Discover Your Next <span class="gradient-text">Big Opportunity</span> Weekly
+        <h1 class="text-5xl lg:text-7xl font-black leading-tight text-gray-900 animate-fade-in-up">
+          Discover Your Next <span class="gradient-text inline-block animate-gradient">Big Opportunity</span> Weekly
         </h1>
-        <p class="text-xl text-gray-600 leading-relaxed max-w-lg">
+        <p class="text-xl text-gray-600 leading-relaxed max-w-lg animate-fade-in-up animation-delay-200">
           Curated job openings, grants, fellowships, and accelerator programs delivered straight to your inbox. Tailored for ambitious professionals and entrepreneurs in Kenya.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4">
-          <button @click="$dispatch('open-subscribe')" class="px-8 py-4 bg-brand-600 text-white rounded-full font-bold text-lg hover:bg-brand-700 transition shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center justify-center gap-2">
+        <div class="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-400">
+          <button @click="$dispatch('open-subscribe')" class="group px-8 py-4 bg-brand-600 text-white rounded-full font-bold text-lg hover:bg-brand-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-brand-500/30 transform hover:-translate-y-1 flex items-center justify-center gap-2 active:scale-95">
             <span>Subscribe Now</span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
           </button>
         </div>
-        <div class="flex items-center gap-4 text-sm text-gray-500">
+        <div class="flex items-center gap-4 text-sm text-gray-500 animate-fade-in-up animation-delay-600">
           <div class="flex -space-x-2">
-            <img src="https://i.pravatar.cc/100?img=1" class="w-8 h-8 rounded-full border-2 border-white" alt="User">
-            <img src="https://i.pravatar.cc/100?img=2" class="w-8 h-8 rounded-full border-2 border-white" alt="User">
-            <img src="https://i.pravatar.cc/100?img=3" class="w-8 h-8 rounded-full border-2 border-white" alt="User">
-            <img src="https://i.pravatar.cc/100?img=4" class="w-8 h-8 rounded-full border-2 border-white" alt="User">
+            <img src="https://i.pravatar.cc/100?img=1" class="w-8 h-8 rounded-full border-2 border-white hover:scale-110 transition-transform duration-200 hover:z-10" alt="User">
+            <img src="https://i.pravatar.cc/100?img=2" class="w-8 h-8 rounded-full border-2 border-white hover:scale-110 transition-transform duration-200 hover:z-10" alt="User">
+            <img src="https://i.pravatar.cc/100?img=3" class="w-8 h-8 rounded-full border-2 border-white hover:scale-110 transition-transform duration-200 hover:z-10" alt="User">
+            <img src="https://i.pravatar.cc/100?img=4" class="w-8 h-8 rounded-full border-2 border-white hover:scale-110 transition-transform duration-200 hover:z-10" alt="User">
           </div>
           <p>Join 10,000+ subscribers today</p>
         </div>
       </div>
 
-      <div class="relative hidden lg:block">
+      <div class="relative hidden lg:block animate-fade-in-right">
         <div class="relative w-full max-w-md mx-auto">
-          <div class="bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition duration-500">
+          <!-- Floating card -->
+          <div class="bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition-all duration-700 hover:shadow-3xl animate-float-card">
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center"><span class="text-brand-600 font-bold">M</span></div>
                 <div><p class="font-semibold text-gray-900">Mboka Weekly</p><p class="text-xs text-gray-500">Monday, 8:00 AM</p></div>
               </div>
-              <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-bold rounded-full">NEW</span>
+              <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-bold rounded-full animate-pulse">NEW</span>
             </div>
             <h3 class="font-bold text-lg mb-3 text-gray-800">5 Opportunities Matched For You</h3>
             <div class="space-y-3">
-              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-brand-50 transition-colors duration-300 cursor-default">
                 <div class="w-2 h-2 bg-brand-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div><p class="font-medium text-sm text-gray-800">Senior Product Designer</p><p class="text-xs text-gray-500">Safaricom - Nairobi - KES 180K</p></div>
               </div>
-              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-amber-50 transition-colors duration-300 cursor-default">
                 <div class="w-2 h-2 bg-amber-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div><p class="font-medium text-sm text-gray-800">Hivos East Africa Grant</p><p class="text-xs text-gray-500">Deadline: Dec 15 - Up to $50K</p></div>
               </div>
-              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors duration-300 cursor-default">
                 <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div><p class="font-medium text-sm text-gray-800">Google for Startups</p><p class="text-xs text-gray-500">Accelerator - Applications Open</p></div>
               </div>
@@ -89,10 +95,22 @@
 <section class="py-16 bg-white border-y border-gray-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-      <div class="space-y-2"><p class="text-4xl font-black text-brand-600">10K+</p><p class="text-gray-600 font-medium">Active Subscribers</p></div>
-      <div class="space-y-2"><p class="text-4xl font-black text-brand-600">500+</p><p class="text-gray-600 font-medium">Opportunities/Month</p></div>
-      <div class="space-y-2"><p class="text-4xl font-black text-brand-600">85%</p><p class="text-gray-600 font-medium">Success Rate</p></div>
-      <div class="space-y-2"><p class="text-4xl font-black text-brand-600">50+</p><p class="text-gray-600 font-medium">Partner Organizations</p></div>
+      <div class="space-y-2 scroll-animate" data-animation="fade-up">
+        <p class="text-4xl font-black text-brand-600"><span class="counter" data-target="10000">0</span>K+</p>
+        <p class="text-gray-600 font-medium">Active Subscribers</p>
+      </div>
+      <div class="space-y-2 scroll-animate" data-animation="fade-up" data-delay="100">
+        <p class="text-4xl font-black text-brand-600"><span class="counter" data-target="500">0</span>+</p>
+        <p class="text-gray-600 font-medium">Opportunities/Month</p>
+      </div>
+      <div class="space-y-2 scroll-animate" data-animation="fade-up" data-delay="200">
+        <p class="text-4xl font-black text-brand-600"><span class="counter" data-target="85">0</span>%</p>
+        <p class="text-gray-600 font-medium">Success Rate</p>
+      </div>
+      <div class="space-y-2 scroll-animate" data-animation="fade-up" data-delay="300">
+        <p class="text-4xl font-black text-brand-600"><span class="counter" data-target="50">0</span>+</p>
+        <p class="text-gray-600 font-medium">Partner Organizations</p>
+      </div>
     </div>
   </div>
 </section>
@@ -100,30 +118,30 @@
 <!-- Features Section -->
 <section id="features" class="py-24 bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-3xl mx-auto mb-16">
+    <div class="text-center max-w-3xl mx-auto mb-16 scroll-animate" data-animation="fade-up">
       <h2 class="text-4xl font-black text-gray-900 mb-4">Why Choose Mboka?</h2>
       <p class="text-xl text-gray-600">We do the heavy lifting so you can focus on what matters.</p>
     </div>
     <div class="grid md:grid-cols-3 gap-8">
-      <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition group">
-        <div class="w-14 h-14 bg-brand-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+      <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 group scroll-animate" data-animation="fade-up" data-delay="0">
+        <div class="w-14 h-14 bg-brand-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 group-hover:shadow-lg group-hover:shadow-brand-200">
           <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
         </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Curated Weekly Emails</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-brand-600 transition-colors duration-300">Curated Weekly Emails</h3>
         <p class="text-gray-600 leading-relaxed">Handpicked opportunities delivered every Monday. No spam, no fluff.</p>
       </div>
-      <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition group">
-        <div class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+      <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 group scroll-animate" data-animation="fade-up" data-delay="100">
+        <div class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 group-hover:shadow-lg group-hover:shadow-amber-200">
           <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
         </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Custom Topic Selection</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-amber-600 transition-colors duration-300">Custom Topic Selection</h3>
         <p class="text-gray-600 leading-relaxed">Choose exactly what you want. Completely free, forever.</p>
       </div>
-      <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition group">
-        <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+      <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 group scroll-animate" data-animation="fade-up" data-delay="200">
+        <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 group-hover:shadow-lg group-hover:shadow-blue-200">
           <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Instant Alerts</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">Instant Alerts</h3>
         <p class="text-gray-600 leading-relaxed">Be the first to apply. Get real-time notifications for high-priority opportunities in your selected topics.</p>
       </div>
     </div>
@@ -133,24 +151,26 @@
 <!-- How It Works -->
 <section class="py-24 bg-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-3xl mx-auto mb-16">
+    <div class="text-center max-w-3xl mx-auto mb-16 scroll-animate" data-animation="fade-up">
       <h2 class="text-4xl font-black text-gray-900 mb-4">How Mboka Works</h2>
       <p class="text-xl text-gray-600">From signup to success in three simple steps</p>
     </div>
     <div class="grid md:grid-cols-3 gap-8 relative">
-      <div class="hidden md:block absolute top-1/2 left-1/3 right-1/3 h-0.5 bg-brand-200 -translate-y-1/2"></div>
-      <div class="relative text-center">
-        <div class="w-20 h-20 bg-brand-600 rounded-full flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-xl relative z-10">1</div>
+      <div class="hidden md:block absolute top-1/2 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-brand-200 via-brand-400 to-brand-200 -translate-y-1/2">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent animate-shimmer"></div>
+      </div>
+      <div class="relative text-center scroll-animate" data-animation="scale-up" data-delay="0">
+        <div class="w-20 h-20 bg-gradient-to-br from-brand-500 to-brand-700 rounded-full flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-xl shadow-brand-500/30 relative z-10 hover:scale-110 hover:shadow-2xl hover:shadow-brand-500/40 transition-all duration-500 cursor-default">1</div>
         <h3 class="text-xl font-bold text-gray-900 mb-3">Subscribe</h3>
         <p class="text-gray-600">Sign up for our free weekly digest to get started. No hidden fees, ever.</p>
       </div>
-      <div class="relative text-center">
-        <div class="w-20 h-20 bg-brand-600 rounded-full flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-xl relative z-10">2</div>
+      <div class="relative text-center scroll-animate" data-animation="scale-up" data-delay="200">
+        <div class="w-20 h-20 bg-gradient-to-br from-brand-500 to-brand-700 rounded-full flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-xl shadow-brand-500/30 relative z-10 hover:scale-110 hover:shadow-2xl hover:shadow-brand-500/40 transition-all duration-500 cursor-default">2</div>
         <h3 class="text-xl font-bold text-gray-900 mb-3">Select Your Topics</h3>
         <p class="text-gray-600">Pick from 20+ categories. Mix and match as you grow, completely free.</p>
       </div>
-      <div class="relative text-center">
-        <div class="w-20 h-20 bg-brand-600 rounded-full flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-xl relative z-10">3</div>
+      <div class="relative text-center scroll-animate" data-animation="scale-up" data-delay="400">
+        <div class="w-20 h-20 bg-gradient-to-br from-brand-500 to-brand-700 rounded-full flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-xl shadow-brand-500/30 relative z-10 hover:scale-110 hover:shadow-2xl hover:shadow-brand-500/40 transition-all duration-500 cursor-default">3</div>
         <h3 class="text-xl font-bold text-gray-900 mb-3">Receive & Apply</h3>
         <p class="text-gray-600">Get matched opportunities in your inbox. Apply fast and track your success rate.</p>
       </div>
@@ -161,63 +181,63 @@
 <!-- Pricing Section -->
 <section id="pricing" class="py-24 bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-3xl mx-auto mb-16">
+    <div class="text-center max-w-3xl mx-auto mb-16 scroll-animate" data-animation="fade-up">
       <h2 class="text-4xl font-black text-gray-900 mb-4">Free, Forever</h2>
       <p class="text-xl text-gray-600">All features, completely free. No hidden fees.</p>
     </div>
-    <div class="max-w-5xl mx-auto">
-      <div class="bg-white rounded-3xl p-12 shadow-2xl border-2 border-brand-100 hover:border-brand-200 transition text-center">
+    <div class="max-w-5xl mx-auto scroll-animate" data-animation="fade-up" data-delay="100">
+      <div class="bg-white rounded-3xl p-12 shadow-2xl border-2 border-brand-100 hover:border-brand-300 transition-all duration-500 text-center hover:shadow-3xl group">
         <div class="mb-6">
           <h3 class="text-3xl font-bold text-gray-900 mb-2">Weekly Navigator</h3>
           <p class="text-gray-600 text-lg">Curated opportunities for your career path</p>
         </div>
         <div class="mb-8">
-          <span class="text-7xl font-black text-brand-600">Free</span>
+          <span class="text-7xl font-black text-brand-600 group-hover:scale-105 inline-block transition-transform duration-500">Free</span>
           <span class="text-gray-500 text-xl">/forever</span>
         </div>
         <div class="grid md:grid-cols-2 gap-8 mb-10 text-left max-w-2xl mx-auto">
           <ul class="space-y-4">
-            <li class="flex items-center gap-3">
-              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <li class="flex items-center gap-3 group/item hover:bg-brand-50 p-2 rounded-lg transition-colors duration-200">
+              <svg class="w-6 h-6 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               <span class="text-gray-700 text-lg">Weekly job listings</span>
             </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <li class="flex items-center gap-3 group/item hover:bg-brand-50 p-2 rounded-lg transition-colors duration-200">
+              <svg class="w-6 h-6 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               <span class="text-gray-700 text-lg">Grant & funding alerts</span>
             </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <li class="flex items-center gap-3 group/item hover:bg-brand-50 p-2 rounded-lg transition-colors duration-200">
+              <svg class="w-6 h-6 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               <span class="text-gray-700 text-lg">Weekly summary email</span>
             </li>
           </ul>
           <ul class="space-y-4">
-            <li class="flex items-center gap-3">
-              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <li class="flex items-center gap-3 group/item hover:bg-brand-50 p-2 rounded-lg transition-colors duration-200">
+              <svg class="w-6 h-6 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               <span class="text-gray-700 text-lg">Custom topic selection</span>
             </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <li class="flex items-center gap-3 group/item hover:bg-brand-50 p-2 rounded-lg transition-colors duration-200">
+              <svg class="w-6 h-6 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               <span class="text-gray-700 text-lg">Application tracking</span>
             </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <li class="flex items-center gap-3 group/item hover:bg-brand-50 p-2 rounded-lg transition-colors duration-200">
+              <svg class="w-6 h-6 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               <span class="text-gray-700 text-lg">Instant priority alerts</span>
             </li>
           </ul>
         </div>
-        <button @click="$dispatch('open-subscribe')" class="inline-block w-full max-w-md py-5 bg-brand-600 text-white rounded-full font-bold text-xl hover:bg-brand-700 transition shadow-xl transform hover:-translate-y-1 cursor-pointer">Subscribe Now</button>
+        <button @click="$dispatch('open-subscribe')" class="inline-block w-full max-w-md py-5 bg-brand-600 text-white rounded-full font-bold text-xl hover:bg-brand-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-brand-500/30 transform hover:-translate-y-1 cursor-pointer active:scale-95">Subscribe Now</button>
       </div>
     </div>
-    <div class="mt-12 text-center">
+    <div class="mt-12 text-center scroll-animate" data-animation="fade-up" data-delay="200">
       <p class="text-gray-600 mb-4">Popular topics include:</p>
       <div class="flex flex-wrap justify-center gap-3">
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Software Engineering</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">NGO Grants</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Data Science</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Fellowships</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Startups</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Remote Jobs</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border">Accelerator Programs</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Software Engineering</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">NGO Grants</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Data Science</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Fellowships</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Startups</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Remote Jobs</span>
+        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Accelerator Programs</span>
       </div>
     </div>
   </div>
@@ -226,14 +246,14 @@
 <!-- Testimonials -->
 <section id="testimonials" class="py-24 bg-white overflow-hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-3xl mx-auto mb-16">
+    <div class="text-center max-w-3xl mx-auto mb-16 scroll-animate" data-animation="fade-up">
       <h2 class="text-4xl font-black text-gray-900 mb-4">Success Stories</h2>
       <p class="text-xl text-gray-600">Join thousands who have transformed their careers through Mboka</p>
     </div>
-    <div class="swiper testimonial-swiper pb-12">
+    <div class="swiper testimonial-swiper pb-12 scroll-animate" data-animation="fade-up" data-delay="100">
       <div class="swiper-wrapper">
         <div class="swiper-slide">
-          <div class="bg-gray-50 rounded-2xl p-8 mx-4">
+          <div class="bg-gray-50 rounded-2xl p-8 mx-4 hover:bg-brand-50 transition-colors duration-500 hover:shadow-lg">
             <div class="flex items-center gap-1 mb-4">
               <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
               <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -249,7 +269,7 @@
           </div>
         </div>
         <div class="swiper-slide">
-          <div class="bg-gray-50 rounded-2xl p-8 mx-4">
+          <div class="bg-gray-50 rounded-2xl p-8 mx-4 hover:bg-brand-50 transition-colors duration-500 hover:shadow-lg">
             <div class="flex items-center gap-1 mb-4">
               <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
               <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -265,7 +285,7 @@
           </div>
         </div>
         <div class="swiper-slide">
-          <div class="bg-gray-50 rounded-2xl p-8 mx-4">
+          <div class="bg-gray-50 rounded-2xl p-8 mx-4 hover:bg-brand-50 transition-colors duration-500 hover:shadow-lg">
             <div class="flex items-center gap-1 mb-4">
               <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
               <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -289,10 +309,11 @@
 <!-- CTA Section -->
 <section class="py-24 bg-gradient-to-br from-brand-600 to-brand-800 relative overflow-hidden">
   <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0); background-size: 40px 40px;"></div>
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+  <div class="absolute inset-0 bg-gradient-to-r from-brand-600/50 via-transparent to-brand-600/50 animate-shimmer-slow"></div>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 scroll-animate" data-animation="fade-up">
     <h2 class="text-4xl md:text-5xl font-black text-white mb-6">Ready to Transform Your Career?</h2>
     <p class="text-xl text-brand-100 mb-10 max-w-2xl mx-auto">Join thousands of professionals and entrepreneurs who never miss an opportunity. Start free today.</p>
-    <button @click="$dispatch('open-subscribe')" class="inline-block px-8 py-4 bg-white text-brand-700 rounded-full font-bold text-lg hover:bg-brand-50 transition shadow-xl cursor-pointer">Subscribe Now</button>
+    <button @click="$dispatch('open-subscribe')" class="inline-block px-8 py-4 bg-white text-brand-700 rounded-full font-bold text-lg hover:bg-brand-50 transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer active:scale-95 transform hover:-translate-y-1">Subscribe Now</button>
   </div>
 </section>
 
@@ -301,8 +322,8 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid md:grid-cols-4 gap-12 mb-12">
       <div class="col-span-2">
-        <div class="flex items-center space-x-2 mb-6">
-          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl">M</div>
+        <div class="flex items-center space-x-2 mb-6 group">
+          <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:shadow-lg group-hover:shadow-brand-500/30 transition-all duration-300">M</div>
           <span class="text-2xl font-bold text-white">Mboka</span>
         </div>
         <p class="text-gray-400 leading-relaxed max-w-sm">Empowering Kenyan professionals and entrepreneurs with curated opportunities. Your weekly navigator to success.</p>
@@ -310,15 +331,15 @@
       <div>
         <h4 class="text-white font-bold mb-4">Quick Links</h4>
         <ul class="space-y-3">
-          <li><a href="#features" class="hover:text-brand-400 transition">Features</a></li>
-          <li><a href="#pricing" class="hover:text-brand-400 transition">Pricing</a></li>
-          <li><a href="#testimonials" class="hover:text-brand-400 transition">Success Stories</a></li>
+          <li><a href="#features" class="hover:text-brand-400 transition-all duration-300 hover:translate-x-1 inline-block">Features</a></li>
+          <li><a href="#pricing" class="hover:text-brand-400 transition-all duration-300 hover:translate-x-1 inline-block">Pricing</a></li>
+          <li><a href="#testimonials" class="hover:text-brand-400 transition-all duration-300 hover:translate-x-1 inline-block">Success Stories</a></li>
         </ul>
       </div>
       <div>
         <h4 class="text-white font-bold mb-4">Connect</h4>
         <ul class="space-y-3">
-          <li><a href="mailto:hello@mboka.dnrstudios.co.ke" class="hover:text-brand-400 transition">hello@mboka.dnrstudios.co.ke</a></li>
+          <li><a href="mailto:hello@mboka.dnrstudios.co.ke" class="hover:text-brand-400 transition-all duration-300 hover:translate-x-1 inline-block">hello@mboka.dnrstudios.co.ke</a></li>
         </ul>
       </div>
     </div>
@@ -332,9 +353,114 @@
   </div>
 </footer>
 
-<!-- Initialize Swiper -->
+<!-- Animations CSS -->
+<style>
+  /* Floating animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+  @keyframes float-delayed {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(-5deg); }
+  }
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+  }
+  @keyframes float-card {
+    0%, 100% { transform: translateY(0px) rotate(2deg); }
+    50% { transform: translateY(-10px) rotate(1deg); }
+  }
+  .animate-float { animation: float 6s ease-in-out infinite; }
+  .animate-float-delayed { animation: float-delayed 8s ease-in-out infinite 2s; }
+  .animate-float-slow { animation: float-slow 10s ease-in-out infinite 1s; }
+  .animate-float-card { animation: float-card 6s ease-in-out infinite; }
+
+  /* Fade animations */
+  @keyframes fade-in-down {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-right {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .animate-fade-in-down { animation: fade-in-down 0.8s ease-out forwards; }
+  .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; opacity: 0; }
+  .animate-fade-in-right { animation: fade-in-right 1s ease-out forwards; }
+  .animation-delay-200 { animation-delay: 0.2s; }
+  .animation-delay-400 { animation-delay: 0.4s; }
+  .animation-delay-600 { animation-delay: 0.6s; }
+
+  /* Gradient text animation */
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .animate-gradient {
+    background: linear-gradient(135deg, #16a34a, #f59e0b, #16a34a);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient 3s ease infinite;
+  }
+
+  /* Shimmer effect */
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .animate-shimmer { animation: shimmer 3s ease-in-out infinite; }
+  .animate-shimmer-slow { animation: shimmer 8s ease-in-out infinite; }
+
+  /* Scale up animation */
+  @keyframes scale-up {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Scroll animations */
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .scroll-animate.animate-in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .scroll-animate[data-animation="scale-up"] {
+    transform: scale(0.8);
+  }
+  .scroll-animate[data-animation="scale-up"].animate-in {
+    transform: scale(1);
+  }
+  .scroll-animate[data-animation="fade-up"].animate-in {
+    transform: translateY(0);
+  }
+
+  /* Smooth scroll */
+  html { scroll-behavior: smooth; }
+
+  /* Counter animation */
+  .counter { display: inline-block; }
+
+  /* Navbar hide/show */
+  .navbar-hidden { transform: translateY(-100%); }
+  .navbar-visible { transform: translateY(0); }
+</style>
+
+<!-- Initialize Swiper & Animations -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Swiper
     new Swiper('.testimonial-swiper', {
       slidesPerView: 1,
       spaceBetween: 30,
@@ -345,6 +471,105 @@
         768: { slidesPerView: 2 },
         1024: { slidesPerView: 3 }
       }
+    });
+
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = entry.target.dataset.delay || 0;
+          setTimeout(() => {
+            entry.target.classList.add('animate-in');
+          }, parseInt(delay));
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.scroll-animate').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Animated counters
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counter = entry.target;
+          const target = parseInt(counter.dataset.target);
+          const duration = 2000;
+          const step = target / (duration / 16);
+          let current = 0;
+
+          const updateCounter = () => {
+            current += step;
+            if (current < target) {
+              counter.textContent = Math.floor(current).toLocaleString();
+              requestAnimationFrame(updateCounter);
+            } else {
+              counter.textContent = target.toLocaleString();
+            }
+          };
+
+          updateCounter();
+          counterObserver.unobserve(counter);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.counter').forEach(counter => {
+      counterObserver.observe(counter);
+    });
+
+    // Navbar hide/show on scroll
+    let lastScroll = 0;
+    const navbar = document.getElementById('navbar');
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+
+      if (currentScroll <= 0) {
+        navbar.classList.remove('navbar-hidden');
+        navbar.classList.add('navbar-visible');
+        return;
+      }
+
+      if (currentScroll > lastScroll && currentScroll > 80) {
+        // Scrolling down
+        navbar.classList.add('navbar-hidden');
+        navbar.classList.remove('navbar-visible');
+      } else {
+        // Scrolling up
+        navbar.classList.remove('navbar-hidden');
+        navbar.classList.add('navbar-visible');
+      }
+
+      lastScroll = currentScroll;
+    });
+
+    // Active nav link highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (window.pageYOffset >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('text-brand-600');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('text-brand-600');
+        }
+      });
     });
   });
 </script>
