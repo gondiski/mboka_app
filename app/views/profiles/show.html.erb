@@ -275,4 +275,9 @@
       }
     });
   }
+
+  function updateTopicCount() {
+    const checked = document.querySelectorAll('.topic-checkbox:checked').length;
+    document.getElementById('topic-count').textContent = checked;
+  }
 </script>

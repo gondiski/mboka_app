@@ -62,14 +62,17 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "mboka.dnrstudios.co.ke", protocol: "https" }
 
-  # SMTP2GO configuration
+  # ZeptoMail configuration
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    user_name: ENV.fetch("SMTP2GO_USER_NAME", nil),
-    password: ENV.fetch("SMTP2GO_PASSWORD", nil),
-    address: "mail-eu.smtp2go.com",
-    port: 2525,
+    address: "smtp.zeptomail.com",
+    port: 587,
+    user_name: "emailapikey",
+    password: ENV.fetch("ZEPTOMAIL_API_KEY", nil),
     authentication: :plain,
-    enable_starttls_auto: true
+    enable_starttls_auto: true,
+    open_timeout: 10,
+    read_timeout: 10
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
