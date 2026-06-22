@@ -7,7 +7,6 @@ class ProfilesController < ApplicationController
   def show
     @user = current_user
     authorize @user, policy_class: ProfilePolicy
-    @topics = Topic.all
     @tab = params[:tab] || "profile"
     load_digest_data if @tab == "digest"
     load_favorites if @tab == "favorites"
@@ -19,7 +18,6 @@ class ProfilesController < ApplicationController
 
     if username_changing?
       unless @user.can_change_username?
-        @topics = Topic.all
         flash.now[:alert] = "Username can only be changed once every 48 hours. You can change it again in #{@user.username_cooldown_display}."
         render :show, status: :unprocessable_entity
         return
@@ -29,7 +27,6 @@ class ProfilesController < ApplicationController
     if @user.update(profile_params.merge(username_change_timestamp))
       redirect_to profile_path, notice: "Profile updated successfully."
     else
-      @topics = Topic.all
       render :show, status: :unprocessable_entity
     end
   end

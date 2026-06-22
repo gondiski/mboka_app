@@ -1,7 +1,6 @@
 # app/controllers/subscribers_controller.rb
 class SubscribersController < ApplicationController
   def new
-    @topics = Topic.all
     authorize :subscriber, :new?
   end
 
@@ -30,7 +29,6 @@ class SubscribersController < ApplicationController
 
       redirect_to check_email_path, notice: "Account pre-registered. Check your email to verify!"
     else
-      @topics = Topic.all
       render :new, status: :unprocessable_entity
     end
   end
