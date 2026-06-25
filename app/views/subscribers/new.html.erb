@@ -571,5 +571,30 @@
         }
       });
     });
+
+    // Anchor nav links: immediately reveal target section animations on click
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            // Immediately animate all scroll-animate elements in the target section
+            target.querySelectorAll('.scroll-animate').forEach(el => {
+              const delay = el.dataset.delay || 0;
+              setTimeout(() => el.classList.add('animate-in'), parseInt(delay));
+            });
+            // Also animate the section itself if it has scroll-animate
+            if (target.classList.contains('scroll-animate')) {
+              const delay = target.dataset.delay || 0;
+              setTimeout(() => target.classList.add('animate-in'), parseInt(delay));
+            }
+            // Smooth scroll to the section
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
   });
 </script>
