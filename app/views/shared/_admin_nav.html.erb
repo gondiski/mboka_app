@@ -40,7 +40,7 @@
         <!-- Finance Dropdown -->
         <div class="relative" @click.stop>
           <button @click="openDropdown = openDropdown === 'finance' ? null : 'finance'" class="px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1 <%= ['payments', 'settings'].include?(controller_name) ? 'bg-brand-50 text-brand-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50' %>">
-            Finance
+            Settings
             <svg class="w-4 h-4 transition-transform" :class="openDropdown === 'finance' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div x-show="openDropdown === 'finance'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50" @click.stop x-cloak>
