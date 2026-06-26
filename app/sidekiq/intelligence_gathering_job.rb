@@ -14,14 +14,15 @@ class IntelligenceGatheringJob
       next if existing.present?
 
       begin
+        jobs = JobSearchService.call(topic_name: topic.name, schedule_date: week_date)
+
         digest_content = AiAgentService.call(
           topics: [topic.name],
-          designation: "general"
+          designation: "general",
+          jobs: jobs
         )
 
-        jobs = JobSearchService.call(topic_name: topic.name, schedule_date: week_date)
         job_html = JobDigestFormatter.format(jobs)
-
         full_content = job_html.present? ? "#{digest_content}\n#{job_html}" : digest_content
 
         TopicDigest.create!(
