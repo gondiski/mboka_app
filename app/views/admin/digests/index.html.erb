@@ -7,15 +7,21 @@
         <h1 class="text-3xl font-black text-gray-900">Digest Moderation</h1>
         <p class="text-gray-600 mt-1">Review and approve digests before they're sent to subscribers.</p>
       </div>
-      <% if @stats[:draft] > 0 %>
-        <%= form_with url: bulk_approve_admin_digests_path, method: :patch, local: true, class: "inline" do |f| %>
-          <%= f.hidden_field :digest_ids, value: "" %>
-          <button type="submit" class="px-6 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-all duration-200 shadow-lg cursor-pointer transform hover:-translate-y-0.5 flex items-center gap-2 btn-press">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            Approve All Pending
-          </button>
+      <div class="flex items-center gap-3">
+        <%= button_to run_now_admin_digests_path, method: :post, class: "px-6 py-3 bg-amber-600 text-white font-bold rounded-xl hover:bg-amber-700 transition-all duration-200 shadow-lg cursor-pointer transform hover:-translate-y-0.5 flex items-center gap-2 btn-press" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Run Now
         <% end %>
-      <% end %>
+        <% if @stats[:draft] > 0 %>
+          <%= form_with url: bulk_approve_admin_digests_path, method: :patch, local: true, class: "inline" do |f| %>
+            <%= f.hidden_field :digest_ids, value: "" %>
+            <button type="submit" class="px-6 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-all duration-200 shadow-lg cursor-pointer transform hover:-translate-y-0.5 flex items-center gap-2 btn-press">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Approve All Pending
+            </button>
+          <% end %>
+        <% end %>
+      </div>
     </div>
 
     <!-- Stats Cards -->

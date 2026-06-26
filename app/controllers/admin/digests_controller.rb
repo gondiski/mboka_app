@@ -81,6 +81,15 @@ class Admin::DigestsController < ApplicationController
     redirect_to admin_digests_path, notice: "#{count} digests approved."
   end
 
+  def run_now
+    authorize :digest, :run_now?, policy_class: Admin::DigestPolicy
+
+    week_of = Date.current.beginning_of_week.to_s
+    IntelligenceGatheringJob.perform_async(week_of)
+
+    redirect_to admin_digests_path, notice: "Digest generation queued for this week."
+  end
+
   private
 
   def set_topic_digest

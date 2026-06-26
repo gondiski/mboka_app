@@ -29,6 +29,10 @@ class Admin::DigestPolicy < ApplicationPolicy
     admin_only?
   end
 
+  def run_now?
+    admin_only?
+  end
+
   private
 
   def admin_or_moderator?

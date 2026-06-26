@@ -69,6 +69,7 @@ Rails.application.routes.draw do
       end
       collection do
         patch :bulk_approve
+        post :run_now
       end
     end
     resources :users, only: [ :index, :show ] do
