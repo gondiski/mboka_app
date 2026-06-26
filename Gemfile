@@ -78,7 +78,7 @@ gem "rolify", "~> 6.0"
 
 # Background jobs
 gem "connection_pool", "~> 2.5"
-gem "sidekiq", "~> 7.0"
+gem "sidekiq", "~> 8.0"
 gem "sidekiq-cron", "~> 1.12"
 
 # Pagination
