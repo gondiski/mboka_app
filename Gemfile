@@ -71,7 +71,7 @@ gem "rack-attack", "~> 6.7"
 gem "premailer-rails", "~> 1.12"
 
 # Authentication & Authorization
-gem "devise", "~> 4.9"
+gem "devise", "~> 5.0"
 gem "devise_invitable", "~> 2.0"
 gem "pundit", "~> 2.3"
 gem "rolify", "~> 6.0"
