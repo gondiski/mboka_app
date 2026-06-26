@@ -25,8 +25,8 @@ class AiAgentService
   def scrape_web_for_topics
     client = Anthropic::Client.new(api_key: anthropic_api_key)
 
-    response = client.messages(
-      model: "claude-sonnet-4-20250514",
+    response = client.messages.create(
+      model: "claude-sonnet-4-6",
       max_tokens: 4096,
       messages: [
         {
@@ -38,8 +38,8 @@ class AiAgentService
 
     response.content[0].text
   rescue StandardError => e
-    Rails.logger.error("AiAgentService scrape error: #{e.message}")
-    "Unable to fetch data for #{@topics.join(', ')} at this time."
+    Rails.logger.error("AiAgentService scrape error: #{e.class} - #{e.message}\n#{e.backtrace&.first(5)&.join("\n")}")
+    raise
   end
 
   def analyze_and_summarize(raw_data)
@@ -57,8 +57,8 @@ class AiAgentService
       Focus on actionable insights and key takeaways.
     TEXT
 
-    response = client.messages(
-      model: "claude-sonnet-4-20250514",
+    response = client.messages.create(
+      model: "claude-sonnet-4-6",
       max_tokens: 4096,
       messages: [
         {
@@ -70,7 +70,7 @@ class AiAgentService
 
     response.content[0].text
   rescue StandardError => e
-    Rails.logger.error("AiAgentService analysis error: #{e.message}")
-    "Unable to analyze data for #{@topics.join(', ')} at this time."
+    Rails.logger.error("AiAgentService analysis error: #{e.class} - #{e.message}\n#{e.backtrace&.first(5)&.join("\n")}")
+    raise
   end
 end

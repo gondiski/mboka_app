@@ -40,17 +40,23 @@ class JobSearchService
 
   private
 
-  def search_query
-    base = @topic_name
-    "#{base} jobs East Africa"
+  def search_google_jobs
+    east_africa_jobs = fetch_jobs_for_location("#{@topic_name} jobs Kenya OR Tanzania OR Uganda OR Rwanda")
+    remote_jobs = fetch_jobs_for_location("#{@topic_name} remote jobs")
+
+    all_jobs = (east_africa_jobs + remote_jobs)
+    seen = all_jobs.map { |j| j[:title].to_s + j[:company_name].to_s }.uniq
+    unique_jobs = seen.map { |key| all_jobs.find { |j| j[:title].to_s + j[:company_name].to_s == key } }
+
+    unique_jobs
   end
 
-  def search_google_jobs
+  def fetch_jobs_for_location(query)
     uri = URI("https://serpapi.com/search.json")
     params = {
       engine: "google_jobs",
-      q: search_query,
-      location: "East Africa",
+      q: query,
+      location: "Kenya",
       api_key: @api_key,
       hl: "en",
       gl: "ke",
@@ -62,6 +68,9 @@ class JobSearchService
     data = JSON.parse(response.body, symbolize_names: true)
 
     data.dig(:jobs_results) || []
+  rescue StandardError => e
+    Rails.logger.error("JobSearchService fetch_jobs_for_location error: #{e.message}")
+    []
   end
 
   def date_chip

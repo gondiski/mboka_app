@@ -13,22 +13,29 @@ class IntelligenceGatheringJob
       existing = TopicDigest.find_by(topic: topic, week_of: week_date)
       next if existing.present?
 
-      digest_content = AiAgentService.call(
-        topics: [topic.name],
-        designation: "general"
-      )
+      begin
+        digest_content = AiAgentService.call(
+          topics: [topic.name],
+          designation: "general"
+        )
 
-      jobs = JobSearchService.call(topic_name: topic.name, schedule_date: week_date)
-      job_html = JobDigestFormatter.format(jobs)
+        jobs = JobSearchService.call(topic_name: topic.name, schedule_date: week_date)
+        job_html = JobDigestFormatter.format(jobs)
 
-      full_content = job_html.present? ? "#{digest_content}\n#{job_html}" : digest_content
+        full_content = job_html.present? ? "#{digest_content}\n#{job_html}" : digest_content
 
-      TopicDigest.create!(
-        topic: topic,
-        content: full_content,
-        week_of: week_date,
-        status: :draft
-      )
+        TopicDigest.create!(
+          topic: topic,
+          content: full_content,
+          week_of: week_date,
+          status: :draft
+        )
+
+        Rails.logger.info("IntelligenceGatheringJob: Created digest for #{topic.name}")
+      rescue StandardError => e
+        Rails.logger.error("IntelligenceGatheringJob: Failed for #{topic.name}: #{e.class} - #{e.message}")
+        next
+      end
     end
   end
 end
