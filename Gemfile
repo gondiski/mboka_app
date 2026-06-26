@@ -89,3 +89,6 @@ gem "groupdate", "~> 6.4"
 gem "ahoy_email", "~> 2.0"
 
 gem "hashids", "~> 1.0"
+
+# Excel parsing for user imports
+gem "creek", "~> 2.6"

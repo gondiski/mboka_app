@@ -4,7 +4,7 @@ class Admin::BulkOnboardUserJob
   include Sidekiq::Job
   sidekiq_options queue: :default, retry: 3
 
-  def perform(full_name, email, designation)
+  def perform(full_name, email, designation, extra_fields_json = "{}")
     user = User.find_or_initialize_by(email: email)
 
     if user.persisted?
@@ -12,11 +12,27 @@ class Admin::BulkOnboardUserJob
       return
     end
 
+    extra = JSON.parse(extra_fields_json) rescue {}
+
     user.assign_attributes(
       full_name: full_name.presence || "New Colleague",
       designation: designation.presence || "Professional Ecosystem Partner",
       status: "active",
-      password: SecureRandom.hex(16)
+      password: SecureRandom.hex(16),
+      phone: extra["phone"],
+      country: extra["country"],
+      age_range: extra["age_range"],
+      education: extra["education"],
+      status_description: extra["status_description"] || designation,
+      opportunities: extra["opportunities"],
+      sectors: extra["sectors"],
+      receive_via: extra["receive_via"],
+      telegram: extra["telegram"],
+      looking_for: extra["looking_for"],
+      events_consent: extra["events_consent"],
+      consent: extra["consent"],
+      form_submitted_at: parse_timestamp(extra["form_submitted_at"]),
+      extra_data: extra["extra_data"] || {}
     )
 
     if user.save
@@ -28,5 +44,12 @@ class Admin::BulkOnboardUserJob
     else
       Rails.logger.error "BulkOnboard: Failed to create #{email} — #{user.errors.full_messages.join(', ')}"
     end
+  end
+
+  private
+
+  def parse_timestamp(value)
+    return nil if value.blank?
+    Time.parse(value.to_s) rescue nil
   end
 end

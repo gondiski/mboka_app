@@ -11,7 +11,7 @@
         <% end %>
         <div data-controller="csv-upload" class="flex items-center gap-3">
           <%= form_with url: import_admin_users_path, method: :post, multipart: true, class: "flex items-center gap-3", data: { csv_upload_target: "form" } do |f| %>
-            <%= f.file_field :file, accept: '.csv', required: true, class: "text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 text-gray-500 cursor-pointer", data: { csv_upload_target: "input" } %>
+            <%= f.file_field :file, accept: '.csv,.xlsx', required: true, class: "text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 text-gray-500 cursor-pointer", data: { csv_upload_target: "input" } %>
             <button type="button" data-action="click->csv-upload#upload" class="px-4 py-2 bg-brand-600 text-white text-sm font-bold rounded-xl hover:bg-brand-700 cursor-pointer transition shadow-md">
               Bulk Import
             </button>

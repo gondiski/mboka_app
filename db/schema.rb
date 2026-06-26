@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_19_162506) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_26_133636) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -148,6 +148,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_19_162506) do
     t.string "invited_by_type"
     t.string "username"
     t.datetime "username_changed_at"
+    t.string "phone"
+    t.string "country"
+    t.string "age_range"
+    t.string "education"
+    t.string "status_description"
+    t.string "opportunities"
+    t.string "sectors"
+    t.string "receive_via"
+    t.string "telegram"
+    t.string "looking_for"
+    t.string "events_consent"
+    t.string "consent"
+    t.datetime "form_submitted_at"
+    t.jsonb "extra_data", default: {}
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
