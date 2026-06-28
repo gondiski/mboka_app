@@ -69,6 +69,7 @@ Rails.application.routes.draw do
       end
       collection do
         patch :bulk_approve
+        delete :bulk_destroy
         post :run_now
       end
     end

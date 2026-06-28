@@ -90,27 +90,11 @@
         } catch(e) {}
       }
     </script>
-    <% if flash.any? %>
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          <% flash.each do |type, message| %>
-            playToastSound('<%= type == 'notice' ? 'success' : 'error' %>');
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              icon: '<%= type == 'notice' ? 'success' : 'error' %>',
-              title: '<%= j message %>',
-              showConfirmButton: false,
-              timer: 4000,
-              timerProgressBar: true,
-              background: '<%= type == 'notice' ? '#f0fdf4' : '#fef2f2' %>',
-              color: '<%= type == 'notice' ? '#15803d' : '#991b1b' %>',
-              customClass: { popup: 'swal2-toast-custom' }
-            });
-          <% end %>
-        });
-      </script>
-    <% end %>
+    <div id="flash-messages">
+      <% flash.each do |type, message| %>
+        <div data-controller="flash" data-flash-type-value="<%= type %>" data-flash-message-value="<%= j message %>"></div>
+      <% end %>
+    </div>
 
     <div x-data="{ showSubscribeModal: false }" @open-subscribe.window="showSubscribeModal = true">
       <%= yield %>

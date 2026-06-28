@@ -81,6 +81,23 @@ class Admin::DigestsController < ApplicationController
     redirect_to admin_digests_path, notice: "#{count} digests approved."
   end
 
+  def bulk_destroy
+    authorize :digest, :destroy?, policy_class: Admin::DigestPolicy
+
+    digest_ids = params[:digest_ids]&.split(",")&.map { |id| TopicDigest.decode_hashid(id) }.compact || []
+    week_of = params[:week_of]
+
+    scope = TopicDigest.pending_review
+    scope = scope.for_week(Date.parse(week_of)) if week_of.present?
+    scope = scope.where(id: digest_ids) if digest_ids.any?
+
+    count = scope.count
+    scope.destroy_all
+
+    clear_analytics_cache
+    redirect_to admin_digests_path, notice: "#{count} digests deleted."
+  end
+
   def destroy
     authorize @topic_digest, :destroy?, policy_class: Admin::DigestPolicy
 
