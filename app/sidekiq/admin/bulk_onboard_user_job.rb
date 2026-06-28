@@ -37,9 +37,23 @@ class Admin::BulkOnboardUserJob
 
     if user.save
       user.add_role(:subscriber)
-      DesignationTopicMatcher.assign_to_user(user)
+      
+      explicit_topics = [user.opportunities, user.sectors].compact.join(",").split(",").map(&:strip).reject(&:blank?).uniq
+      if explicit_topics.any?
+        topics = explicit_topics.map { |name| Topic.find_or_create_by!(name: name) }
+        user.topics = topics
+      else
+        DesignationTopicMatcher.assign_to_user(user)
+      end
+
       token = user.generate_magic_link!
-      UserMailer.account_setup_invitation(user, token).deliver_now
+      
+      if user.receive_via.to_s.downcase.include?("telegram")
+        UserMailer.telegram_welcome(user, token).deliver_now
+      else
+        UserMailer.account_setup_invitation(user, token).deliver_now
+      end
+      
       Rails.logger.info "BulkOnboard: Created #{email} and sent invitation."
     else
       Rails.logger.error "BulkOnboard: Failed to create #{email} — #{user.errors.full_messages.join(', ')}"

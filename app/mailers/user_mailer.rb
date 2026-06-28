@@ -45,4 +45,11 @@ class UserMailer < ApplicationMailer
       subject: "You've Been Invited to Mboka"
     )
   end
+
+  def telegram_welcome(user, token)
+    @user = user
+    @token = token
+    @login_url = validate_magic_link_url(token: token)
+    mail(to: @user.email, subject: "Welcome to Mboka - Connect your Telegram")
+  end
 end

@@ -44,6 +44,10 @@ Rails.application.routes.draw do
   resources :topic_digests, only: [ :show ], path: "digests"
   post "favorites/toggle/:topic_digest_id", to: "favorites#toggle", as: :toggle_favorite
 
+  namespace :webhooks do
+    post "telegram/:token", to: "telegram#create", as: :telegram
+  end
+
   # Administration Zone Control Arrays
   namespace :admin do
     resource :dashboard, only: [ :show ]

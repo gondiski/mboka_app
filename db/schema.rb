@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_26_133636) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_28_085422) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -162,6 +162,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_26_133636) do
     t.string "consent"
     t.datetime "form_submitted_at"
     t.jsonb "extra_data", default: {}
+    t.string "telegram_chat_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"

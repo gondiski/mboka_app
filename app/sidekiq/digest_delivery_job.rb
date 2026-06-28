@@ -20,7 +20,16 @@ class DigestDeliveryJob
       next if user_digests.empty?
 
       shuffled_digests = user_digests.to_a.shuffle
-      UserMailer.topic_digest(user, shuffled_digests).deliver_later
+      
+      preference = user.receive_via.to_s.downcase
+      
+      if preference.include?("telegram") && user.telegram_chat_id.present?
+        TelegramDeliveryService.deliver_digest(user, shuffled_digests)
+      end
+      
+      if preference.include?("email") || preference.blank?
+        UserMailer.topic_digest(user, shuffled_digests).deliver_later
+      end
     end
 
     # Users without topics get a random digest as they wait to choose topics
@@ -34,7 +43,15 @@ class DigestDeliveryJob
 
     users_without_topics.find_each do |user|
       random_digest = all_ready_digests.sample
-      UserMailer.topic_digest(user, [random_digest]).deliver_later
+      preference = user.receive_via.to_s.downcase
+
+      if preference.include?("telegram") && user.telegram_chat_id.present?
+        TelegramDeliveryService.deliver_digest(user, [random_digest])
+      end
+
+      if preference.include?("email") || preference.blank?
+        UserMailer.topic_digest(user, [random_digest]).deliver_later
+      end
     end
 
     clear_analytics_cache
