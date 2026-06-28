@@ -76,7 +76,7 @@ class Admin::CsvImportService
         mapped[:full_name]&.strip,
         email,
         mapped[:status_description]&.strip,
-        mapped.except(:full_name, :email, :status_description).as_json
+        mapped.except(:full_name, :email, :status_description).to_json
       )
       rows_processed += 1
     end
