@@ -21,12 +21,9 @@ class SingleTopicDigestJob
       jobs: jobs
     )
 
-    job_html = JobDigestFormatter.format(jobs)
-    full_content = job_html.present? ? "#{digest_content}\n#{job_html}" : digest_content
-
     TopicDigest.create!(
       topic: topic,
-      content: full_content,
+      content: digest_content,
       week_of: week_date,
       status: :draft
     )

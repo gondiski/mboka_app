@@ -5,12 +5,14 @@ require "json"
 
 class JobSearchService
   def self.call(topic_name:, schedule_date: nil)
-    new(topic_name, schedule_date).fetch_jobs
+    cache_key = "job_search_#{topic_name.parameterize}_#{Date.current.to_s}"
+    Rails.cache.fetch(cache_key, expires_in: 12.hours) do
+      new(topic_name, schedule_date).fetch_jobs
+    end
   end
 
   def initialize(topic_name, schedule_date = nil)
     @topic_name = topic_name
-    @schedule_date = schedule_date || Date.current
     @api_key = ApiKeyCache.read("serpapi_key")
   end
 
@@ -40,7 +42,7 @@ class JobSearchService
       api_key: @api_key,
       hl: "en",
       gl: "ke",
-      chips: "date_posted:#{date_chip}"
+      chips: "date_posted:r259200" # strictly past 3 days to prevent expired jobs
     }
     uri.query = URI.encode_www_form(params)
 
@@ -51,17 +53,6 @@ class JobSearchService
   rescue StandardError => e
     Rails.logger.error("JobSearchService fetch_jobs_for_location error: #{e.message}")
     []
-  end
-
-  def date_chip
-    days_until = (@schedule_date - Date.current).to_i
-    if days_until <= 3
-      "r86400"       # past 24 hours
-    elsif days_until <= 7
-      "r604800"      # past week
-    else
-      "r2592000"     # past month
-    end
   end
 
   def format_results(jobs)

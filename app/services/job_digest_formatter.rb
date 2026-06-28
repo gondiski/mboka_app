@@ -21,7 +21,7 @@ class JobDigestFormatter
           #{@jobs.map { |job| job_row(job) }.join}
         </table>
         <p style="font-size: 13px; color: #94a3b8; margin: 16px 0 0; text-align: center;">
-          Curated from Google Jobs &middot; Updated #{@jobs.first&.dig(:posted_at) || "recently"}
+          Updated #{@jobs.first&.dig(:posted_at) || "recently"}
         </p>
       </div>
     HTML

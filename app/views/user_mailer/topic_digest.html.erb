@@ -93,6 +93,10 @@
                 </div>
                 <div class="topic-content">
                   <%= raw inject_utm_links(digest.content, source: "digest_email", medium: "email", campaign: digest.topic.name.parameterize, content: digest.id) %>
+                  
+                  <% if @jobs_by_topic[digest.topic.name].present? %>
+                    <%= raw JobDigestFormatter.format(@jobs_by_topic[digest.topic.name]) %>
+                  <% end %>
                 </div>
                 <div class="btn-container">
                   <a href="<%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>" class="view-more-btn">
