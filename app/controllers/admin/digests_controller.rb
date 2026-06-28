@@ -84,9 +84,47 @@ class Admin::DigestsController < ApplicationController
   def run_now
     authorize :digest, :run_now?, policy_class: Admin::DigestPolicy
 
-    IntelligenceGatheringJob.perform_async
+    week_date = Date.current.beginning_of_week
+    topics = Topic.all.to_a
+    topics_to_generate = topics.reject { |t| TopicDigest.exists?(topic: t, week_of: week_date) }
 
-    redirect_to admin_digests_path, notice: "Digest generation queued for this week."
+    if topics_to_generate.empty?
+      redirect_to admin_digests_path, notice: "All digests for this week already exist."
+      return
+    end
+
+    # Generate digests in background threads within the web process
+    # This works whether or not Sidekiq is running
+    Thread.new do
+      topics_to_generate.each do |topic|
+        begin
+          jobs = JobSearchService.call(topic_name: topic.name, schedule_date: week_date)
+
+          digest_content = AiAgentService.call(
+            topics: [topic.name],
+            designation: "general",
+            jobs: jobs
+          )
+
+          job_html = JobDigestFormatter.format(jobs)
+          full_content = job_html.present? ? "#{digest_content}\n#{job_html}" : digest_content
+
+          TopicDigest.create!(
+            topic: topic,
+            content: full_content,
+            week_of: week_date,
+            status: :draft
+          )
+
+          Rails.logger.info("RunNow: Created digest for #{topic.name}")
+        rescue StandardError => e
+          Rails.logger.error("RunNow: Failed for #{topic.name}: #{e.class} - #{e.message}")
+          next
+        end
+      end
+    end
+
+    redirect_to admin_digests_path, notice: "Generating #{topics_to_generate.size} digests in the background. Refresh the page to see them as they appear."
   end
 
   private
