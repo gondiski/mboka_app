@@ -53,7 +53,8 @@ class Admin::UsersController < ApplicationController
     digests = digests.sort_by { |d| d.week_of }.reverse
 
     mail = UserMailer.topic_digest(@profile_user, digests)
-    render html: mail.body.to_s.html_safe
+    html_content = mail.html_part ? mail.html_part.body.decoded : mail.body.decoded
+    render html: html_content.html_safe
   end
 
   def update_status
