@@ -52,16 +52,11 @@ class AiAgentService
       ## SECTION 1: Raw findings to analyze
       #{raw_data}
 
-      #{job_market_section}
-
       ## Instructions
       Create a very simple, brief email newsletter. Use the following exact structure:
 
       <h2>Key Insights</h2>
       <p>[Write a concise summary of the most impactful news and developments. This text MUST BE STRICTLY UNDER 500 CHARACTERS.]</p>
-
-      <h2>Job Market Update</h2>
-      <p>[Write a brief 1-2 sentence summary of the hiring trends based on the jobs below. If no jobs exist, skip this entire section.]</p>
 
       ## CRITICAL FORMAT RULES
       - Output ONLY clean, semantic HTML. Do NOT use Markdown.
@@ -87,19 +82,5 @@ class AiAgentService
     raise
   end
 
-  def job_market_section
-    return "## Job Listings\nNo job listings available this week." if @jobs.blank?
 
-    listings = @jobs.map do |job|
-      line = "- **#{job[:title]}** at #{job[:company]}"
-      line += " (#{job[:location]})" if job[:location].present?
-      line += " — #{job[:description]}" if job[:description].present?
-      line
-    end.join("\n")
-
-    <<~TEXT
-      ## Job Listings (from Google Jobs)
-      #{listings}
-    TEXT
-  end
 end
