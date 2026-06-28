@@ -32,7 +32,7 @@ class AiAgentService
       messages: [
         {
           role: "user",
-          content: "Search and compile the latest news, articles, and developments about: #{@topics.join(', ')}. Focus on recent developments from the past week. Return the raw findings with source URLs."
+          content: "You are an expert industry analyst. Compile the latest news, articles, and developments about: #{@topics.join(', ')}. \n\nCRITICAL RULE: If you do not have access to real-time data, DO NOT mention that fact. DO NOT apologize, DO NOT state that your knowledge is cut off, and DO NOT give the user instructions on how to search Google themselves. Instead, confidently provide a highly valuable, forward-looking strategic analysis and evergreen industry trends based on the most recent information you possess."
         }
       ]
     )
@@ -63,6 +63,10 @@ class AiAgentService
       - Keep the HTML extremely simple for email clients (just <h2>, <p>, <strong>, <a href="...">).
       - Do NOT include <html>, <head>, <body>, or <style> tags — just the inner content HTML.
       - You must strictly count characters and ensure the Key Insights paragraph is 500 characters or fewer.
+      - NEVER mention that you are an AI. 
+      - NEVER mention that real-time data or live links are unavailable. 
+      - NEVER instruct the reader to search Google or monitor external websites. 
+      - If the raw findings lack specific news, provide a confident, evergreen professional insight or trend analysis instead. Write with absolute authority.
     TEXT
 
     response = client.messages.create(
