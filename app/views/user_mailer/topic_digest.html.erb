@@ -3,48 +3,47 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-      body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1e293b; margin: 0; padding: 0; background-color: #f1f5f9; -webkit-font-smoothing: antialiased; }
-      .wrapper { background-color: #f1f5f9; padding: 32px 16px; }
-      .container { max-width: 580px; margin: 0 auto; }
-      .card { background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 10px 15px -3px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
-      .header { background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%); padding: 48px 40px 40px; text-align: center; position: relative; overflow: hidden; }
-      .header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.12) 0%, transparent 50%); }
-      .header::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 24px; background: #ffffff; border-radius: 24px 24px 0 0; }
-      .logo { width: 52px; height: 52px; background: rgba(255,255,255,0.2); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; position: relative; backdrop-filter: blur(8px); }
-      .logo-text { color: white; font-size: 26px; font-weight: 800; }
-      .header h1 { color: white; margin: 0; font-size: 24px; font-weight: 800; position: relative; letter-spacing: -0.02em; }
-      .header p { color: rgba(255,255,255,0.85); margin: 10px 0 0; font-size: 15px; position: relative; font-weight: 500; }
-      .content { padding: 8px 40px 40px; }
-      .greeting { font-size: 22px; font-weight: 700; color: #0f172a; margin: 0 0 6px; letter-spacing: -0.01em; }
-      .subtitle { font-size: 15px; color: #64748b; margin: 0 0 32px; }
-      .topic-section { padding: 24px 0; }
-      .topic-section:first-child { padding-top: 0; }
-      .topic-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-      .topic-name { font-size: 17px; font-weight: 700; color: #16a34a; margin: 0; letter-spacing: -0.01em; }
-      .topic-badge { font-size: 11px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); color: #15803d; padding: 4px 12px; border-radius: 20px; font-weight: 600; border: 1px solid #bbf7d0; letter-spacing: 0.02em; }
-      .topic-content { font-size: 15px; color: #475569; line-height: 1.75; }
-      .topic-content h3 { font-size: 16px; color: #1e293b; margin: 20px 0 10px; font-weight: 700; }
-      .topic-content ul { padding-left: 22px; margin: 10px 0; }
-      .topic-content li { margin-bottom: 8px; color: #475569; }
-      .topic-content a { color: #16a34a; text-decoration: none; font-weight: 600; }
+      body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #334155; margin: 0; padding: 0; background-color: #f8fafc; -webkit-font-smoothing: antialiased; }
+      h1, h2, h3, h4 { font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .wrapper { background-color: #f8fafc; padding: 40px 16px; }
+      .container { max-width: 600px; margin: 0 auto; }
+      .card { background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01); border: 1px solid rgba(0,0,0,0.02); }
+      .header { background: linear-gradient(135deg, #059669 0%, #15803d 100%); padding: 48px 40px; text-align: center; position: relative; }
+      .header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 32px; background: #ffffff; border-radius: 32px 32px 0 0; }
+      .logo { width: 56px; height: 56px; background: rgba(255,255,255,0.15); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+      .logo-text { color: white; font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; }
+      .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+      .header p { color: rgba(255,255,255,0.9); margin: 8px 0 0; font-size: 16px; font-weight: 500; }
+      .content { padding: 8px 40px 48px; }
+      .greeting { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 8px; letter-spacing: -0.02em; }
+      .subtitle { font-size: 16px; color: #64748b; margin: 0 0 32px; font-weight: 400; }
+      .topic-section { padding: 32px 0; border-top: 1px solid #f1f5f9; }
+      .topic-section:first-of-type { padding-top: 16px; border-top: none; }
+      .topic-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+      .topic-name { font-size: 20px; font-weight: 800; color: #059669; margin: 0; letter-spacing: -0.01em; }
+      .topic-badge { font-size: 12px; background: #ecfdf5; color: #059669; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; }
+      .topic-content { font-size: 15px; color: #475569; line-height: 1.8; }
+      .topic-content h2, .topic-content h3 { font-size: 18px; color: #0f172a; margin: 24px 0 12px; font-weight: 700; letter-spacing: -0.01em; }
+      .topic-content p { margin: 0 0 16px; }
+      .topic-content a { color: #059669; text-decoration: none; font-weight: 600; }
       .topic-content a:hover { text-decoration: underline; }
-      .view-more-link { display: inline-block; margin-top: 16px; font-size: 14px; color: #16a34a; font-weight: 600; text-decoration: none; }
-      .view-more-link:hover { text-decoration: underline; }
-      .topic-divider { height: 1px; background: #e5e7eb; margin: 0; }
-      .footer { padding: 28px 40px; background: #f8fafc; border-top: 1px solid #f1f5f9; text-align: center; border-radius: 0 0 20px 20px; }
-      .footer-brand { font-size: 16px; font-weight: 800; color: #16a34a; margin-bottom: 12px; letter-spacing: -0.02em; }
+      .btn-container { margin-top: 24px; }
+      .view-more-btn { display: inline-block; background-color: #059669; color: #ffffff !important; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600; text-decoration: none; padding: 12px 24px; border-radius: 12px; transition: background-color 0.2s; }
+      .view-more-btn:hover { background-color: #047857; text-decoration: none !important; }
+      .footer { padding: 32px 40px; background: #f8fafc; border-top: 1px solid #f1f5f9; text-align: center; border-radius: 0 0 24px 24px; }
+      .footer-brand { font-size: 18px; font-weight: 800; color: #059669; font-family: 'Outfit', sans-serif; margin-bottom: 16px; letter-spacing: -0.02em; }
       .footer-links { margin-bottom: 16px; }
-      .footer-links a { font-size: 13px; color: #64748b; text-decoration: none; margin: 0 14px; font-weight: 500; transition: color 0.2s; }
-      .footer-links a:hover { color: #16a34a; }
-      .footer-note { font-size: 12px; color: #94a3b8; line-height: 1.6; }
+      .footer-links a { font-size: 14px; color: #64748b; text-decoration: none; margin: 0 12px; font-weight: 500; transition: color 0.2s; }
+      .footer-links a:hover { color: #059669; }
+      .footer-note { font-size: 13px; color: #94a3b8; line-height: 1.6; margin: 0; }
       @media only screen and (max-width: 600px) {
         .wrapper { padding: 16px 8px; }
-        .header { padding: 36px 24px 32px; }
-        .content { padding: 8px 24px 32px; }
+        .header { padding: 40px 24px; }
+        .content { padding: 8px 24px 40px; }
         .footer { padding: 24px; }
-        .topic-section { padding: 20px 0; }
+        .topic-header { flex-direction: column; align-items: flex-start; gap: 8px; }
       }
     </style>
   </head>
@@ -56,14 +55,14 @@
             <div class="logo">
               <span class="logo-text">M</span>
             </div>
-            <h1>Weekly Intelligence Digest</h1>
+            <h1>Your Weekly Insights</h1>
             <p><%= Date.current.strftime('%B %d, %Y') %></p>
           </div>
           <div class="content">
             <h2 class="greeting">Hi <%= @greeting %>,</h2>
-            <p class="subtitle">Here's what happened across your topics this week.</p>
+            <p class="subtitle">Here are the most critical updates across your topics.</p>
 
-            <% @topic_digests.each_with_index do |digest, index| %>
+            <% @topic_digests.each do |digest| %>
               <div class="topic-section">
                 <div class="topic-header">
                   <h3 class="topic-name"><%= digest.topic.name %></h3>
@@ -72,13 +71,12 @@
                 <div class="topic-content">
                   <%= raw inject_utm_links(digest.content, source: "digest_email", medium: "email", campaign: digest.topic.name.parameterize, content: digest.id) %>
                 </div>
-                <a href="<%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>" class="view-more-link">
-                  Read Full Digest →
-                </a>
+                <div class="btn-container">
+                  <a href="<%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>" class="view-more-btn">
+                    Open Full Digest
+                  </a>
+                </div>
               </div>
-              <% if index < @topic_digests.length - 1 %>
-                <div class="topic-divider"></div>
-              <% end %>
             <% end %>
 
           </div>
