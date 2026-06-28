@@ -33,6 +33,10 @@ class Admin::DigestPolicy < ApplicationPolicy
     admin_only?
   end
 
+  def destroy?
+    admin_or_moderator?
+  end
+
   private
 
   def admin_or_moderator?

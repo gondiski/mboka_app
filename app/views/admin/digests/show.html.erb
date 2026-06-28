@@ -54,12 +54,15 @@
       </div>
 
       <!-- Actions -->
-      <% if @topic_digest.draft? || @topic_digest.rejected? %>
+      <% if @topic_digest.draft? || @topic_digest.rejected? || policy(@topic_digest).destroy? %>
         <div class="px-8 py-5 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <% if @topic_digest.draft? || @topic_digest.rejected? %>
               <%= link_to "Edit Content", edit_admin_digest_path(@topic_digest), class: "px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 text-sm btn-press" %>
               <%= button_to "Reset to Draft", reset_to_draft_admin_digest_path(@topic_digest), method: :patch, class: "px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 text-sm cursor-pointer btn-press" if @topic_digest.rejected? %>
+            <% end %>
+            <% if policy(@topic_digest).destroy? %>
+              <%= button_to "Delete Digest", admin_digest_path(@topic_digest), method: :delete, data: { confirm: "Are you sure you want to delete this digest?" }, class: "px-5 py-2.5 bg-white border border-red-300 text-red-700 font-semibold rounded-xl hover:bg-red-50 hover:border-red-400 transition-all duration-200 text-sm cursor-pointer btn-press" %>
             <% end %>
           </div>
           <div class="flex items-center gap-3">

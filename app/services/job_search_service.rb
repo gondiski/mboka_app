@@ -4,19 +4,6 @@ require "net/http"
 require "json"
 
 class JobSearchService
-  EAST_AFRICA_LOCATIONS = [
-    "Kenya",
-    "Nairobi, Kenya",
-    "Tanzania",
-    "Dar es Salaam, Tanzania",
-    "Uganda",
-    "Kampala, Uganda",
-    "Rwanda",
-    "Kigali, Rwanda",
-    "Ethiopia",
-    "Addis Ababa, Ethiopia"
-  ].freeze
-
   def self.call(topic_name:, schedule_date: nil)
     new(topic_name, schedule_date).fetch_jobs
   end
@@ -41,14 +28,7 @@ class JobSearchService
   private
 
   def search_google_jobs
-    east_africa_jobs = fetch_jobs_for_location("#{@topic_name} jobs Kenya OR Tanzania OR Uganda OR Rwanda")
-    remote_jobs = fetch_jobs_for_location("#{@topic_name} remote jobs")
-
-    all_jobs = (east_africa_jobs + remote_jobs)
-    seen = all_jobs.map { |j| j[:title].to_s + j[:company_name].to_s }.uniq
-    unique_jobs = seen.map { |key| all_jobs.find { |j| j[:title].to_s + j[:company_name].to_s == key } }
-
-    unique_jobs
+    fetch_jobs_for_location("#{@topic_name} jobs Kenya")
   end
 
   def fetch_jobs_for_location(query)

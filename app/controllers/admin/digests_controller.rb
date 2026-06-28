@@ -2,7 +2,7 @@
 
 class Admin::DigestsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_topic_digest, only: [:show, :edit, :update, :approve, :reject, :reset_to_draft]
+  before_action :set_topic_digest, only: [:show, :edit, :update, :approve, :reject, :reset_to_draft, :destroy]
 
   def index
     authorize :digest, :index?, policy_class: Admin::DigestPolicy
@@ -79,6 +79,14 @@ class Admin::DigestsController < ApplicationController
     end
 
     redirect_to admin_digests_path, notice: "#{count} digests approved."
+  end
+
+  def destroy
+    authorize @topic_digest, :destroy?, policy_class: Admin::DigestPolicy
+
+    @topic_digest.destroy!
+    clear_analytics_cache
+    redirect_to admin_digests_path, notice: "Digest deleted."
   end
 
   def run_now

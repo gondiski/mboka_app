@@ -55,13 +55,16 @@ class AiAgentService
       #{job_market_section}
 
       ## Instructions
-      1. Start with a "## Job Market Update" section that summarizes the job listings above — highlight key roles, hiring trends, notable companies, and locations. If no jobs were found, skip this section.
-      2. Then include a "## Key Insights" section with the most impactful news and developments from the raw data above.
-      3. End with a "## Key Takeaways" section with actionable bullet points.
+      1. Start with a "Job Market Update" section that summarizes the job listings above — highlight key roles, hiring trends, notable companies, and locations. If no jobs were found, skip this section entirely.
+      2. Then include a "Key Insights" section with the most impactful news and developments. THIS SECTION MUST BE 240 CHARACTERS OR LESS — be extremely concise and punchy.
+      3. End with a "Key Takeaways" section with 3-4 actionable bullet points.
 
-      Format in clean Markdown suitable for an email newsletter.
-      Include links to source articles where available.
-      Be concise and actionable — this is for a busy professional.
+      ## CRITICAL FORMAT RULES
+      - Output ONLY clean, semantic HTML. Do NOT use Markdown.
+      - Use <h2> for section headings, <p> for paragraphs, <ul>/<li> for bullet points, <a href="..."> for links, <strong> for emphasis.
+      - Do NOT include <html>, <head>, <body>, or <style> tags — just the inner content HTML.
+      - The Key Insights section content (not the heading) must be 240 characters or fewer.
+      - Be concise and actionable — this is for a busy professional.
     TEXT
 
     response = client.messages.create(

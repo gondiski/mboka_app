@@ -15,7 +15,7 @@ class JobDigestFormatter
     <<~HTML
       <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;">
       <h3 style="color: #1e40af; font-size: 16px; margin-bottom: 12px;">
-        Recent East Africa Job Openings
+        Recent Kenya Job Openings
       </h3>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
         #{@jobs.map { |job| job_row(job) }.join}

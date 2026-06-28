@@ -61,7 +61,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :digests, only: [ :index, :show, :edit, :update ] do
+    resources :digests, only: [ :index, :show, :edit, :update, :destroy ] do
       member do
         patch :approve
         patch :reject
