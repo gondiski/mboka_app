@@ -11,14 +11,12 @@ class DigestSchedulerJob
 
     today = Date.current
 
-    if schedule.respond_to?(:should_generate_today?) && schedule.should_generate_today?(today)
-      week_of = today.beginning_of_week.to_s
-      IntelligenceGatheringJob.perform_async(week_of)
+    if schedule.should_generate_today?(today)
+      IntelligenceGatheringJob.perform_async
     end
 
-    if schedule.respond_to?(:should_send_today?) && schedule.should_send_today?(today)
-      week_of = today.beginning_of_week.to_s
-      DigestDeliveryJob.perform_async(week_of)
+    if schedule.should_send_today?(today)
+      DigestDeliveryJob.perform_async
     end
   end
 end

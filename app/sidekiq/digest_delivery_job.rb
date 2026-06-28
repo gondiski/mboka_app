@@ -5,8 +5,8 @@ class DigestDeliveryJob
 
   sidekiq_options queue: :mailers, retry: 3
 
-  def perform(week_of)
-    week_date = Date.parse(week_of)
+  def perform(week_of = nil)
+    week_date = week_of ? Date.parse(week_of) : Date.current.beginning_of_week
 
     # Users with topics get their subscribed digests
     users_with_topics = User.where(status: "active", subscribed: true)

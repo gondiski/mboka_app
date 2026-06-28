@@ -39,8 +39,7 @@ class Admin::DigestSchedulesController < ApplicationController
       Sidekiq::Cron::Job.create(
         name: "digest-delivery",
         cron: schedule.cron_expression,
-        class: "DigestDeliveryJob",
-        args: [Date.current.beginning_of_week.to_s]
+        class: "DigestDeliveryJob"
       )
     end
 
@@ -49,8 +48,7 @@ class Admin::DigestSchedulesController < ApplicationController
       Sidekiq::Cron::Job.create(
         name: "digest-generation",
         cron: schedule.generation_cron_expression,
-        class: "IntelligenceGatheringJob",
-        args: [Date.current.beginning_of_week.to_s]
+        class: "IntelligenceGatheringJob"
       )
     end
   end

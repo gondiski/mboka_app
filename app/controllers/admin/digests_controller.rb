@@ -84,8 +84,7 @@ class Admin::DigestsController < ApplicationController
   def run_now
     authorize :digest, :run_now?, policy_class: Admin::DigestPolicy
 
-    week_of = Date.current.beginning_of_week.to_s
-    IntelligenceGatheringJob.perform_async(week_of)
+    IntelligenceGatheringJob.perform_async
 
     redirect_to admin_digests_path, notice: "Digest generation queued for this week."
   end

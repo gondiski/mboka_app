@@ -5,9 +5,9 @@ class IntelligenceGatheringJob
 
   sidekiq_options queue: :high, retry: 3
 
-  def perform(week_of)
-    week_date = Date.parse(week_of)
-    topics = Topic.joins(:user_topics).distinct
+  def perform(week_of = nil)
+    week_date = week_of ? Date.parse(week_of) : Date.current.beginning_of_week
+    topics = Topic.all
 
     topics.find_each do |topic|
       existing = TopicDigest.find_by(topic: topic, week_of: week_date)
