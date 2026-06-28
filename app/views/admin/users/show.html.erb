@@ -19,15 +19,22 @@
         <div class="flex items-end gap-5">
           <img src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=<%= @profile_user.id %>&backgroundColor=fef3c7,fde68a,dcfce7,b6e3f4,c0aede,d1d4f9,ffd5dc,fed7aa,fecdd3" alt="<%= @profile_user.full_name %>" class="w-24 h-24 rounded-2xl shadow-lg border-4 border-white bg-white" />
           <div class="flex-1 pb-1">
-            <div class="flex items-center gap-3 mb-1">
-              <h1 class="text-2xl font-black text-gray-900"><%= @profile_user.full_name %></h1>
-              <% @profile_user.roles.each do |role| %>
-                <% badge_color = case role.name
-                   when 'admin' then 'bg-purple-100 text-purple-700'
-                   when 'moderator' then 'bg-blue-100 text-blue-700'
-                   else 'bg-brand-100 text-brand-700'
-                   end %>
-                <span class="px-2.5 py-0.5 text-xs font-bold rounded-full <%= badge_color %>"><%= role.name %></span>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-1">
+              <div class="flex items-center gap-3">
+                <h1 class="text-2xl font-black text-gray-900"><%= @profile_user.full_name %></h1>
+                <% @profile_user.roles.each do |role| %>
+                  <% badge_color = case role.name
+                     when 'admin' then 'bg-purple-100 text-purple-700'
+                     when 'moderator' then 'bg-blue-100 text-blue-700'
+                     else 'bg-brand-100 text-brand-700'
+                     end %>
+                  <span class="px-2.5 py-0.5 text-xs font-bold rounded-full <%= badge_color %>"><%= role.name %></span>
+                <% end %>
+              </div>
+
+              <%= link_to preview_digest_admin_user_path(@profile_user), target: "_blank", class: "inline-flex items-center gap-2 px-4 py-2 bg-brand-50 text-brand-700 hover:bg-brand-100 rounded-xl text-sm font-bold transition-all btn-press shadow-sm border border-brand-100" do %>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                Preview Digest Email
               <% end %>
             </div>
             <p class="text-gray-600 font-medium"><%= @profile_user.designation %></p>

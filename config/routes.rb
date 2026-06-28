@@ -77,6 +77,7 @@ Rails.application.routes.draw do
       member do
         patch :update_status
         patch :update_role
+        get :preview_digest
       end
       collection do
         post :import

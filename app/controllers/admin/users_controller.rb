@@ -26,6 +26,36 @@ class Admin::UsersController < ApplicationController
     @pagy_favorites, @favorited_digests = pagy(favorited, items: 10)
   end
 
+  def preview_digest
+    user_id = User.decode_hashid(params[:id])
+    @profile_user = User.includes(:topics).find(user_id)
+    authorize @profile_user, :show?, policy_class: Admin::UserPolicy
+
+    topic_ids = @profile_user.topics.pluck(:id)
+    
+    if topic_ids.empty?
+      render plain: "This user is not subscribed to any topics.", status: :not_found
+      return
+    end
+
+    # Fetch the most recent digest for each of the user's topics
+    digests = TopicDigest.where(topic_id: topic_ids)
+                         .select('DISTINCT ON (topic_id) *')
+                         .order('topic_id, week_of DESC')
+                         .to_a
+
+    if digests.empty?
+      render plain: "No digests have been generated for this user's topics yet.", status: :not_found
+      return
+    end
+
+    # Sort them by week_of descending (the DISTINCT ON query sorts by topic_id first)
+    digests = digests.sort_by { |d| d.week_of }.reverse
+
+    mail = UserMailer.topic_digest(@profile_user, digests)
+    render html: mail.body.to_s.html_safe
+  end
+
   def update_status
     user_id = User.decode_hashid(params[:id])
     @user = User.find(user_id)
