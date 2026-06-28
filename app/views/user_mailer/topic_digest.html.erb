@@ -9,18 +9,22 @@
       h1, h2, h3, h4 { font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
       .wrapper { background-color: #f8fafc; padding: 40px 16px; }
       .container { max-width: 600px; margin: 0 auto; }
-      .card { background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01); border: 1px solid rgba(0,0,0,0.02); }
-      .header { background: linear-gradient(135deg, #059669 0%, #15803d 100%); padding: 48px 40px; text-align: center; position: relative; }
-      .header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 32px; background: #ffffff; border-radius: 32px 32px 0 0; }
-      .logo { width: 56px; height: 56px; background: rgba(255,255,255,0.15); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 24px; }
-      .logo-text { color: white; font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; }
-      .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
-      .header p { color: rgba(255,255,255,0.9); margin: 8px 0 0; font-size: 16px; font-weight: 500; }
-      .content { padding: 8px 40px 48px; }
+      .header { background-color: #020617; padding: 48px 40px; position: relative; border-bottom: 4px solid #059669; }
+      .header-bg { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: radial-gradient(circle at top right, #064e3b 0%, transparent 60%); opacity: 0.8; z-index: 1; }
+      .header-content { position: relative; z-index: 2; }
+      .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; }
+      .logo { display: inline-block; }
+      .logo-text { color: #ffffff; font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.04em; margin: 0; }
+      .logo-dot { color: #34d399; }
+      .date-pill { display: inline-block; background-color: rgba(255,255,255,0.08); color: #e2e8f0; font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 20px; font-family: 'Inter', sans-serif; border: 1px solid rgba(255,255,255,0.1); }
+      .header h1 { color: #ffffff; margin: 0 0 16px; font-size: 38px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; text-align: left; }
+      .header-highlight { color: #34d399; }
+      .header p { color: #94a3b8; margin: 0; font-size: 16px; font-weight: 400; text-align: left; max-width: 85%; line-height: 1.5; }
+      .content { padding: 40px 40px 48px; }
       .greeting { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 8px; letter-spacing: -0.02em; }
       .subtitle { font-size: 16px; color: #64748b; margin: 0 0 32px; font-weight: 400; }
       .topic-section { padding: 32px 0; border-top: 1px solid #f1f5f9; }
-      .topic-section:first-of-type { padding-top: 16px; border-top: none; }
+      .topic-section:first-of-type { padding-top: 0; border-top: none; }
       .topic-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
       .topic-name { font-size: 20px; font-weight: 800; color: #059669; margin: 0; letter-spacing: -0.01em; }
       .topic-badge { font-size: 12px; background: #ecfdf5; color: #059669; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; }
@@ -41,9 +45,11 @@
       @media only screen and (max-width: 600px) {
         .wrapper { padding: 16px 8px; }
         .header { padding: 40px 24px; }
-        .content { padding: 8px 24px 40px; }
+        .header h1 { font-size: 32px; }
+        .content { padding: 32px 24px 40px; }
         .footer { padding: 24px; }
         .topic-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .header-top { margin-bottom: 32px; }
       }
     </style>
   </head>
@@ -52,11 +58,28 @@
       <div class="container">
         <div class="card">
           <div class="header">
-            <div class="logo">
-              <span class="logo-text">M</span>
+            <div class="header-bg"></div>
+            <div class="header-content">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="header-top">
+                <tr>
+                  <td align="left">
+                    <div class="logo">
+                      <span class="logo-text">mboka<span class="logo-dot">.</span></span>
+                    </div>
+                  </td>
+                  <td align="right">
+                    <div class="date-pill">
+                      <%= Date.current.strftime('%b %d, %Y') %>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <h1>
+                Your Intelligence<br>
+                <span class="header-highlight">Briefing</span>
+              </h1>
+              <p>The most critical updates and top jobs across your subscribed topics, delivered straight to you.</p>
             </div>
-            <h1>Your Weekly Insights</h1>
-            <p><%= Date.current.strftime('%B %d, %Y') %></p>
           </div>
           <div class="content">
             <h2 class="greeting">Hi <%= @greeting %>,</h2>
