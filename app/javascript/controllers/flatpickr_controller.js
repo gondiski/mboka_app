@@ -8,8 +8,7 @@ export default class extends Controller {
 
     this.flatpickr = flatpickr(this.inputTarget, {
       monthSelectorType: "dropdown",
-      theme: "mboka",
-      altInput: true,
+            altInput: true,
       altFormat: "F j, Y"
     })
   }

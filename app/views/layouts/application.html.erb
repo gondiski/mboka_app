@@ -24,20 +24,6 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('[data-flatpickr-target="input"]').forEach(function(el) {
-          if (el._flatpickr) return;
-          flatpickr(el, {
-            monthSelectorType: "dropdown",
-            theme: "mboka",
-            altInput: true,
-            altFormat: "F j, Y"
-          });
-        });
-      });
-    </script>
-
     <style>
       [x-cloak] { display: none !important; }
       .gradient-text {

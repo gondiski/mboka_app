@@ -2,15 +2,15 @@ namespace :telegram do
   desc "Set the Telegram Webhook"
   task set_webhook: :environment do
     token = ENV["TELEGRAM_BOT_TOKEN"]
-    domain = ENV["APP_DOMAIN"] || "https://your-domain.com"
-    
+    domain = ENV["APP_DOMAIN"] || "https://mboka.dnrstudios.co.ke"
+
     if token.blank?
       puts "❌ TELEGRAM_BOT_TOKEN is not set in .env"
       exit
     end
 
     webhook_url = "#{domain}/webhooks/telegram/#{token}"
-    
+
     uri = URI.parse("https://api.telegram.org/bot#{token}/setWebhook")
     request = Net::HTTP::Post.new(uri)
     request.content_type = "application/json"

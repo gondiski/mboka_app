@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_28_085422) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_29_060759) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -101,7 +101,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_28_085422) do
     t.datetime "updated_at", null: false
     t.integer "status", default: 0, null: false
     t.datetime "moderated_at"
-    t.bigint "moderated_by"
+    t.bigint "moderated_by_id"
     t.text "rejection_reason"
     t.index ["status"], name: "index_topic_digests_on_status"
     t.index ["topic_id", "week_of"], name: "index_topic_digests_on_topic_id_and_week_of", unique: true
@@ -184,7 +184,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_28_085422) do
   add_foreign_key "favorites", "users"
   add_foreign_key "payments", "admin_settings"
   add_foreign_key "topic_digests", "topics"
-  add_foreign_key "topic_digests", "users", column: "moderated_by"
+  add_foreign_key "topic_digests", "users", column: "moderated_by_id"
   add_foreign_key "user_topics", "topics"
   add_foreign_key "user_topics", "users"
 end
