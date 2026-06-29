@@ -18,10 +18,15 @@ class TopicDigest < ApplicationRecord
   scope :for_topics, ->(topic_ids) { where(topic_id: topic_ids) }
   scope :pending_review, -> { where(status: :draft) }
   scope :ready_to_send, -> { where(status: :approved) }
+  scope :unsent, -> { where(status: :approved, sent_at: nil) }
   scope :modifiable, -> { where(status: %w[draft rejected]) }
 
   def self.current_week
     for_week(Date.current)
+  end
+
+  def mark_sent!
+    update!(status: :sent, sent_at: Time.current)
   end
 
   def approve!(user)

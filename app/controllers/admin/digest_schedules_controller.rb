@@ -29,27 +29,31 @@ class Admin::DigestSchedulesController < ApplicationController
   end
 
   def update_sidekiq_crons(schedule)
+    # Clean up all existing cron jobs (including legacy digest-scheduler)
     destroy_cron_job("digest-delivery")
     destroy_cron_job("digest-generation")
+    destroy_cron_job("digest-scheduler") # legacy job that wrapped both
 
     return unless schedule.active?
 
-    # Create delivery cron job
+    # Create delivery cron job — fires DigestDeliveryJob directly
     if schedule.cron_expression.present?
       Sidekiq::Cron::Job.create(
         name: "digest-delivery",
         cron: schedule.cron_expression,
         class: "DigestDeliveryJob"
       )
+      Rails.logger.info("Sidekiq Cron: Created digest-delivery with cron '#{schedule.cron_expression}'")
     end
 
-    # Create generation cron job
+    # Create generation cron job — fires IntelligenceGatheringJob directly
     if schedule.generation_cron_expression.present?
       Sidekiq::Cron::Job.create(
         name: "digest-generation",
         cron: schedule.generation_cron_expression,
         class: "IntelligenceGatheringJob"
       )
+      Rails.logger.info("Sidekiq Cron: Created digest-generation with cron '#{schedule.generation_cron_expression}'")
     end
   end
 
