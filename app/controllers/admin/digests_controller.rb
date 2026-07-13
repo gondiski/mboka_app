@@ -118,36 +118,12 @@ class Admin::DigestsController < ApplicationController
       return
     end
 
-    # Generate digests in background threads within the web process
-    # This works whether or not Sidekiq is running
-    Thread.new do
-      topics_to_generate.each do |topic|
-        begin
-          jobs = JobSearchService.call(topic_name: topic.name, schedule_date: week_date)
-
-          digest_content = AiAgentService.call(
-            topics: [topic.name],
-            designation: "general",
-            jobs: jobs
-          )
-
-          TopicDigest.create!(
-            topic: topic,
-            content: digest_content,
-            scraped_data: jobs.to_json,
-            week_of: week_date,
-            status: :draft
-          )
-
-          Rails.logger.info("RunNow: Created digest for #{topic.name}")
-        rescue StandardError => e
-          Rails.logger.error("RunNow: Failed for #{topic.name}: #{e.class} - #{e.message}")
-          next
-        end
-      end
+    topics_to_generate.each_with_index do |topic, index|
+      # Stagger the jobs by 1 minute each to avoid hitting Anthropic and SerpApi rate limits
+      SingleTopicDigestJob.perform_in(index.minutes, topic.id, week_date.to_s)
     end
 
-    redirect_to admin_digests_path, notice: "Generating #{topics_to_generate.size} digests in the background. Refresh the page to see them as they appear."
+    redirect_to admin_digests_path, notice: "Generating #{topics_to_generate.size} digests in the background. They are staggered by 1 minute each to avoid AI rate limits. Refresh the page periodically to see them appear."
   end
 
   private
