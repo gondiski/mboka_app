@@ -2,6 +2,7 @@
 
 class TopicDigestPolicy < ApplicationPolicy
   def show?
-    user.present?
+    # Digests are publicly accessible to both logged-in and signed-out users
+    true
   end
 end

@@ -16,9 +16,11 @@ class AiAgentService
     insights_html = analyze_and_summarize(raw_data)
     jobs_html = JobDigestFormatter.format(@jobs)
 
-    # Combine AI insights with formatted job listings into a single content block
+    # Combine AI insights with formatted job listings into a single content block.
+    # The <!-- JOBS_SECTION --> delimiter lets the email template show only insights
+    # while the full web view shows everything.
     if jobs_html.present?
-      "#{insights_html}\n#{jobs_html}"
+      "#{insights_html}\n<!-- JOBS_SECTION -->\n#{jobs_html}"
     else
       insights_html
     end

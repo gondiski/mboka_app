@@ -42,21 +42,24 @@ class TelegramDeliveryService
     digests.each do |digest|
       message += "🔥 *#{digest.topic.name}*\n"
       
+      # Show only the Key Insights section (before the jobs block)
+      insights = digest.content.split('<!-- JOBS_SECTION -->').first
+
       # Convert basic HTML from AI into simple Markdown
-      content = digest.content
-      content = content.gsub(/<h2>(.*?)<\/h2>/, "*\\1*\n")
-      content = content.gsub(/<p>(.*?)<\/p>/, "\\1\n\n")
-      content = content.gsub(/<strong>(.*?)<\/strong>/, "*\\1*")
-      content = content.gsub(/<br\s*\/?>/, "\n")
+      insights = insights.gsub(/<h2>(.*?)<\/h2>/, "*\\1*\n")
+      insights = insights.gsub(/<p>(.*?)<\/p>/, "\\1\n\n")
+      insights = insights.gsub(/<strong>(.*?)<\/strong>/, "*\\1*")
+      insights = insights.gsub(/<br\s*\/?>/, "\n")
       
       # Strip any remaining tags
-      content = ActionController::Base.helpers.strip_tags(content)
+      insights = ActionController::Base.helpers.strip_tags(insights)
 
-      message += "#{content}\n"
+      message += "#{insights}\n"
+
+      # Add link to full digest with jobs
+      digest_url = Rails.application.routes.url_helpers.topic_digest_url(digest, host: Rails.application.routes.default_url_options[:host] || "localhost:3000")
+      message += "💼 [See More Jobs →](#{digest_url})\n\n"
     end
-
-    message += "💼 *Top Jobs in Kenya*\n"
-    message += "View your full email digest to apply for these roles.\n"
 
     send_message(user.telegram_chat_id, message)
   end

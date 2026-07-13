@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class TopicDigestsController < ApplicationController
-  before_action :authenticate_user!
+  # Allow both logged-in and signed-out users to view digests
+  skip_before_action :check_app_access, only: [:show]
 
   def show
     digest_id = TopicDigest.decode_hashid(params[:id])
     @digest = TopicDigest.includes(:topic).find(digest_id)
     authorize @digest
     @user = current_user
-    @favorited = @user.favorites.exists?(topic_digest: @digest)
+    @favorited = @user&.favorites&.exists?(topic_digest: @digest) || false
   end
 end

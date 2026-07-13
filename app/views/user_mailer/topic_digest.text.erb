@@ -7,9 +7,9 @@ Your Weekly Intelligence Digest for <%= Date.current.strftime('%B %d, %Y') %>
 <%= digest.topic.name %>
 ----------------------------------------------------------------
 
-<%= strip_tags(digest.content) %>
+<%= strip_tags(digest.content.split('<!-- JOBS_SECTION -->').first) %>
 
-Read full digest: <%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>
+See More Jobs: <%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>
 
 <% end %>
 
