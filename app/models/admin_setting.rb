@@ -27,14 +27,6 @@ class AdminSetting < ApplicationRecord
     "#{anthropic_api_key[0..3]}#{"*" * [anthropic_api_key.length - 8, 4].max}#{anthropic_api_key[-4..]}"
   end
 
-  def paystack_configured?
-    key = ENV.fetch("PAYSTACK_SECRET_KEY", nil).presence || paystack_secret_key
-    key.present? && key.start_with?("sk_") && !key.include?("your_")
-  end
-
-  def paystack_public_key_value
-    ENV.fetch("PAYSTACK_PUBLIC_KEY", nil).presence || paystack_public_key
-  end
 
   # --- Payment / Access Logic ---
 

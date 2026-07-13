@@ -117,14 +117,9 @@
               $<%= number_with_precision(@summary[:installment_amount], precision: 0) %> &mdash; Unlocks 30 days of access
             </p>
           </div>
-          <% if @settings.paystack_configured? %>
-            <%= button_to checkout_admin_payments_path, method: :post, class: "px-8 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition shadow-lg cursor-pointer transform hover:-translate-y-0.5 flex items-center gap-2" do %>
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-              Pay Now
-            <% end %>
-          <% else %>
-            <%= link_to "Configure Paystack First", admin_settings_path, class: "px-6 py-3 bg-gray-100 text-gray-500 font-semibold rounded-xl hover:bg-gray-200 transition" %>
-          <% end %>
+          <div class="px-6 py-3 bg-gray-100 text-gray-500 font-semibold rounded-xl text-center">
+            Payment gateway pending integration
+          </div>
         </div>
       </div>
     <% end %>
@@ -153,9 +148,7 @@
                   <p class="font-semibold text-gray-900">Installment #<%= payment.installment_number %></p>
                   <p class="text-xs text-gray-500">
                     <%= payment.created_at.strftime("%b %d, %Y %H:%M") %>
-                    <% if payment.paystack_reference %>
-                      &middot; Ref: <code class="bg-gray-100 px-1 rounded"><%= payment.paystack_reference %></code>
-                    <% end %>
+
                   </p>
                 </div>
               </div>

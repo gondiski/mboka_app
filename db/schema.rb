@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_29_062615) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_13_071320) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,8 +19,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_29_062615) do
     t.text "anthropic_api_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "paystack_secret_key"
-    t.text "paystack_public_key"
     t.integer "total_price_cents", default: 200000
     t.integer "installment_count", default: 4
     t.datetime "trial_start_at"
@@ -71,14 +69,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_29_062615) do
     t.integer "amount_cents", null: false
     t.integer "installment_number", null: false
     t.integer "status", default: 0, null: false
-    t.string "paystack_reference"
     t.datetime "paid_at"
     t.datetime "expires_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["admin_setting_id", "installment_number"], name: "index_payments_on_admin_setting_id_and_installment_number", unique: true
     t.index ["admin_setting_id"], name: "index_payments_on_admin_setting_id"
-    t.index ["paystack_reference"], name: "index_payments_on_paystack_reference", unique: true
     t.index ["status"], name: "index_payments_on_status"
   end
 

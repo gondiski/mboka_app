@@ -59,9 +59,7 @@ Rails.application.routes.draw do
 
     # Payments
     resource :payments, only: [ :show ] do
-      post :checkout
       collection do
-        get :verify
         get :history
       end
     end
@@ -93,8 +91,7 @@ Rails.application.routes.draw do
     resources :invitations, only: [ :create ]
   end
 
-  # Paystack Webhook
-  post "webhooks/paystack", to: "webhooks/paystack#receive"
+
 
   # Locked Page (app expired)
   get "locked", to: "pages#locked", as: :locked
