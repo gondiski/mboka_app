@@ -18,10 +18,8 @@ class UserMailer < ApplicationMailer
     @preferences_url = email_preferences_url(token: @unsubscribe_token)
     @unsubscribe_url = unsubscribe_email_url(token: @unsubscribe_token)
 
+    # Jobs are now embedded in digest content at generation time — no re-fetch needed
     @jobs_by_topic = {}
-    @topic_digests.each do |digest|
-      @jobs_by_topic[digest.topic.name] = JobSearchService.call(topic_name: digest.topic.name)
-    end
 
     mail(
       to: @user.email,

@@ -92,12 +92,7 @@
                   <span class="topic-badge">Week of <%= digest.week_of.strftime("%b %d") %></span>
                 </div>
                 <div class="topic-content">
-                  <% clean_content = digest.content.split('<div style="background-color: #f8fafc; border-radius: 16px; padding: 24px; margin-top: 24px; border: 1px solid #f1f5f9;">').first %>
-                  <%= raw inject_utm_links(clean_content, source: "digest_email", medium: "email", campaign: digest.topic.name.parameterize, content: digest.id) %>
-                  
-                  <% if @jobs_by_topic[digest.topic.name].present? %>
-                    <%= raw JobDigestFormatter.format(@jobs_by_topic[digest.topic.name]) %>
-                  <% end %>
+                  <%= raw inject_utm_links(digest.content, source: "digest_email", medium: "email", campaign: digest.topic.name.parameterize, content: digest.id) %>
                 </div>
                 <div class="btn-container">
                   <a href="<%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>" class="view-more-btn">

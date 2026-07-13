@@ -25,6 +25,7 @@ class IntelligenceGatheringJob
         TopicDigest.create!(
           topic: topic,
           content: digest_content,
+          scraped_data: jobs.to_json,
           week_of: week_date,
           status: :draft
         )
