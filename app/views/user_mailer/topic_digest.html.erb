@@ -115,5 +115,8 @@
         </div>
       </div>
     </div>
+    <% if @user && @user.id %>
+      <img src="<%= track_open_url(user_id: @user.id, mailer: 'UserMailer#topic_digest') %>" width="1" height="1" alt="" style="display:none;" />
+    <% end %>
   </body>
 </html>

@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   root "subscribers#new"
   resources :subscribers, only: [ :create ]
   get "check_email", to: "magic_links#check_email", as: :check_email
+  get "t/open", to: "email_tracks#open", as: :track_open
 
   # Email Preferences (token-based, unauthenticated)
   get "email_preferences/:token", to: "email_preferences#show", as: :email_preferences
