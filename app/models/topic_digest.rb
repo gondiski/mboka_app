@@ -5,6 +5,7 @@ class TopicDigest < ApplicationRecord
 
   belongs_to :topic
   belongs_to :moderated_by, class_name: "User", optional: true
+  has_many :favorites, dependent: :destroy
 
   validates :topic_id, uniqueness: { scope: :week_of }
   validates :content, presence: true
