@@ -38,10 +38,9 @@ class Admin::UsersController < ApplicationController
       return
     end
 
-    # Fetch the most recent digest for each of the user's topics
-    digests = TopicDigest.where(topic_id: topic_ids)
-                         .select('DISTINCT ON (topic_id) *')
-                         .order('topic_id, week_of DESC')
+    current_week = Date.current.beginning_of_week
+    # Fetch the digest for the current week for each of the user's topics
+    digests = TopicDigest.where(topic_id: topic_ids, week_of: current_week)
                          .to_a
 
     if digests.empty?

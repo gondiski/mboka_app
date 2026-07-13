@@ -49,7 +49,15 @@
       <!-- Content -->
       <div class="p-8">
         <div class="prose prose-gray max-w-none">
-          <%= raw @topic_digest.content %>
+          <% insights_content = @topic_digest.content.split('<!-- JOBS_SECTION -->').first %>
+          <%= raw insights_content %>
+          <% if @topic_digest.content.include?('<!-- JOBS_SECTION -->') %>
+            <div class="mt-6">
+              <a href="<%= topic_digest_path(@topic_digest) %>" class="text-brand-600 font-semibold hover:text-brand-700 hover:underline transition-colors" target="_blank">
+                See More Jobs &rarr;
+              </a>
+            </div>
+          <% end %>
         </div>
       </div>
 

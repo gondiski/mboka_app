@@ -196,7 +196,12 @@
 
   function previewDigest() {
     const content = document.getElementById('html-source').value;
-    document.getElementById('preview-content').innerHTML = content;
+    let previewHtml = content;
+    if (content.includes('<!-- JOBS_SECTION -->')) {
+      const parts = content.split('<!-- JOBS_SECTION -->');
+      previewHtml = parts[0] + '<div class="mt-6"><a href="#" style="color: #059669; font-weight: 600; text-decoration: none;">See More Jobs &rarr;</a></div>';
+    }
+    document.getElementById('preview-content').innerHTML = previewHtml;
     document.getElementById('preview-modal').classList.remove('hidden');
   }
 
