@@ -2,8 +2,6 @@
 
 class TopicDigestsController < ApplicationController
   # Allow both logged-in and signed-out users to view digests
-  skip_before_action :check_app_access, only: [:show]
-
   def show
     digest_id = TopicDigest.decode_hashid(params[:id])
     @digest = TopicDigest.includes(:topic).find(digest_id)
