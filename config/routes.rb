@@ -57,12 +57,7 @@ Rails.application.routes.draw do
     resource :digest_schedule, only: [ :show, :update ]
     get "docs", to: "docs#show", as: :docs
 
-    # Payments
-    resource :payments, only: [ :show ] do
-      collection do
-        get :history
-      end
-    end
+
 
     resources :digests, only: [ :index, :show, :edit, :update, :destroy ] do
       member do
@@ -93,6 +88,4 @@ Rails.application.routes.draw do
 
 
 
-  # Locked Page (app expired)
-  get "locked", to: "pages#locked", as: :locked
 end

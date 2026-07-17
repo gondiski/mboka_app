@@ -30,7 +30,7 @@ class Admin::DashboardsController < ApplicationController
         total_topics: Topic.count,
         sent_count: Ahoy::Message.count,
         opened_count: Ahoy::Message.where.not(opened_at: nil).count,
-        clicked_count: Ahoy::Message.where.not(clicked_at: nil).count,
+        clicked_count: Ahoy::Click.count,
         open_rate: calc_open_rate,
         digest_stats: build_digest_stats,
         digest_page: build_digest_stats.first(5),

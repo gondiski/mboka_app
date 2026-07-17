@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_13_071320) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_17_101929) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,9 +19,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_13_071320) do
     t.text "anthropic_api_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "total_price_cents", default: 200000
-    t.integer "installment_count", default: 4
-    t.datetime "trial_start_at"
   end
 
   create_table "ahoy_clicks", force: :cascade do |t|
@@ -62,20 +59,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_13_071320) do
     t.index ["topic_digest_id"], name: "index_favorites_on_topic_digest_id"
     t.index ["user_id", "topic_digest_id"], name: "index_favorites_on_user_id_and_topic_digest_id", unique: true
     t.index ["user_id"], name: "index_favorites_on_user_id"
-  end
-
-  create_table "payments", force: :cascade do |t|
-    t.bigint "admin_setting_id", null: false
-    t.integer "amount_cents", null: false
-    t.integer "installment_number", null: false
-    t.integer "status", default: 0, null: false
-    t.datetime "paid_at"
-    t.datetime "expires_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["admin_setting_id", "installment_number"], name: "index_payments_on_admin_setting_id_and_installment_number", unique: true
-    t.index ["admin_setting_id"], name: "index_payments_on_admin_setting_id"
-    t.index ["status"], name: "index_payments_on_status"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -179,7 +162,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_13_071320) do
 
   add_foreign_key "favorites", "topic_digests"
   add_foreign_key "favorites", "users"
-  add_foreign_key "payments", "admin_settings"
   add_foreign_key "topic_digests", "topics"
   add_foreign_key "topic_digests", "users", column: "moderated_by_id"
   add_foreign_key "user_topics", "topics"
