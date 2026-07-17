@@ -25,6 +25,7 @@ class Admin::SettingsController < ApplicationController
     params.require(:admin_setting).permit(
       :serpapi_key,
       :anthropic_api_key,
+      :google_analytics_id,
       :installment_count
     )
   end

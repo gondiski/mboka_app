@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_17_101929) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_17_103601) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,6 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_17_101929) do
     t.text "anthropic_api_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "google_analytics_id"
   end
 
   create_table "ahoy_clicks", force: :cascade do |t|
