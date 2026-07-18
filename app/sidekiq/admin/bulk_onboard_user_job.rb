@@ -63,3 +63,17 @@ class Admin::BulkOnboardUserJob
         Rails.logger.info "BulkOnboard: Updated #{email} with explicit topics."
       end
     else
+      Rails.logger.error "BulkOnboard: Failed to save #{email} - #{user.errors.full_messages.join(', ')}"
+    end
+  end
+
+  private
+
+  def parse_timestamp(timestamp_str)
+    return nil if timestamp_str.blank?
+
+    Time.parse(timestamp_str)
+  rescue StandardError
+    nil
+  end
+end
