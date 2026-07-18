@@ -36,7 +36,7 @@
           <div class="flex items-center justify-between p-5 bg-gray-50 rounded-2xl mb-8">
             <div>
               <h2 class="text-lg font-bold text-gray-900">Weekly Digest Emails</h2>
-              <p class="text-sm text-gray-500 mt-1">Receive curated intelligence digests every week.</p>
+              <p class="text-sm text-gray-500 mt-1">Receive curated Job Opportunity Radars every week.</p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
               <%= f.check_box :subscribed, { checked: @user.subscribed?, class: "sr-only peer", data: { controller: "toggle", action: "change->toggle#toggleAll" } }, "true", "false" %>

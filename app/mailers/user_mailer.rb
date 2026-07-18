@@ -23,7 +23,7 @@ class UserMailer < ApplicationMailer
 
     mail(
       to: @user.email,
-      subject: "Your Weekly Intelligence Digest - #{Date.current.strftime('%B %d, %Y')}"
+      subject: "Your Weekly Job Opportunity Radar - #{Date.current.strftime('%B %d, %Y')}"
     )
   end
 

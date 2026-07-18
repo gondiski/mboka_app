@@ -56,7 +56,7 @@ class JobSearchService
   end
 
   def format_results(jobs)
-    jobs.first(5).map do |job|
+    jobs.map do |job|
       {
         title: job[:title],
         company: job[:company_name],

@@ -63,14 +63,3 @@ class Admin::BulkOnboardUserJob
         Rails.logger.info "BulkOnboard: Updated #{email} with explicit topics."
       end
     else
-      Rails.logger.error "BulkOnboard: Failed to #{is_new_user ? 'create' : 'update'} #{email} — #{user.errors.full_messages.join(', ')}"
-    end
-  end
-
-  private
-
-  def parse_timestamp(value)
-    return nil if value.blank?
-    Time.parse(value.to_s) rescue nil
-  end
-end

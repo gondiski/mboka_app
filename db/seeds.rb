@@ -248,7 +248,7 @@ else
         user_id: user_id,
         to: User.find(user_id).email,
         mailer: "UserMailer#topic_digest",
-        subject: "Mboka Intelligence Digest",
+        subject: "Mboka Job Opportunity Radar",
         sent_at: sent_at,
         opened_at: opened ? sent_at + rand(1..48).hours : nil,
         campaign: "weekly_digest"

@@ -19,7 +19,7 @@ class Webhooks::TelegramController < ApplicationController
         user = User.find_by(id: user_id)
         if user
           user.update!(telegram_chat_id: chat_id.to_s)
-          TelegramDeliveryService.send_message(chat_id, "Welcome to Mboka! 🚀 Your Telegram account has been successfully linked. You will now receive your weekly intelligence digests right here.")
+          TelegramDeliveryService.send_message(chat_id, "Welcome to Mboka! 🚀 Your Telegram account has been successfully linked. You will now receive your weekly Job Opportunity Radars right here.")
         end
       end
     elsif text == "/start"

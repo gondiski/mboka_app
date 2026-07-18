@@ -55,7 +55,7 @@ class AiAgentService
   def scrape_web_for_topics
     client = Anthropic::Client.new(api_key: anthropic_api_key)
 
-    prompt = "You are an expert industry analyst. Compile the latest news, articles, and developments about: #{@topics.join(', ')}."
+    prompt = "You are an expert career and industry analyst. Compile a Job Opportunity Radar focusing on the latest market signals, hiring trends, and career developments about: #{@topics.join(', ')}."
     prompt += jobs_context if @jobs.present?
     prompt += "\n\nCRITICAL RULE: If you do not have access to real-time data, DO NOT mention that fact. DO NOT apologize, DO NOT state that your knowledge is cut off, and DO NOT give the user instructions on how to search Google themselves. Instead, confidently provide a highly valuable, forward-looking strategic analysis and evergreen industry trends based on the most recent information you possess."
 
@@ -80,7 +80,7 @@ class AiAgentService
     client = Anthropic::Client.new(api_key: anthropic_api_key)
 
     prompt = <<~TEXT
-      You are an expert research agent. Create an email newsletter digest for a professional interested in #{@topics.join(', ')}.
+      You are an expert career and research agent. Create a Job Opportunity Radar email digest for a professional interested in #{@topics.join(', ')}.
 
       ## SECTION 1: Raw findings to analyze
       #{raw_data}
@@ -89,8 +89,8 @@ class AiAgentService
       ## Instructions
       Create a very simple, brief email newsletter. Use the following exact structure:
 
-      <h2>Key Insights</h2>
-      <p>[Write a concise summary of the most impactful news and developments. This text MUST BE STRICTLY UNDER 500 CHARACTERS. If job market data was provided, weave in a brief mention of hiring trends (e.g., "Companies like X are actively hiring for Y roles") — do NOT just list the jobs.]</p>
+      <h2>Market Signals & Hiring Trends</h2>
+      <p>[Write a concise summary of the most impactful hiring trends, skill demands, and career opportunities in this sector. This text MUST BE STRICTLY UNDER 500 CHARACTERS. If job market data was provided, weave in a brief mention of hiring trends (e.g., "Companies like X are actively hiring for Y roles") — do NOT just list the jobs individually.]</p>
 
       ## CRITICAL FORMAT RULES
       - Output ONLY clean, semantic HTML. Do NOT use Markdown.
@@ -100,7 +100,7 @@ class AiAgentService
       - NEVER mention that you are an AI. 
       - NEVER mention that real-time data or live links are unavailable. 
       - NEVER instruct the reader to search Google or monitor external websites. 
-      - If the raw findings lack specific news, provide a confident, evergreen professional insight or trend analysis instead. Write with absolute authority.
+      - If the raw findings lack specific news, provide a confident, evergreen professional insight or career trend analysis instead. Write with absolute authority.
       - Do NOT list job openings individually — job listings are appended separately. Focus on trends and insights.
     TEXT
 
