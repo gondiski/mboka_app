@@ -98,6 +98,17 @@ class Admin::DigestsController < ApplicationController
     redirect_to admin_digests_path, notice: "#{count} digests deleted."
   end
 
+  def bulk_destroy_unsent
+    authorize :digest, :destroy?, policy_class: Admin::DigestPolicy
+
+    scope = TopicDigest.unsent
+    count = scope.count
+    scope.destroy_all
+
+    clear_analytics_cache
+    redirect_to admin_digests_path, notice: "#{count} unsent approved digests deleted."
+  end
+
   def destroy
     authorize @topic_digest, :destroy?, policy_class: Admin::DigestPolicy
 
