@@ -22,8 +22,6 @@ class SubscribersController < ApplicationController
       end
       @user.add_role(:subscriber) if @user.roles.blank?
 
-      AdminSetting.instance.start_trial!
-
       token = @user.generate_magic_link!
       UserMailer.magic_link(@user, token).deliver_now
 
