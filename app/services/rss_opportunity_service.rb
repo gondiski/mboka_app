@@ -4,7 +4,7 @@ require "rss"
 require "open-uri"
 
 class RssOpportunityService
-  URL = "https://www.opportunitiesforafricans.com/feed/"
+  URL = "https://opportunitydesk.org/feed/"
 
   def self.fetch
     new.fetch
@@ -16,7 +16,7 @@ class RssOpportunityService
       rss.items.map do |item|
         {
           title: item.title,
-          company: "Opportunities for Africans",
+          company: "Opportunity Desk",
           location: "Africa / Global",
           description: ActionView::Base.full_sanitizer.sanitize(item.description)&.truncate(200),
           link: item.link,
