@@ -2,7 +2,7 @@
 
 module ApplicationHelper
   include Pagy::Frontend
-  def inject_utm_links(html_content, source: "digest", medium: "email", campaign: "", content: "")
+  def inject_utm_links(html_content, source: "digest", medium: "email", campaign: "", content: "", user_id: nil, mailer: nil)
     return html_content if html_content.blank?
 
     doc = Nokogiri::HTML.fragment(html_content)
@@ -21,7 +21,19 @@ module ApplicationHelper
       existing_params["utm_content"] = content.to_s if content.present?
 
       uri.query = URI.encode_www_form(existing_params)
-      link["href"] = uri.to_s
+      
+      final_url = uri.to_s
+      
+      if user_id.present? && mailer.present?
+        final_url = Rails.application.routes.url_helpers.track_click_url(
+          url: final_url, 
+          user_id: user_id, 
+          mailer: mailer, 
+          host: ActionMailer::Base.default_url_options[:host] || "mboka.dnrstudios.co.ke"
+        )
+      end
+
+      link["href"] = final_url
     end
 
     doc.to_html

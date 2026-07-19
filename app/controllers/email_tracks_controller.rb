@@ -16,4 +16,19 @@ class EmailTracksController < ApplicationController
     send_data Base64.decode64("R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="), 
               type: "image/gif", disposition: "inline"
   end
+
+  def click
+    url = params[:url]
+    
+    if params[:user_id].present? && params[:mailer].present? && url.present?
+      msg = Ahoy::Message.where(user_id: params[:user_id], mailer: params[:mailer], clicked_at: nil)
+                         .where("sent_at >= ?", 7.days.ago)
+                         .order(sent_at: :desc)
+                         .first
+      
+      msg.update(clicked_at: Time.current) if msg
+    end
+
+    redirect_to url.to_s, allow_other_host: true
+  end
 end

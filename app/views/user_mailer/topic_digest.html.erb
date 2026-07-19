@@ -93,10 +93,12 @@
                 </div>
                 <div class="topic-content">
                   <% insights_content = digest.content.split('<!-- JOBS_SECTION -->').first %>
-                  <%= raw inject_utm_links(insights_content, source: "digest_email", medium: "email", campaign: digest.topic.name.parameterize, content: digest.id) %>
+                  <%= raw inject_utm_links(insights_content, source: "digest_email", medium: "email", campaign: digest.topic.name.parameterize, content: digest.id, user_id: @user&.id, mailer: 'UserMailer#topic_digest') %>
                 </div>
                 <div class="btn-container">
-                  <a href="<%= topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>" style="color: #059669; font-weight: 600; font-size: 15px; text-decoration: none; font-family: 'Inter', sans-serif;">
+                  <% base_url = topic_digest_url(digest, utm_source: 'digest_email', utm_medium: 'email', utm_campaign: digest.topic.name.parameterize, utm_content: digest.id) %>
+                  <% tracked_url = @user&.id ? track_click_url(url: base_url, user_id: @user.id, mailer: 'UserMailer#topic_digest') : base_url %>
+                  <a href="<%= tracked_url %>" style="color: #059669; font-weight: 600; font-size: 15px; text-decoration: none; font-family: 'Inter', sans-serif;">
                     See More Jobs &rarr;
                   </a>
                 </div>
