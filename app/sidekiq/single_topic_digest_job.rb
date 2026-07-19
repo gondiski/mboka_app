@@ -30,7 +30,7 @@ class SingleTopicDigestJob
       content: digest_content,
       scraped_data: jobs.to_json,
       week_of: week_date,
-      status: :draft
+      status: :approved
     )
 
     Rails.logger.info("SingleTopicDigestJob: Created digest for #{topic.name}")

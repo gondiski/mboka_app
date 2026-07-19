@@ -6,7 +6,25 @@ class IntelligenceGatheringJob
   sidekiq_options queue: :high, retry: 3
 
   def perform(week_of = nil)
-    week_date = week_of ? Date.parse(week_of) : Date.current.beginning_of_week
+    schedule = DigestSchedule.active_schedule
+
+    if week_of
+      week_date = Date.parse(week_of)
+    elsif schedule
+      # Determine the target week based on the NEXT delivery date
+      next_delivery = Date.current
+      (0..7).each do |i|
+        date = Date.current + i.days
+        if schedule.should_send_today?(date)
+          next_delivery = date
+          break
+        end
+      end
+      week_date = next_delivery.beginning_of_week
+    else
+      week_date = Date.current.beginning_of_week
+    end
+
     topics = Topic.all
 
     topics.each_with_index do |topic, index|

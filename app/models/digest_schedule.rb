@@ -79,7 +79,7 @@ class DigestSchedule < ApplicationRecord
     hour = send_time.hour
     day_names = days.map { |d| DAY_NAMES[d] }.compact.join(",")
 
-    "#{minute} #{hour} * * #{day_names}"
+    "#{minute} #{hour} * * #{day_names} Africa/Nairobi"
   end
 
   # Cron expression for the generation day
@@ -87,23 +87,27 @@ class DigestSchedule < ApplicationRecord
     return nil if send_time.blank?
     return nil unless active?
 
-    minute = send_time.min
-    # Generate 2 hours before delivery time
-    hour = [send_time.hour - 2, 0].max
+    time = send_time - 2.hours
+    minute = time.min
+    hour = time.hour
+    day_offset = (send_time.to_date - time.to_date).to_i
 
     if generation_day == -1
-      # Same day as delivery - use same cron as delivery
-      return cron_expression
+      # Same day as delivery
+      gen_days = days.map { |d| (d - day_offset) % 7 }
+      day_names = gen_days.map { |d| DAY_NAMES[d] }.compact.join(",")
+      return "#{minute} #{hour} * * #{day_names} Africa/Nairobi"
     elsif generation_day_negative?
       # Relative days before delivery
-      offset = generation_day.abs - 1
+      offset = (generation_day.abs - 1) + day_offset
       gen_days = days.map { |d| (d - offset) % 7 }
       day_names = gen_days.map { |d| DAY_NAMES[d] }.compact.join(",")
-      return "#{minute} #{hour} * * #{day_names}"
+      return "#{minute} #{hour} * * #{day_names} Africa/Nairobi"
     else
       # Specific day of week
-      day_name = DAY_NAMES[generation_day]
-      return "#{minute} #{hour} * * #{day_name}"
+      day = (generation_day - day_offset) % 7
+      day_name = DAY_NAMES[day]
+      return "#{minute} #{hour} * * #{day_name} Africa/Nairobi"
     end
   end
 
