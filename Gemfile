@@ -59,7 +59,7 @@ end
 
 gem "discard", "~> 1.4"
 
-gem "aws-sdk-s3", "~> 1.215"
+gem "aws-sdk-s3", "~> 1.226"
 
 gem "foreman", "~> 0.90.0"
 
