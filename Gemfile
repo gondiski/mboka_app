@@ -92,3 +92,5 @@ gem "hashids", "~> 1.0"
 
 # Excel parsing for user imports
 gem "creek", "~> 2.6"
+
+gem "rss", "~> 0.3.3"

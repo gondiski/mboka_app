@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class JobDigestFormatter
-  def self.format(jobs)
-    new(jobs).to_html
+  def self.format(jobs, title: "Top Jobs in Kenya")
+    new(jobs, title: title).to_html
   end
 
-  def initialize(jobs)
+  def initialize(jobs, title: "Top Jobs in Kenya")
     @jobs = jobs
+    @title = title
   end
 
   def to_html
@@ -15,7 +16,7 @@ class JobDigestFormatter
     <<~HTML
       <div style="background-color: #f8fafc; border-radius: 16px; padding: 24px; margin-top: 24px; border: 1px solid #f1f5f9;">
         <h3 style="color: #0f172a; font-size: 18px; margin: 0 0 16px; font-family: 'Outfit', sans-serif; font-weight: 700;">
-          Top Jobs in Kenya
+          #{@title}
         </h3>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse: separate; border-spacing: 0 8px;">
           #{@jobs.map { |job| job_row(job) }.join}

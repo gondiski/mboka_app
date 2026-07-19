@@ -14,13 +14,17 @@ class AiAgentService
   def execute
     raw_data = scrape_web_for_topics
     insights_html = analyze_and_summarize(raw_data)
-    jobs_html = JobDigestFormatter.format(@jobs)
-
     # Combine AI insights with formatted job listings into a single content block.
-    # The <!-- JOBS_SECTION --> delimiter lets the email template show only insights
-    # while the full web view shows everything.
-    if jobs_html.present?
-      "#{insights_html}\n<!-- JOBS_SECTION -->\n#{jobs_html}"
+    # The <!-- JOBS_SECTION --> delimiter lets the email template show only insights and top 5 jobs,
+    # while the full web view shows everything in sequence.
+    if @jobs.present?
+      preview_jobs = @jobs.first(5)
+      remaining_jobs = @jobs.drop(5)
+
+      preview_html = JobDigestFormatter.format(preview_jobs, title: "Top Opportunities")
+      remaining_html = remaining_jobs.any? ? JobDigestFormatter.format(remaining_jobs, title: "More Opportunities") : ""
+
+      "#{insights_html}\n#{preview_html}\n<!-- JOBS_SECTION -->\n#{remaining_html}"
     else
       insights_html
     end

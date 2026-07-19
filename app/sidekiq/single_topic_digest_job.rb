@@ -15,6 +15,10 @@ class SingleTopicDigestJob
 
     jobs = JobSearchService.call(topic_name: topic.name, schedule_date: week_date)
 
+    if ["Education, Training & Academia", "Science, Research & Innovation", "International Development & Humanitarian Work"].include?(topic.name) || topic.name.match?(/scholarship|grant|fellowship/i)
+      jobs += RssOpportunityService.fetch
+    end
+
     digest_content = AiAgentService.call(
       topics: [topic.name],
       designation: "general",
