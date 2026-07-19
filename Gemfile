@@ -57,7 +57,7 @@ group :development do
   gem "letter_opener"
 end
 
-gem "discard", "~> 1.4"
+gem "discard", "~> 2.0"
 
 gem "aws-sdk-s3", "~> 1.215"
 
