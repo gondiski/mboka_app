@@ -62,9 +62,13 @@ telegram_failed = 0
 # Deliver to users with topics
 users_with_topics.find_each do |user|
   user_digests = all_unsent.select { |d| user.topic_ids.include?(d.topic_id) }
-  next if user_digests.empty?
+  if user_digests.empty?
+    shuffled = [all_unsent.sample].compact
+  else
+    shuffled = user_digests.shuffle
+  end
 
-  shuffled = user_digests.shuffle
+  next if shuffled.empty?
   preference = user.receive_via.to_s.downcase
 
   # Email delivery
