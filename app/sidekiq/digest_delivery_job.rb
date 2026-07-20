@@ -26,11 +26,15 @@ class DigestDeliveryJob
 
     users_with_topics.find_each do |user|
       user_digests = all_unsent.select { |d| user.topic_ids.include?(d.topic_id) }
-      next if user_digests.empty?
-
-      shuffled_digests = user_digests.shuffle
-
-      deliver_to_user(user, shuffled_digests)
+      
+      if user_digests.empty?
+        # Fallback: if none of their subscribed topics have approved digests this week, send a random one
+        random_digest = all_unsent.sample
+        deliver_to_user(user, [random_digest]) if random_digest
+      else
+        shuffled_digests = user_digests.shuffle
+        deliver_to_user(user, shuffled_digests)
+      end
     end
 
     # Users without topics get a random digest

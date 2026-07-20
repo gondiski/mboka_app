@@ -3,68 +3,68 @@
 class DesignationTopicMatcher
   DESIGNATION_MAP = {
     # Engineering
-    /software\s*(engineer|developer|dev)/i => ["Software Engineering", "Full Stack Development"],
-    /frontend\s*(engineer|developer)/i => ["Frontend Development", "Software Engineering"],
-    /backend\s*(engineer|developer)/i => ["Backend Development", "Software Engineering"],
-    /full\s*stack/i => ["Full Stack Development", "Software Engineering"],
-    /mobile\s*(engineer|developer|dev)/i => ["Mobile Development", "Software Engineering"],
-    /devops/i => ["DevOps & Cloud", "Software Engineering"],
-    /site\s*reliability|sre/i => ["DevOps & Cloud", "Cybersecurity"],
-    /cloud\s*(engineer|architect)/i => ["DevOps & Cloud", "Software Engineering"],
-    /embedded|iot|hardware/i => ["Embedded Systems & IoT", "Software Engineering"],
-    /security|cybersecurity|infosec/i => ["Cybersecurity", "DevOps & Cloud"],
-    /blockchain|web3|crypto/i => ["Blockchain & Web3", "Software Engineering"],
-    /data\s*(scientist|engineer|analyst)/i => ["Data Science & AI", "Software Engineering"],
-    /machine\s*learning|ml\s*engineer|ai/i => ["Data Science & AI", "Software Engineering"],
-    /qa|quality|test\s*engineer/i => ["Software Engineering", "DevOps & Cloud"],
-    /architect|solutions?\s*architect/i => ["Software Engineering", "DevOps & Cloud"],
+    /software\s*(engineer|developer|dev)/i => ["Technology, Software, Data & AI"],
+    /frontend\s*(engineer|developer)/i => ["Technology, Software, Data & AI"],
+    /backend\s*(engineer|developer)/i => ["Technology, Software, Data & AI"],
+    /full\s*stack/i => ["Technology, Software, Data & AI"],
+    /mobile\s*(engineer|developer|dev)/i => ["Technology, Software, Data & AI"],
+    /devops/i => ["Technology, Software, Data & AI"],
+    /site\s*reliability|sre/i => ["Technology, Software, Data & AI"],
+    /cloud\s*(engineer|architect)/i => ["Technology, Software, Data & AI"],
+    /embedded|iot|hardware/i => ["Technology, Software, Data & AI"],
+    /security|cybersecurity|infosec/i => ["Technology, Software, Data & AI"],
+    /blockchain|web3|crypto/i => ["Technology, Software, Data & AI"],
+    /data\s*(scientist|engineer|analyst)/i => ["Technology, Software, Data & AI"],
+    /machine\s*learning|ml\s*engineer|ai/i => ["Technology, Software, Data & AI"],
+    /qa|quality|test\s*engineer/i => ["Technology, Software, Data & AI"],
+    /architect|solutions?\s*architect/i => ["Technology, Software, Data & AI"],
 
     # Design
-    /product\s*designer|ux\s*designer|ui\s*designer|ui\/ux/i => ["Product Design", "Product Management"],
-    /graphic\s*designer|visual\s*designer/i => ["Product Design", "Digital Marketing"],
-    /design\s*lead|design\s*director/i => ["Product Design", "Product Management"],
+    /product\s*designer|ux\s*designer|ui\s*designer|ui\/ux/i => ["Technology, Software, Data & AI"],
+    /graphic\s*designer|visual\s*designer/i => ["Media, Entertainment & Creative Industries", "Marketing, Advertising, Sales & Communications"],
+    /design\s*lead|design\s*director/i => ["Technology, Software, Data & AI", "Business, Management & Consulting"],
 
     # Product & Management
-    /product\s*manager|product\s*owner/i => ["Product Management", "Startup Accelerators"],
-    /project\s*manager|program\s*manager/i => ["Product Management", "Business & Entrepreneurship"],
-    /scrum\s*master|agile/i => ["Product Management", "Software Engineering"],
+    /product\s*manager|product\s*owner/i => ["Business, Management & Consulting"],
+    /project\s*manager|program\s*manager/i => ["Business, Management & Consulting"],
+    /scrum\s*master|agile/i => ["Business, Management & Consulting"],
 
     # Business & Entrepreneurship
-    /founder|co-?founder|ceo|cto|cfo|coo/i => ["Business & Entrepreneurship", "Startup Accelerators", "Venture Capital & Funding"],
-    /entrepreneur|startup/i => ["Business & Entrepreneurship", "Startup Accelerators", "Startup Incubators"],
-    /business\s*(analyst|developer|development)/i => ["Business & Entrepreneurship", "Digital Marketing"],
-    /marketing\s*(manager|director|lead|specialist)/i => ["Digital Marketing", "Business & Entrepreneurship"],
-    /digital\s*marketer|growth\s*hacker/i => ["Digital Marketing", "Startup Accelerators"],
-    /social\s*media/i => ["Digital Marketing", "Social Enterprise"],
+    /founder|co-?founder|ceo|cto|cfo|coo/i => ["Entrepreneurship, Startups & Innovation", "Business, Management & Consulting"],
+    /entrepreneur|startup/i => ["Entrepreneurship, Startups & Innovation"],
+    /business\s*(analyst|developer|development)/i => ["Business, Management & Consulting", "Marketing, Advertising, Sales & Communications"],
+    /marketing\s*(manager|director|lead|specialist)/i => ["Marketing, Advertising, Sales & Communications"],
+    /digital\s*marketer|growth\s*hacker/i => ["Marketing, Advertising, Sales & Communications", "Entrepreneurship, Startups & Innovation"],
+    /social\s*media/i => ["Marketing, Advertising, Sales & Communications"],
 
     # NGO & Social Impact
-    /ngo|non-?profit|npo/i => ["NGO & Non-Profit Grants", "Social Enterprise"],
-    /program\s*officer|program\s*coordinator/i => ["NGO & Non-Profit Grants", "Government Grants"],
-    /community\s*manager|community\s*organizer/i => ["Social Enterprise", "NGO & Non-Profit Grants"],
-    /social\s*enterprise|impact/i => ["Social Enterprise", "NGO & Non-Profit Grants", "Climate & Sustainability"],
-    /monitoring|evaluation|m&e/i => ["NGO & Non-Profit Grants", "Research Fellowships"],
+    /ngo|non-?profit|npo/i => ["International Development & Humanitarian Work"],
+    /program\s*officer|program\s*coordinator/i => ["International Development & Humanitarian Work", "Government, Public Policy & Diplomacy"],
+    /community\s*manager|community\s*organizer/i => ["Community Development, Youth & Inclusion", "International Development & Humanitarian Work"],
+    /social\s*enterprise|impact/i => ["International Development & Humanitarian Work", "Climate, Environment & Conservation"],
+    /monitoring|evaluation|m&e/i => ["Technology, Software, Data & AI", "International Development & Humanitarian Work"],
 
     # Research & Academia
-    /researcher|research\s*(officer|scientist|fellow)/i => ["Research Fellowships", "Academic Scholarships"],
-    /professor|lecturer|academic/i => ["Academic Scholarships", "Research Fellowships"],
-    /student|intern|undergraduate|postgraduate/i => ["Academic Scholarships", "Remote Jobs"],
+    /researcher|research\s*(officer|scientist|fellow)/i => ["Science, Research & Innovation", "Education, Training & Academia"],
+    /professor|lecturer|academic/i => ["Education, Training & Academia"],
+    /student|intern|undergraduate|postgraduate/i => ["Education, Training & Academia"],
 
     # Sector-specific
-    /fintech|finance|banking|financial/i => ["Fintech Opportunities", "Venture Capital & Funding"],
-    /healthtech|health|medical|healthcare/i => ["Healthtech Opportunities", "Social Enterprise"],
-    /edtech|education|teacher/i => ["Edtech Opportunities", "Academic Scholarships"],
-    /agritech|agriculture|farming/i => ["Agritech Opportunities", "Climate & Sustainability"],
-    /climate|sustainability|environment|green/i => ["Climate & Sustainability", "Social Enterprise"],
+    /fintech|finance|banking|financial/i => ["Finance, Banking, Accounting & Insurance"],
+    /healthtech|health|medical|healthcare/i => ["Health, Medicine & Life Sciences"],
+    /edtech|education|teacher/i => ["Education, Training & Academia"],
+    /agritech|agriculture|farming/i => ["Agriculture, Food & Agribusiness"],
+    /climate|sustainability|environment|green/i => ["Climate, Environment & Conservation"],
 
     # Remote & General
-    /remote|freelance|consultant/i => ["Remote Jobs", "Business & Entrepreneurship"],
-    /operations|logistics|supply\s*chain/i => ["Business & Entrepreneurship", "Agritech Opportunities"],
-    /hr|human\s*resources|talent/i => ["Business & Entrepreneurship", "Remote Jobs"],
-    /legal|lawyer|attorney/i => ["Business & Entrepreneurship", "NGO & Non-Profit Grants"],
-    /journalist|writer|content|media/i => ["Digital Marketing", "Remote Jobs"]
+    /remote|freelance|consultant/i => ["Business, Management & Consulting"],
+    /operations|logistics|supply\s*chain/i => ["Transport, Logistics & Supply Chain", "Business, Management & Consulting"],
+    /hr|human\s*resources|talent/i => ["Business, Management & Consulting"],
+    /legal|lawyer|attorney/i => ["Law, Governance, Justice & Human Rights"],
+    /journalist|writer|content|media/i => ["Media, Entertainment & Creative Industries", "Marketing, Advertising, Sales & Communications"]
   }.freeze
 
-  FALLBACK_TOPICS = ["Remote Jobs", "Business & Entrepreneurship"].freeze
+  FALLBACK_TOPICS = ["Business, Management & Consulting", "Technology, Software, Data & AI"].freeze
 
   def self.match(designation)
     return [] if designation.blank?
