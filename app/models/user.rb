@@ -71,7 +71,7 @@ class User < ApplicationRecord
     raw_token = SecureRandom.hex(24)
     update!(
       magic_link_token: Devise.token_generator.digest(self.class, :magic_link_token, raw_token),
-      magic_link_expires_at: 15.minutes.from_now
+      magic_link_expires_at: 1.hour.from_now
     )
     raw_token
   end
