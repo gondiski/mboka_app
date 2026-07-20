@@ -15,7 +15,16 @@ class SingleTopicDigestJob
 
     jobs = JobSearchService.call(topic_name: topic.name, schedule_date: week_date)
 
-    if ["Education, Training & Academia", "Science, Research & Innovation", "International Development & Humanitarian Work"].include?(topic.name) || topic.name.match?(/scholarship|grant|fellowship/i)
+    rss_topics = [
+      "Education, Training & Academia",
+      "Science, Research & Innovation",
+      "International Development & Humanitarian Work",
+      "Community Development, Youth & Inclusion",
+      "Government, Public Policy & Diplomacy",
+      "Entrepreneurship, Startups & Innovation"
+    ]
+
+    if rss_topics.include?(topic.name) || topic.name.match?(/scholarship|grant|fellowship|sponsorship/i)
       jobs += RssOpportunityService.fetch
     end
 
