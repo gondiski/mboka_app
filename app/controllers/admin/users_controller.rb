@@ -39,9 +39,8 @@ class Admin::UsersController < ApplicationController
     end
 
     current_week = Date.current.beginning_of_week
-    # Fetch the digest for the current week for each of the user's topics
-    digests = TopicDigest.where(topic_id: topic_ids, week_of: current_week)
-                         .to_a
+    # Fetch the digest for the current scheduled week that are yet to be sent (draft or approved)
+    digests = TopicDigest.where(topic_id: topic_ids, week_of: current_week, status: [:draft, :approved]).to_a
 
     if digests.empty?
       render plain: "No digests have been generated for this user's topics yet.", status: :not_found

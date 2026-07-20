@@ -1,5 +1,6 @@
 class EmailTracksController < ApplicationController
   skip_before_action :authenticate_user!, raise: false
+  skip_after_action :verify_authorized
 
   def open
     if params[:user_id].present? && params[:mailer].present?
