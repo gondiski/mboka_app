@@ -7,24 +7,39 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-10">
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <p class="text-sm font-medium text-gray-500 mb-1">Total Users</p>
-        <p class="text-3xl font-black text-brand-600"><%= @total_users %></p>
+        <p class="text-sm font-medium text-gray-500 mb-1">New Users (This Week)</p>
+        <div class="flex items-end justify-between mt-2">
+          <p class="text-3xl font-black text-brand-600"><%= @users_stat[:current] %></p>
+          <%= render_trend(@users_stat[:trend]) %>
+        </div>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <p class="text-sm font-medium text-gray-500 mb-1">Emails Sent</p>
-        <p class="text-3xl font-black text-brand-600"><%= @sent_count %></p>
+        <p class="text-sm font-medium text-gray-500 mb-1">Emails Sent (This Week)</p>
+        <div class="flex items-end justify-between mt-2">
+          <p class="text-3xl font-black text-brand-600"><%= @sent_stat[:current] %></p>
+          <%= render_trend(@sent_stat[:trend]) %>
+        </div>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <p class="text-sm font-medium text-gray-500 mb-1">Emails Opened</p>
-        <p class="text-3xl font-black text-brand-600"><%= @opened_count %></p>
+        <p class="text-sm font-medium text-gray-500 mb-1">Emails Opened (This Week)</p>
+        <div class="flex items-end justify-between mt-2">
+          <p class="text-3xl font-black text-brand-600"><%= @opened_stat[:current] %></p>
+          <%= render_trend(@opened_stat[:trend]) %>
+        </div>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <p class="text-sm font-medium text-gray-500 mb-1">Total Clicks</p>
-        <p class="text-3xl font-black text-brand-600"><%= @clicked_count %></p>
+        <p class="text-sm font-medium text-gray-500 mb-1">Total Clicks (This Week)</p>
+        <div class="flex items-end justify-between mt-2">
+          <p class="text-3xl font-black text-brand-600"><%= @clicked_stat[:current] %></p>
+          <%= render_trend(@clicked_stat[:trend]) %>
+        </div>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <p class="text-sm font-medium text-gray-500 mb-1">Open Rate</p>
-        <p class="text-3xl font-black text-brand-600"><%= @open_rate %>%</p>
+        <p class="text-sm font-medium text-gray-500 mb-1">Open Rate (This Week)</p>
+        <div class="flex items-end justify-between mt-2">
+          <p class="text-3xl font-black text-brand-600"><%= @open_rate_stat[:current] %>%</p>
+          <%= render_trend(@open_rate_stat[:trend]) %>
+        </div>
       </div>
     </div>
 

@@ -7,12 +7,11 @@ class Admin::DashboardsController < ApplicationController
     authorize :dashboard, :show?, policy_class: Admin::DashboardPolicy
 
     stats = cached_dashboard_stats
-    @total_users = stats[:total_users]
-    @total_topics = stats[:total_topics]
-    @sent_count = stats[:sent_count]
-    @opened_count = stats[:opened_count]
-    @clicked_count = stats[:clicked_count]
-    @open_rate = stats[:open_rate]
+    @users_stat = stats[:users_stat]
+    @sent_stat = stats[:sent_stat]
+    @opened_stat = stats[:opened_stat]
+    @clicked_stat = stats[:clicked_stat]
+    @open_rate_stat = stats[:open_rate_stat]
     @digest_stats = stats[:digest_stats]
     @digest_page = stats[:digest_page]
     @weekly_open_data = stats[:weekly_open_data]
@@ -25,13 +24,30 @@ class Admin::DashboardsController < ApplicationController
 
   def cached_dashboard_stats
     Rails.cache.fetch("dashboard_stats", expires_in: 5.minutes) do
+      current_week = Time.current.all_week
+      last_week = 1.week.ago.all_week
+
+      users_this_week = User.where(created_at: current_week).count
+      users_last_week = User.where(created_at: last_week).count
+
+      sent_this_week = Ahoy::Message.where(sent_at: current_week).count
+      sent_last_week = Ahoy::Message.where(sent_at: last_week).count
+
+      opened_this_week = Ahoy::Message.where(sent_at: current_week).where.not(opened_at: nil).count
+      opened_last_week = Ahoy::Message.where(sent_at: last_week).where.not(opened_at: nil).count
+
+      clicked_this_week = Ahoy::Message.where(clicked_at: current_week).count
+      clicked_last_week = Ahoy::Message.where(clicked_at: last_week).count
+
+      open_rate_this_week = sent_this_week > 0 ? (opened_this_week.to_f / sent_this_week * 100).round(1) : 0
+      open_rate_last_week = sent_last_week > 0 ? (opened_last_week.to_f / sent_last_week * 100).round(1) : 0
+
       {
-        total_users: User.count,
-        total_topics: Topic.count,
-        sent_count: Ahoy::Message.count,
-        opened_count: Ahoy::Message.where.not(opened_at: nil).count,
-        clicked_count: Ahoy::Click.count,
-        open_rate: calc_open_rate,
+        users_stat: { current: users_this_week, previous: users_last_week, trend: calculate_trend(users_this_week, users_last_week) },
+        sent_stat: { current: sent_this_week, previous: sent_last_week, trend: calculate_trend(sent_this_week, sent_last_week) },
+        opened_stat: { current: opened_this_week, previous: opened_last_week, trend: calculate_trend(opened_this_week, opened_last_week) },
+        clicked_stat: { current: clicked_this_week, previous: clicked_last_week, trend: calculate_trend(clicked_this_week, clicked_last_week) },
+        open_rate_stat: { current: open_rate_this_week, previous: open_rate_last_week, trend: (open_rate_this_week - open_rate_last_week).round(1) },
         digest_stats: build_digest_stats,
         digest_page: build_digest_stats.first(5),
         weekly_open_data: weekly_open_rates,
@@ -42,10 +58,9 @@ class Admin::DashboardsController < ApplicationController
     end
   end
 
-  def calc_open_rate
-    sent = Ahoy::Message.count
-    return 0 if sent == 0
-    (Ahoy::Message.where.not(opened_at: nil).count.to_f / sent * 100).round(1)
+  def calculate_trend(current, previous)
+    return 0 if previous.zero?
+    (((current - previous).to_f / previous) * 100).round(1)
   end
 
   def build_digest_stats

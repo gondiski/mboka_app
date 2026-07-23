@@ -112,6 +112,28 @@ module ApplicationHelper
     end
   end
 
+  def render_trend(trend_value)
+    if trend_value > 0
+      <<~HTML.html_safe
+        <span class="text-sm font-medium text-green-600 flex items-center mb-1">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+          #{trend_value}%
+        </span>
+      HTML
+    elsif trend_value < 0
+      <<~HTML.html_safe
+        <span class="text-sm font-medium text-red-600 flex items-center mb-1">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path></svg>
+          #{trend_value.abs}%
+        </span>
+      HTML
+    else
+      <<~HTML.html_safe
+        <span class="text-sm font-medium text-gray-500 flex items-center mb-1">0%</span>
+      HTML
+    end
+  end
+
   private
 
   def hex_to_rgb(hex)
