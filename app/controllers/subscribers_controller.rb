@@ -11,7 +11,7 @@ class SubscribersController < ApplicationController
     if @user.new_record?
       @user.full_name = subscriber_params[:full_name]
       @user.designation = subscriber_params[:designation]
-      @user.status = "pending"
+      @user.status = "active"
     end
 
     if @user.save

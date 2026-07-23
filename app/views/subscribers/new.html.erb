@@ -231,13 +231,11 @@
     <div class="mt-12 text-center scroll-animate" data-animation="fade-up" data-delay="200">
       <p class="text-gray-600 mb-4">Popular topics include:</p>
       <div class="flex flex-wrap justify-center gap-3">
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Software Engineering</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">NGO Grants</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Data Science</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Fellowships</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Startups</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Remote Jobs</span>
-        <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5">Accelerator Programs</span>
+        <% if @topics.present? %>
+          <% @topics.first(8).each do |topic| %>
+            <span class="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm border hover:shadow-md hover:border-brand-300 hover:text-brand-600 transition-all duration-300 cursor-default hover:-translate-y-0.5"><%= topic.name %></span>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>
