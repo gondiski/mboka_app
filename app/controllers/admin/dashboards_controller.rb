@@ -12,6 +12,7 @@ class Admin::DashboardsController < ApplicationController
     @opened_stat = stats[:opened_stat]
     @clicked_stat = stats[:clicked_stat]
     @open_rate_stat = stats[:open_rate_stat]
+    @click_rate_stat = stats[:click_rate_stat]
     @digest_stats = stats[:digest_stats]
     @digest_page = stats[:digest_page]
     @weekly_open_data = stats[:weekly_open_data]
@@ -42,12 +43,16 @@ class Admin::DashboardsController < ApplicationController
       open_rate_this_week = sent_this_week > 0 ? (opened_this_week.to_f / sent_this_week * 100).round(1) : 0
       open_rate_last_week = sent_last_week > 0 ? (opened_last_week.to_f / sent_last_week * 100).round(1) : 0
 
+      click_rate_this_week = opened_this_week > 0 ? (clicked_this_week.to_f / opened_this_week * 100).round(1) : 0
+      click_rate_last_week = opened_last_week > 0 ? (clicked_last_week.to_f / opened_last_week * 100).round(1) : 0
+
       {
         users_stat: { current: users_this_week, previous: users_last_week, trend: calculate_trend(users_this_week, users_last_week) },
         sent_stat: { current: sent_this_week, previous: sent_last_week, trend: calculate_trend(sent_this_week, sent_last_week) },
         opened_stat: { current: opened_this_week, previous: opened_last_week, trend: calculate_trend(opened_this_week, opened_last_week) },
         clicked_stat: { current: clicked_this_week, previous: clicked_last_week, trend: calculate_trend(clicked_this_week, clicked_last_week) },
         open_rate_stat: { current: open_rate_this_week, previous: open_rate_last_week, trend: (open_rate_this_week - open_rate_last_week).round(1) },
+        click_rate_stat: { current: click_rate_this_week, previous: click_rate_last_week, trend: (click_rate_this_week - click_rate_last_week).round(1) },
         digest_stats: build_digest_stats,
         digest_page: build_digest_stats.first(5),
         weekly_open_data: weekly_open_rates,

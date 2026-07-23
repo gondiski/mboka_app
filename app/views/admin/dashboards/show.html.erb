@@ -5,7 +5,7 @@
     <h1 class="text-3xl font-black text-gray-900 mb-8">Performance Dashboard</h1>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-10">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-10">
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <p class="text-sm font-medium text-gray-500 mb-1">New Users (This Week)</p>
         <div class="flex items-end justify-between mt-2">
@@ -39,6 +39,13 @@
         <div class="flex items-end justify-between mt-2">
           <p class="text-3xl font-black text-brand-600"><%= @open_rate_stat[:current] %>%</p>
           <%= render_trend(@open_rate_stat[:trend]) %>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <p class="text-sm font-medium text-gray-500 mb-1">Click Rate (This Week)</p>
+        <div class="flex items-end justify-between mt-2">
+          <p class="text-3xl font-black text-brand-600"><%= @click_rate_stat[:current] %>%</p>
+          <%= render_trend(@click_rate_stat[:trend]) %>
         </div>
       </div>
     </div>
