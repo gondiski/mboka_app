@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def load_topics_for_modal
-    @topics = Topic.order(:name)
+    @topics = Topic.where(name: TopicConsolidationService::NEW_TOPICS).order(:name)
   end
 
   def user_not_authorized
